@@ -543,6 +543,10 @@ public class Actor extends Entity implements Mover{
 		 * After the Actor is rendered, its Entity position is translated back to Tile
 		 * coordinates.
 		 */
+		
+		/* moving in isometric */
+		
+	//	getX()*(RogueGame.TILE_SIZE/2) + getY()*(RogueGame.TILE_SIZE/2))
 		setPosition(getPosition().add(new Vector(RogueGame.TILE_SIZE/2, RogueGame.TILE_SIZE/2)));
 		super.render(g);
 		setPosition(getPosition().add(new Vector(-RogueGame.TILE_SIZE/2, -RogueGame.TILE_SIZE/2)));
