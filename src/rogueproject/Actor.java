@@ -532,8 +532,7 @@ public class Actor extends Entity implements Mover{
 	
 	/* Render */
 	
-	@Override
-	public void render (Graphics g){
+	public void render (Graphics g,boolean isometric){
 		/*
 		 * Position in Tile coordinates is tracked by the top left corner of each tile,
 		 * but Entity position renders sprite images centered at the Entity's position.
@@ -545,11 +544,26 @@ public class Actor extends Entity implements Mover{
 		 */
 		
 		/* moving in isometric */
+		if(isometric == true){
+			float i = getPosition().getX()/ (RogueGame.TILE_SIZE);
+			float j = getPosition().getY()/ (RogueGame.TILE_SIZE);
+			float x = (i * (RogueGame.TILE_SIZE/2) ) + (j * (RogueGame.TILE_SIZE/2) );
+			float y = (i * (RogueGame.TILE_SIZE/2) ) - (j * (RogueGame.TILE_SIZE/2) );
 		
-	//	getX()*(RogueGame.TILE_SIZE/2) + getY()*(RogueGame.TILE_SIZE/2))
-		setPosition(getPosition().add(new Vector(RogueGame.TILE_SIZE/2, RogueGame.TILE_SIZE/2)));
-		super.render(g);
-		setPosition(getPosition().add(new Vector(-RogueGame.TILE_SIZE/2, -RogueGame.TILE_SIZE/2)));
+			float xx = getPosition().getX();
+			float yy = getPosition().getY();
+			
+			setPosition(x+8,y + 308);
+			super.render(g);
+			setPosition(xx,yy);
+		}
+		else{
+			setPosition(getPosition().add(new Vector(RogueGame.TILE_SIZE/2, RogueGame.TILE_SIZE/2)));
+			super.render(g);
+			setPosition(getPosition().add(new Vector(-RogueGame.TILE_SIZE/2, -RogueGame.TILE_SIZE/2)));
+		}
+
+
 	}
 
 	public void remove(){
