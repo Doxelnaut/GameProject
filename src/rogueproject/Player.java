@@ -95,6 +95,7 @@ public class Player extends Actor{
 	public boolean act(RogueGame rg){
 		if(this.orders != PlayingState.WAIT && getEnergy() >= 1){ // only act if the action is not wait and there is enough energy to act
 			setNextTile(getOrders());
+			System.out.println(this.orders);
 			this.orders = PlayingState.WAIT;
 			// rest
 			if(this.getNextTile().equals(this.getTilePosition())){

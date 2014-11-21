@@ -20,6 +20,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.util.pathfinding.*;
 
+
 /**
  * 
  * @author Zacharias Shufflebarger
@@ -43,14 +44,14 @@ import org.newdawn.slick.util.pathfinding.*;
  */
 public class PlayingState extends BasicGameState {
 	
-	private TiledMap map;
+	public static TiledMap map;
 	public String blockingPropertyName;
 	public boolean tiles[][];
 	public Rectangle blocks[][];
 	// input direction
 	public static final int WAIT = -1, N = 0, E = 1, S = 2, W = 3, NW = 4, NE = 5, SE = 6, SW = 7, REST = 8;
 	
-	
+	public boolean isometric = true;
 	// collective boolean for of all actors turns
 	public boolean actorsTurns = false; 
 	
@@ -102,8 +103,8 @@ public class PlayingState extends BasicGameState {
 			rg.enterState(RogueGame.STARTUPSTATE);
 		}
 		if(map != null){
-			fill();
-			//map.render(0, 0); // renders the map on screen at (x, y)	
+			if(isometric == true) fill();
+			else map.render(0, 0); // renders the map on screen at (x, y)	
 		} else {
 			rg.enterState(RogueGame.PLAYINGSTATE);
 		}
@@ -119,20 +120,19 @@ public class PlayingState extends BasicGameState {
 		}
 		
 		for(Actor a : rg.actors){
-			a.render(g);
+			a.render(g,isometric);
 		}
 		
 		if(rg.player != null){
-			rg.player.render(g);	
+			rg.player.render(g,isometric);	
 		}
 		
 	}
 	public void fill(){
-		// This will create an Array with all the Tiles in your map. When set to true, it means that Tile is blocked.
+		//drawing left to right, or right to left
 		
-
-		for(int i = 0; i < map.getWidth(); i++) {//
-		//for(int i = map.getWidth()-1; i > 0; i--){	
+		//for(int i = 0; i < map.getWidth(); i++) {
+		for(int i = map.getWidth()-1; i > 0; i--){	
 		    for(int j = 0; j < map.getHeight(); j++) {
 		    	
 			       Image tile = map.getTileImage(i, j, 0);
@@ -141,20 +141,6 @@ public class PlayingState extends BasicGameState {
 		    }
 		}
 	}
-	/*private void renderMap(TiledMap x, int[][] tile_map) {
-		
-		TiledMapTileLayer layer = (TiledMapTileLayer)x. // assuming the layer at index on contains tiles
-
-		int screenX, screenY,cellX, cellY;
-		for ( cellY = 0; cellY < tile_map.length; cellY++);
-		    for (cellX = 0; cellX < tile_map[cellY].length;cellX++);
-		        x.draw(
-		            tile_map[cellX][cellY],
-		            screenX = (cellX * RogueGame.TILE_SIZE  / 2) + (cellY * RogueGame.TILE_SIZE  / 2));
-		            screenY = (cellY * RogueGame.TILE_SIZE / 2) - (cellX * RogueGame.TILE_SIZE / 2);
-		        );
-	}
-*/
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta)
 			throws SlickException {
