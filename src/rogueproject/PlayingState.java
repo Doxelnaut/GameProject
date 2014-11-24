@@ -298,7 +298,7 @@ public class PlayingState extends BasicGameState {
 **/			break;
 		case 2:
 			rg.state.player.setTilePosition(3,3);
-			map = new TiledMap("rogueproject/resource/maps/map2.tmx");
+			map = new TiledMap("rogueproject/resource/maps/tinytestmapx.tmx");
 /**			// Little Spiders
 			rg.state.actors.add( new Actor(6, 12, 19));
 			rg.state.actors.add( new Actor(6, 7, 31));
