@@ -9,7 +9,6 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.ResourceLoader;
 
-
 /**
  * 
  * @author Zacharias Shufflebarger
@@ -73,7 +72,7 @@ public class StartUpState extends BasicGameState {
 		// Render Buttons
 		startButton.render(g);
 		exitButton.render(g);
-	
+		
 	}
 	
 	@Override
