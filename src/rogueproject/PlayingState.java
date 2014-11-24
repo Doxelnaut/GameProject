@@ -259,9 +259,9 @@ public class PlayingState extends BasicGameState {
 	public void setLevel(RogueGame rg) throws SlickException{
 		switch(rg.state.player.getDepth()){
 		case 1:
-			rg.state.player.setTilePosition(7, 6);
-			map = new TiledMap("rogueproject/resource/maps/largetestmap.tmx");
-			//Little Zombies
+			rg.state.player.setTilePosition(3, 3);
+			map = new TiledMap("rogueproject/resource/maps/tinytestmap.tmx");
+/**			//Little Zombies
 			rg.state.actors.add( new Actor(0, 14, 15));
 			rg.state.actors.add( new Actor(0, 10, 16));
 			rg.state.actors.add( new Actor(0, 12, 28));
@@ -295,11 +295,11 @@ public class PlayingState extends BasicGameState {
 			rg.state.actors.add( new Actor(4, 54, 13));
 			//Death
 			rg.state.actors.add( new Actor(5, 48, 4)); 
-			break;
+**/			break;
 		case 2:
-			rg.state.player.setTilePosition(11, 31);
+			rg.state.player.setTilePosition(3,3);
 			map = new TiledMap("rogueproject/resource/maps/map2.tmx");
-			// Little Spiders
+/**			// Little Spiders
 			rg.state.actors.add( new Actor(6, 12, 19));
 			rg.state.actors.add( new Actor(6, 7, 31));
 			rg.state.actors.add( new Actor(6, 13, 34));
@@ -330,7 +330,7 @@ public class PlayingState extends BasicGameState {
 			rg.state.actors.add( new Actor(10, 54, 33));
 			// Red Leech
 			rg.state.actors.add( new Actor(11, 48, 8));
-			break;
+**/			break;
 		default:
 			break;
 		}
