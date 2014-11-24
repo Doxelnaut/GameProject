@@ -9,7 +9,6 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.ResourceLoader;
 
-
 /**
  * 
  * @author Zacharias Shufflebarger
@@ -39,6 +38,7 @@ public class StartUpState extends BasicGameState {
 	Button startButton;
 	Button exitButton;
 	Button title;
+	Button hostButton;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
@@ -56,9 +56,11 @@ public class StartUpState extends BasicGameState {
 				(rg.ScreenWidth * 0.5f), (rg.ScreenHeight * 0.2f), 48);
 		
 		// Create Start Menu Buttons
-		startButton = new Button("Start Game", 
+		startButton = new Button("Join Game", 
 				(rg.ScreenWidth * 0.5f), (rg.ScreenHeight * 0.5f), Button.MENU_LARGE, 20);
 		exitButton = new Button("Exit", 
+				rg.ScreenWidth * 0.5f, (rg.ScreenHeight * 0.5f) + 100, Button.MENU_LARGE, 20);
+		hostButton = new Button("Host Game", 
 				rg.ScreenWidth * 0.5f, (rg.ScreenHeight * 0.5f) + 50, Button.MENU_LARGE, 20);
 		
 
@@ -72,8 +74,9 @@ public class StartUpState extends BasicGameState {
 		title.render(g);
 		// Render Buttons
 		startButton.render(g);
+		hostButton.render(g);
 		exitButton.render(g);
-	
+		
 	}
 	
 	@Override
@@ -98,6 +101,14 @@ public class StartUpState extends BasicGameState {
 				&& input.getAbsoluteMouseY() >= exitButton.getCoarseGrainedMinY()){
 			System.out.println("exit!!");
 			container.exit();
+		}
+		
+		if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)
+				&& input.getAbsoluteMouseX() <= hostButton.getCoarseGrainedMaxX()
+				&& input.getAbsoluteMouseX() >= hostButton.getCoarseGrainedMinX()
+				&& input.getAbsoluteMouseY() <= hostButton.getCoarseGrainedMaxY()
+				&& input.getAbsoluteMouseY() >= hostButton.getCoarseGrainedMinY()){
+			rg.enterState(RogueGame.HOSTSTATE);
 		}
 	}
 	

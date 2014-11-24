@@ -360,9 +360,9 @@ public class Actor extends Entity implements Mover{
 				}
 				if(this.getEnergy() >= 1){
 					// find path
-					AStarPathFinder pathFinder = new AStarPathFinder(rg.pathmap, 7, true);
+					AStarPathFinder pathFinder = new AStarPathFinder(rg.state.pathmap, 7, true);
 					Path path = pathFinder.findPath(this, this.getTileX(), this.getTileY(), 
-							rg.player.getTileX(), rg.player.getTileY());
+							rg.state.player.getTileX(), rg.state.player.getTileY());
 					if(path != null){
 						this.nextTile = new Vector(path.getX(1), path.getY(1)); // set orders
 					} else{ // no orders, hang out a bit.
@@ -370,14 +370,14 @@ public class Actor extends Entity implements Mover{
 					}
 					if(this.getEnergy() >= 1){
 						if(!this.nextTile.equals(this.getPosition())){
-							if (!isBlocked(rg.blocked) && !isOccupied(rg.occupied)){
+							if (!isBlocked(rg.state.blocked) && !isOccupied(rg.state.occupied)){
 								this.toNextTile = this.nextTile.subtract(this.getTilePosition());
 								move();
 								this.consumeEnergy();
 								return true;
 							}
-							else if (isOccupied(rg.occupied)){
-								attackPlayer(rg.player);
+							else if (isOccupied(rg.state.occupied)){
+								attackPlayer(rg.state.player);
 								this.consumeEnergy();
 								this.nextTile = this.getPosition();
 								this.turn = false;

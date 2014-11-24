@@ -46,6 +46,8 @@ public class RogueGame extends StateBasedGame{
 	public static final int STARTUPSTATE = 0;
 	public static final int PLAYINGSTATE = 1;
 	public static final int GAMEOVERSTATE = 2;
+	public static final int HOSTSTATE = 3;
+
 	// other possible states: CharacterSelect, Inventory, Pause, Menu, Settings
 	
 	// create image, animation, and sound macros
@@ -60,9 +62,7 @@ public class RogueGame extends StateBasedGame{
 	
 	public static final String GOLDGUI_IMG_RSC = "rogueproject/resource/goldui_big_pieces_0.png"; 
 	public static final String GUI_MENULARGE_IMG_RSC = "rogueproject/resource/menu_large.png";
-	public static final String HIT_REDNUMBERS0_IMG_RSC = "rogueproject/resource/boxy_bold_fat/gradient/boxy_bold_fat_gradient_red.png";
-	public static final String HIT_REDNUMBERS1_IMG_RSC = "rogueproject/resource/boxy_bold_fat/edged/boxy_bold_fat_edge_red.png";
-	
+
 	public static final String ACTOR_PLAYER0_IMG_RSC = "rogueproject/resource/DawnLike_3/Characters/Player0.png";
 	public static final String ACTOR_PLAYER1_IMG_RSC = "rogueproject/resource/DawnLike_3/Characters/Player1.png";
 	public static final String ACTOR_UNDEAD0_IMG_RSC = "rogueproject/resource/DawnLike_3/Characters/Undead0.png";
@@ -77,13 +77,7 @@ public class RogueGame extends StateBasedGame{
 	TrueTypeFont courierBOLD12;
 	TrueTypeFont custom12;
 	
-	public static final int WARRIOR = 0;
-	Player player;
-	ArrayList<Actor> actors;
-	boolean[][] blocked;
-	boolean[][] occupied; // for collision detection with actors
-	NodeMap pathmap;
-	ArrayList<Damage> hits;
+	GameState state = new GameState();
 	
 	//TODO ArrayList<Objects> objects;
 	
@@ -101,6 +95,7 @@ public class RogueGame extends StateBasedGame{
 		addState(new StartUpState());
 		//addState(new GameOverState());
 		addState(new PlayingState());
+		addState(new HostState());
 		
 		// preload resources here
 		// images: ResourceManager.loadImage(IMG_RSC);
@@ -113,11 +108,9 @@ public class RogueGame extends StateBasedGame{
 		ResourceManager.loadImage(ACTOR_UNDEAD1_IMG_RSC);
 		ResourceManager.loadImage(ACTOR_PEST0_IMG_RSC);
 		ResourceManager.loadImage(ACTOR_PEST1_IMG_RSC);
-		ResourceManager.loadImage(HIT_REDNUMBERS0_IMG_RSC);
-		ResourceManager.loadImage(HIT_REDNUMBERS1_IMG_RSC);
 
-		player = new Player(WARRIOR);
-		hits = new ArrayList<Damage>(10);
+
+		state.player = new Player(GameState.WARRIOR);
 	}
 	
 	public static void main(String[] args) {
