@@ -113,7 +113,7 @@ public class RogueGame extends StateBasedGame{
 		ResourceManager.loadImage(HIT_REDNUMBERS0_IMG_RSC);
 		ResourceManager.loadImage(HIT_REDNUMBERS1_IMG_RSC);
 
-		state.player = new Player(state.WARRIOR);
+		state.player = new Player(GameState.WARRIOR);
 		state.hits = new ArrayList<Damage>(10);
 	}
 	
