@@ -9,7 +9,6 @@ public class GameState {
 	boolean[][] blocked;
 	boolean[][] occupied; // for collision detection with actors
 	NodeMap pathmap;
-	ArrayList<Damage> hits;
 	
 	GameState(){
 		return;
