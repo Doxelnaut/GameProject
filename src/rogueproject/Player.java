@@ -105,14 +105,14 @@ public class Player extends Actor{
 				return true;
 			}
 			// if the player indicates a direction that is not an obstacle, enemy, or object, move into the open tile.
-			else if (!isBlocked(rg.blocked) && !isOccupied(rg.occupied)){
+			else if (!isBlocked(rg.state.blocked) && !isOccupied(rg.state.occupied)){
 				move();
 				this.consumeEnergy();
 				return true;
 			}
 			// if the indicated direction is an enemy, attack it.
-			else if (isOccupied(rg.occupied)){
-				for(Actor a : rg.actors){
+			else if (isOccupied(rg.state.occupied)){
+				for(Actor a : rg.state.actors){
 					if(a.getTilePosition().equals(this.getNextTile())){
 						attackActor(a);
 						this.consumeEnergy();
