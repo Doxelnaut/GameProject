@@ -61,29 +61,29 @@ public class PlayingState extends BasicGameState {
 			throws SlickException {
 		
 		RogueGame rg = (RogueGame)game;
-		rg.actors = new ArrayList<Actor>();
+		rg.state.actors = new ArrayList<Actor>();
 		setLevel(rg);
 		
-		rg.blocked = new boolean[map.getWidth()][map.getHeight()];
-		rg.occupied = new boolean[map.getWidth()][map.getHeight()]; 
-		rg.pathmap = new NodeMap(map);
+		rg.state.blocked = new boolean[map.getWidth()][map.getHeight()];
+		rg.state.occupied = new boolean[map.getWidth()][map.getHeight()]; 
+		rg.state.pathmap = new NodeMap(map);
 				
 		// Build collision detection for map tiles, and fill occupied with false values.
 		for (int i = 0; i < map.getWidth(); i++){
 			for (int j = 0; j < map.getHeight(); j++){
-				rg.occupied[i][j] = false; // initialize occupied
+				rg.state.occupied[i][j] = false; // initialize occupied
 				int tileID = map.getTileId(i, j, 0);
 				String value = map.getTileProperty(tileID, "blocked", "false");
 				if ("true".equals(value)){
-					rg.blocked[i][j] = true;
+					rg.state.blocked[i][j] = true;
 				}
 			}
 		}
 		// at play start set the actors starting position to occupied = true;
-		rg.occupied[rg.player.getTileX()][rg.player.getTileY()] = true;
+		rg.state.occupied[rg.state.player.getTileX()][rg.state.player.getTileY()] = true;
 
-		for(Actor a : rg.actors){
-			rg.occupied[a.getTileX()][a.getTileY()] = true;
+		for(Actor a : rg.state.actors){
+			rg.state.occupied[a.getTileX()][a.getTileY()] = true;
 		}
 		
 	}
@@ -94,7 +94,7 @@ public class PlayingState extends BasicGameState {
 		
 		RogueGame rg = (RogueGame)game;
 		
-		if(rg.player == null){ // player died, don't render anything.
+		if(rg.state.player == null){ // player died, don't render anything.
 			rg.enterState(RogueGame.STARTUPSTATE);
 		}
 		if(map != null){
@@ -102,23 +102,23 @@ public class PlayingState extends BasicGameState {
 		} else {
 			rg.enterState(RogueGame.PLAYINGSTATE);
 		}
-		if(rg.player != null){
-			g.drawString("Level: " + (int)rg.player.getLevel() + 
-					" Health: " + (int)rg.player.getHitPoints() + 
-					"/" + (int)rg.player.getMaxHitPoints() +  
-					" Attack: " + (int)rg.player.getAttack() + 
-					" Armor: " + (int)rg.player.getArmor() + 
-					" Experience: " + (int)rg.player.getExp()
+		if(rg.state.player != null){
+			g.drawString("Level: " + (int)rg.state.player.getLevel() + 
+					" Health: " + (int)rg.state.player.getHitPoints() + 
+					"/" + (int)rg.state.player.getMaxHitPoints() +  
+					" Attack: " + (int)rg.state.player.getAttack() + 
+					" Armor: " + (int)rg.state.player.getArmor() + 
+					" Experience: " + (int)rg.state.player.getExp()
 					, 100 , 10);
-			g.drawString("Dungeon Level: " + rg.player.getDepth(), 100, 25);
+			g.drawString("Dungeon Level: " + rg.state.player.getDepth(), 100, 25);
 		}
 		
-		for(Actor a : rg.actors){
+		for(Actor a : rg.state.actors){
 			a.render(g);
 		}
 		
-		if(rg.player != null){
-			rg.player.render(g);	
+		if(rg.state.player != null){
+			rg.state.player.render(g);	
 		}
 		
 	}
@@ -129,54 +129,54 @@ public class PlayingState extends BasicGameState {
 		
 		RogueGame rg = (RogueGame)game;
 		
-		if(rg.actors.size()==0){
-			rg.player.setDepth(rg.player.getDepth() + 1);
+		if(rg.state.actors.size()==0){
+			rg.state.player.setDepth(rg.state.player.getDepth() + 1);
 			rg.enterState(RogueGame.PLAYINGSTATE);
 		}
 		
 		Input input = container.getInput();
 		// The player's turn 
-		if(rg.player != null){
-			if(rg.player.getTurn()){
-				if(!rg.player.getGained()){
-					rg.player.gainEnergy();
-					rg.player.setGained(true);
+		if(rg.state.player != null){
+			if(rg.state.player.getTurn()){
+				if(!rg.state.player.getGained()){
+					rg.state.player.gainEnergy();
+					rg.state.player.setGained(true);
 				}
-				if(!rg.player.isMoving()){ // handle all user input in this block
+				if(!rg.state.player.isMoving()){ // handle all user input in this block
 					// Directional Keys
 					//   Q   W   E
 					//    \  |  /
 					// A - restS - D
 					//    /  |  \
 					//   Z   X   C
-					if 		(input.isKeyPressed(Input.KEY_W)) 	{rg.player.setOrders(N);} 		// North
-					else if (input.isKeyPressed(Input.KEY_X)) 	{rg.player.setOrders(S);} 		// South
-					else if (input.isKeyPressed(Input.KEY_A)) 	{rg.player.setOrders(W);} 		// West
-					else if (input.isKeyPressed(Input.KEY_D)) 	{rg.player.setOrders(E);} 		// East
-					else if (input.isKeyPressed(Input.KEY_Q)) 	{rg.player.setOrders(NW);} 		// Northwest
-					else if (input.isKeyPressed(Input.KEY_E)) 	{rg.player.setOrders(NE);} 		// Northeast
-					else if (input.isKeyPressed(Input.KEY_Z)) 	{rg.player.setOrders(SW);} 		// Southwest
-					else if (input.isKeyPressed(Input.KEY_C)) 	{rg.player.setOrders(SE);} 		// Southeast
-					else if (input.isKeyPressed(Input.KEY_S)) 	{rg.player.setOrders(REST);} 	// Rest
+					if 		(input.isKeyPressed(Input.KEY_W)) 	{rg.state.player.setOrders(N);} 		// North
+					else if (input.isKeyPressed(Input.KEY_X)) 	{rg.state.player.setOrders(S);} 		// South
+					else if (input.isKeyPressed(Input.KEY_A)) 	{rg.state.player.setOrders(W);} 		// West
+					else if (input.isKeyPressed(Input.KEY_D)) 	{rg.state.player.setOrders(E);} 		// East
+					else if (input.isKeyPressed(Input.KEY_Q)) 	{rg.state.player.setOrders(NW);} 		// Northwest
+					else if (input.isKeyPressed(Input.KEY_E)) 	{rg.state.player.setOrders(NE);} 		// Northeast
+					else if (input.isKeyPressed(Input.KEY_Z)) 	{rg.state.player.setOrders(SW);} 		// Southwest
+					else if (input.isKeyPressed(Input.KEY_C)) 	{rg.state.player.setOrders(SE);} 		// Southeast
+					else if (input.isKeyPressed(Input.KEY_S)) 	{rg.state.player.setOrders(REST);} 	// Rest
 					else if (input.isKeyPressed(Input.KEY_ESCAPE)) {container.exit();}
 					// Cheats:
 					/* hard code modulo for the number of dungeons actually playable, 
 					 * then add one, since dungeons start at level 1.
 					 */
 					else if (input.isKeyPressed(Input.KEY_I))	{
-						rg.player.setDepth(1);
+						rg.state.player.setDepth(1);
 						map = null;
-						//rg.enterState(RogueGame.PLAYINGSTATE);
+						//rg.state.enterState(RogueGame.PLAYINGSTATE);
 					}
 					else if (input.isKeyPressed(Input.KEY_O)) { 
-						rg.player.setDepth(2); 
+						rg.state.player.setDepth(2); 
 						map = null;
-						//rg.enterState(RogueGame.PLAYINGSTATE);
+						//rg.state.enterState(RogueGame.PLAYINGSTATE);
 						}
-					rg.player.act(rg);
-					if(!rg.player.getTurn()){ // not player's turn after taking action
+					rg.state.player.act(rg);
+					if(!rg.state.player.getTurn()){ // not player's turn after taking action
 						// set actors' turns
-						for(Actor a : rg.actors){
+						for(Actor a : rg.state.actors){
 							a.setTurn(true);
 							a.setGained(false);
 						}
@@ -184,21 +184,21 @@ public class PlayingState extends BasicGameState {
 				}
 			}
 			// update player position
-			if(rg.player.isMoving()){
-				if(rg.player.getPosition().equals(rg.player.getNextTile().scale(RogueGame.TILE_SIZE))){
+			if(rg.state.player.isMoving()){
+				if(rg.state.player.getPosition().equals(rg.state.player.getNextTile().scale(RogueGame.TILE_SIZE))){
 					//player reached destination.
-					rg.player.setMoving(false);
+					rg.state.player.setMoving(false);
 					// end player's turn and begin actors' turns
-					rg.player.setTurn(false);
+					rg.state.player.setTurn(false);
 					
-					for(Actor a : rg.actors){
+					for(Actor a : rg.state.actors){
 						a.setTurn(true);
 						a.setGained(false);
 					}
 				}else {
-					rg.occupied[rg.player.getTileX()][rg.player.getTileY()] = false;
-					rg.player.update(delta);
-					rg.occupied[rg.player.getTileX()][rg.player.getTileY()] = true;
+					rg.state.occupied[rg.state.player.getTileX()][rg.state.player.getTileY()] = false;
+					rg.state.player.update(delta);
+					rg.state.occupied[rg.state.player.getTileX()][rg.state.player.getTileY()] = true;
 				}
 			}
 		} 
@@ -206,11 +206,11 @@ public class PlayingState extends BasicGameState {
 
 		
 		//Actors turns
-		if(!rg.player.getTurn()){
+		if(!rg.state.player.getTurn()){
 			actorsTurns = false;
-			for(Actor a : rg.actors){
+			for(Actor a : rg.state.actors){
 				a.act(rg);
-				if(rg.player == null){ // player died
+				if(rg.state.player == null){ // player died
 					rg.enterState(RogueGame.STARTUPSTATE);
 				}
 				if(a.getTurn()) actorsTurns = true;
@@ -221,33 +221,33 @@ public class PlayingState extends BasicGameState {
 						a.setTurn(false);
 					} else {
 						//System.out.println("updating actor " + a.getTilePosition() + " to " + a.getNextTile());
-						rg.occupied[a.getTileX()][a.getTileY()] = false;
+						rg.state.occupied[a.getTileX()][a.getTileY()] = false;
 						a.update(delta);
-						rg.occupied[a.getTileX()][a.getTileY()] = true;
+						rg.state.occupied[a.getTileX()][a.getTileY()] = true;
 						if(a.getTurn()) actorsTurns = true;
 					}
 				}
 			}
 			// set players turn if all actors are done with theirs.
 			if(!actorsTurns){
-				rg.player.setTurn(true);
-				rg.player.setGained(false);
+				rg.state.player.setTurn(true);
+				rg.state.player.setGained(false);
 			}
 		}	
 		
 		// remove dead enemies	
-		for(int i = rg.actors.size()-1; i >= 0; i--){
-			Actor a = rg.actors.get(i);
+		for(int i = rg.state.actors.size()-1; i >= 0; i--){
+			Actor a = rg.state.actors.get(i);
 			if(a.getHitPoints() <= 0){
-				rg.occupied[a.getTileX()][a.getTileY()] = false;
+				rg.state.occupied[a.getTileX()][a.getTileY()] = false;
 				a.remove();
-				rg.actors.remove(a);
+				rg.state.actors.remove(a);
 			}
 		}
 		
-		if(rg.player != null && rg.player.getHitPoints() <= 0){
-			rg.player.remove();
-			rg.player = null;
+		if(rg.state.player != null && rg.state.player.getHitPoints() <= 0){
+			rg.state.player.remove();
+			rg.state.player = null;
 		}
 	}
 
@@ -257,79 +257,79 @@ public class PlayingState extends BasicGameState {
 	}
 	
 	public void setLevel(RogueGame rg) throws SlickException{
-		switch(rg.player.getDepth()){
+		switch(rg.state.player.getDepth()){
 		case 1:
-			rg.player.setTilePosition(7, 6);
+			rg.state.player.setTilePosition(7, 6);
 			map = new TiledMap("rogueproject/resource/maps/largetestmap.tmx");
 			//Little Zombies
-			rg.actors.add( new Actor(0, 14, 15));
-			rg.actors.add( new Actor(0, 10, 16));
-			rg.actors.add( new Actor(0, 12, 28));
-			rg.actors.add( new Actor(0, 6, 29));
-			rg.actors.add( new Actor(0, 24, 38));
-			rg.actors.add( new Actor(0, 25, 29));
-			rg.actors.add( new Actor(0, 23, 7));
-			rg.actors.add( new Actor(0, 40, 19));
-			rg.actors.add( new Actor(0, 24, 37));
-			rg.actors.add( new Actor(0, 26, 12));
+			rg.state.actors.add( new Actor(0, 14, 15));
+			rg.state.actors.add( new Actor(0, 10, 16));
+			rg.state.actors.add( new Actor(0, 12, 28));
+			rg.state.actors.add( new Actor(0, 6, 29));
+			rg.state.actors.add( new Actor(0, 24, 38));
+			rg.state.actors.add( new Actor(0, 25, 29));
+			rg.state.actors.add( new Actor(0, 23, 7));
+			rg.state.actors.add( new Actor(0, 40, 19));
+			rg.state.actors.add( new Actor(0, 24, 37));
+			rg.state.actors.add( new Actor(0, 26, 12));
 			//Little Mummies
-			rg.actors.add( new Actor(1, 31, 22));
-			rg.actors.add( new Actor(1, 25, 21));
-			rg.actors.add( new Actor(1, 23, 40));
+			rg.state.actors.add( new Actor(1, 31, 22));
+			rg.state.actors.add( new Actor(1, 25, 21));
+			rg.state.actors.add( new Actor(1, 23, 40));
 			//Skeletons
-			rg.actors.add( new Actor(2, 9, 30));
-			rg.actors.add( new Actor(2, 45, 24));
-			rg.actors.add( new Actor(2, 49, 26));
-			rg.actors.add( new Actor(2, 37, 36));
-			rg.actors.add( new Actor(2, 47, 38));
+			rg.state.actors.add( new Actor(2, 9, 30));
+			rg.state.actors.add( new Actor(2, 45, 24));
+			rg.state.actors.add( new Actor(2, 49, 26));
+			rg.state.actors.add( new Actor(2, 37, 36));
+			rg.state.actors.add( new Actor(2, 47, 38));
 			//Large Zombies
-			rg.actors.add( new Actor(3, 41, 9));
-			rg.actors.add( new Actor(3, 43, 9));
-			rg.actors.add( new Actor(3, 34, 36));
-			rg.actors.add( new Actor(3, 34, 30));
-			rg.actors.add( new Actor(3, 48, 18));
-			rg.actors.add( new Actor(3, 56, 19));
+			rg.state.actors.add( new Actor(3, 41, 9));
+			rg.state.actors.add( new Actor(3, 43, 9));
+			rg.state.actors.add( new Actor(3, 34, 36));
+			rg.state.actors.add( new Actor(3, 34, 30));
+			rg.state.actors.add( new Actor(3, 48, 18));
+			rg.state.actors.add( new Actor(3, 56, 19));
 			//Large Mummies
-			rg.actors.add( new Actor(4, 55, 25));
-			rg.actors.add( new Actor(4, 56, 24));
-			rg.actors.add( new Actor(4, 54, 13));
+			rg.state.actors.add( new Actor(4, 55, 25));
+			rg.state.actors.add( new Actor(4, 56, 24));
+			rg.state.actors.add( new Actor(4, 54, 13));
 			//Death
-			rg.actors.add( new Actor(5, 48, 4)); 
+			rg.state.actors.add( new Actor(5, 48, 4)); 
 			break;
 		case 2:
-			rg.player.setTilePosition(11, 31);
+			rg.state.player.setTilePosition(11, 31);
 			map = new TiledMap("rogueproject/resource/maps/map2.tmx");
 			// Little Spiders
-			rg.actors.add( new Actor(6, 12, 19));
-			rg.actors.add( new Actor(6, 7, 31));
-			rg.actors.add( new Actor(6, 13, 34));
-			rg.actors.add( new Actor(6, 6, 6));
-			rg.actors.add( new Actor(6, 27, 16));
-			rg.actors.add( new Actor(6, 37, 21));
-			rg.actors.add( new Actor(6, 39, 31));
-			rg.actors.add( new Actor(6, 51, 34));
-			rg.actors.add( new Actor(6, 28, 5));
-			rg.actors.add( new Actor(6, 59, 16));
+			rg.state.actors.add( new Actor(6, 12, 19));
+			rg.state.actors.add( new Actor(6, 7, 31));
+			rg.state.actors.add( new Actor(6, 13, 34));
+			rg.state.actors.add( new Actor(6, 6, 6));
+			rg.state.actors.add( new Actor(6, 27, 16));
+			rg.state.actors.add( new Actor(6, 37, 21));
+			rg.state.actors.add( new Actor(6, 39, 31));
+			rg.state.actors.add( new Actor(6, 51, 34));
+			rg.state.actors.add( new Actor(6, 28, 5));
+			rg.state.actors.add( new Actor(6, 59, 16));
 			// Little Scorpions
-			rg.actors.add( new Actor(7, 39, 29));
-			rg.actors.add( new Actor(7, 34, 41));
-			rg.actors.add( new Actor(7, 41, 29));
-			rg.actors.add( new Actor(7, 34, 14));
-			rg.actors.add( new Actor(7, 6, 5));
+			rg.state.actors.add( new Actor(7, 39, 29));
+			rg.state.actors.add( new Actor(7, 34, 41));
+			rg.state.actors.add( new Actor(7, 41, 29));
+			rg.state.actors.add( new Actor(7, 34, 14));
+			rg.state.actors.add( new Actor(7, 6, 5));
 			// Slugs
-			rg.actors.add( new Actor(8, 27, 39));
-			rg.actors.add( new Actor(8, 37, 41));
-			rg.actors.add( new Actor(8, 37, 42));
+			rg.state.actors.add( new Actor(8, 27, 39));
+			rg.state.actors.add( new Actor(8, 37, 41));
+			rg.state.actors.add( new Actor(8, 37, 42));
 			// Large Spiders
-			rg.actors.add( new Actor(9, 48, 10));
-			rg.actors.add( new Actor(9, 22, 5));
-			rg.actors.add( new Actor(9, 55, 19));
+			rg.state.actors.add( new Actor(9, 48, 10));
+			rg.state.actors.add( new Actor(9, 22, 5));
+			rg.state.actors.add( new Actor(9, 55, 19));
 			// Large Scorpions
-			rg.actors.add( new Actor(10, 46, 8));
-			rg.actors.add( new Actor(10, 25, 6));
-			rg.actors.add( new Actor(10, 54, 33));
+			rg.state.actors.add( new Actor(10, 46, 8));
+			rg.state.actors.add( new Actor(10, 25, 6));
+			rg.state.actors.add( new Actor(10, 54, 33));
 			// Red Leech
-			rg.actors.add( new Actor(11, 48, 8));
+			rg.state.actors.add( new Actor(11, 48, 8));
 			break;
 		default:
 			break;

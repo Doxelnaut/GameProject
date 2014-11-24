@@ -46,6 +46,8 @@ public class RogueGame extends StateBasedGame{
 	public static final int STARTUPSTATE = 0;
 	public static final int PLAYINGSTATE = 1;
 	public static final int GAMEOVERSTATE = 2;
+	public static final int HOSTSTATE = 3;
+
 	// other possible states: CharacterSelect, Inventory, Pause, Menu, Settings
 	
 	// create image, animation, and sound macros
@@ -77,13 +79,7 @@ public class RogueGame extends StateBasedGame{
 	TrueTypeFont courierBOLD12;
 	TrueTypeFont custom12;
 	
-	public static final int WARRIOR = 0;
-	Player player;
-	ArrayList<Actor> actors;
-	boolean[][] blocked;
-	boolean[][] occupied; // for collision detection with actors
-	NodeMap pathmap;
-	ArrayList<Damage> hits;
+	GameState state = new GameState();
 	
 	//TODO ArrayList<Objects> objects;
 	
@@ -101,6 +97,7 @@ public class RogueGame extends StateBasedGame{
 		addState(new StartUpState());
 		//addState(new GameOverState());
 		addState(new PlayingState());
+		addState(new HostState());
 		
 		// preload resources here
 		// images: ResourceManager.loadImage(IMG_RSC);
@@ -116,8 +113,8 @@ public class RogueGame extends StateBasedGame{
 		ResourceManager.loadImage(HIT_REDNUMBERS0_IMG_RSC);
 		ResourceManager.loadImage(HIT_REDNUMBERS1_IMG_RSC);
 
-		player = new Player(WARRIOR);
-		hits = new ArrayList<Damage>(10);
+		state.player = new Player(state.WARRIOR);
+		state.hits = new ArrayList<Damage>(10);
 	}
 	
 	public static void main(String[] args) {
