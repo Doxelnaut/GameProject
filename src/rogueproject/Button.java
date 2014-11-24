@@ -9,8 +9,12 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
+import org.newdawn.slick.util.ResourceLoader;
+
 import java.awt.Color;
+
 import org.newdawn.slick.TrueTypeFont;
+
 import java.io.InputStream;
 import java.awt.Font;
 
@@ -46,10 +50,12 @@ public class Button extends Entity {
 	public static final int MENU_LARGE = 0;
 	
 	private java.lang.String text;
-	private int textSize;
+	private float textSize;
 	private float width;
 	private float height;
 	private int style;
+	private Font awtFont;
+	private TrueTypeFont custom;
 	
 	private Animation select; // Perhaps we will use this to animate the buttons... Maybe.
 	
@@ -62,7 +68,7 @@ public class Button extends Entity {
 		textSize = tsize;
 		style = bstyle;	
 		getStyleImage();
-		
+		setFont();
 	}
 	
 	public Button(java.lang.String string, float x, float y, int tsize)
@@ -72,7 +78,7 @@ public class Button extends Entity {
 		textSize = tsize;
 		style = -1;
 		getStyleImage();
-		
+		setFont();
 	}
 	
 	public Button(java.lang.String string, float x, float y)
@@ -81,7 +87,7 @@ public class Button extends Entity {
 		text = string;	
 		style = -1;
 		getStyleImage();
-		
+		setFont();
 	}
 	
 	/* Getters */
@@ -89,7 +95,7 @@ public class Button extends Entity {
 		return text;
 	}
 	
-	public int getTextSize(){
+	public float getTextSize(){
 		return textSize;
 	}
 	
@@ -142,13 +148,32 @@ public class Button extends Entity {
 		width = set;
 	}
 	
+	public void setFont(){
+
+		try {
+			InputStream inputStream	= ResourceLoader.getResourceAsStream(RogueGame.ALAGARD_FONT_RSC);
+			
+			awtFont = Font.createFont(Font.TRUETYPE_FONT, inputStream);
+			awtFont = awtFont.deriveFont(this.textSize); // set font size
+			custom = new TrueTypeFont(awtFont, false);
+						
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	/**
 	*/
 	@Override
 	public void render(Graphics g){
 		super.render(g);
+
+		g.setFont(custom);
+		g.drawString(text, 
+				getX() - (custom.getWidth(text)/2), 
+				getY() - (custom.getHeight(text)/2));
 		
+		/**
 		UnicodeFont alagardFont = new UnicodeFont(
 				new java.awt.Font("Alagard", Font.BOLD, textSize));
 		alagardFont.getEffects().add(new ColorEffect(java.awt.Color.white));
@@ -162,7 +187,7 @@ public class Button extends Entity {
 		g.drawString(text,
 			getX() - (alagardFont.getWidth(text)/2),
 			getY() - (alagardFont.getHeight(text)/2));	
-		
+		**/
 	}
 	
 	/* Action */
