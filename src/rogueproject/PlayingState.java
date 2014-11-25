@@ -9,6 +9,7 @@ import jig.Vector;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
@@ -45,7 +46,7 @@ public class PlayingState extends BasicGameState {
 	
 	// input direction
 	public static final int WAIT = -1, N = 0, E = 1, S = 2, W = 3, NW = 4, NE = 5, SE = 6, SW = 7, REST = 8;
-	
+	public static int mapx = 0, mapy = 80;
 	
 	// collective boolean for of all actors turns
 	public boolean actorsTurns = false; 
@@ -98,7 +99,13 @@ public class PlayingState extends BasicGameState {
 			rg.enterState(RogueGame.STARTUPSTATE);
 		}
 		if(map != null){
-			map.render(0, 0); // renders the map on screen at (x, y)	
+			map.render(mapx, mapy, 0); //render floor
+			if(rg.state.player != null){
+				rg.state.player.render(g);	//render user
+			}
+			map.render(mapx, mapy, 1); // render building
+			
+			//map.render(0, 0); // renders the map on screen at (x, y)	
 		} else {
 			rg.enterState(RogueGame.PLAYINGSTATE);
 		}
@@ -117,12 +124,9 @@ public class PlayingState extends BasicGameState {
 			a.render(g);
 		}
 		
-		if(rg.state.player != null){
-			rg.state.player.render(g);	
-		}
+		
 		
 	}
-
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta)
 			throws SlickException {
@@ -149,14 +153,43 @@ public class PlayingState extends BasicGameState {
 					// A - restS - D
 					//    /  |  \
 					//   Z   X   C
-					if 		(input.isKeyPressed(Input.KEY_W)) 	{rg.state.player.setOrders(N);} 		// North
-					else if (input.isKeyPressed(Input.KEY_X)) 	{rg.state.player.setOrders(S);} 		// South
-					else if (input.isKeyPressed(Input.KEY_A)) 	{rg.state.player.setOrders(W);} 		// West
-					else if (input.isKeyPressed(Input.KEY_D)) 	{rg.state.player.setOrders(E);} 		// East
-					else if (input.isKeyPressed(Input.KEY_Q)) 	{rg.state.player.setOrders(NW);} 		// Northwest
-					else if (input.isKeyPressed(Input.KEY_E)) 	{rg.state.player.setOrders(NE);} 		// Northeast
-					else if (input.isKeyPressed(Input.KEY_Z)) 	{rg.state.player.setOrders(SW);} 		// Southwest
-					else if (input.isKeyPressed(Input.KEY_C)) 	{rg.state.player.setOrders(SE);} 		// Southeast
+					if 		(input.isKeyPressed(Input.KEY_W)) 	{
+						/*rg.state.player.setOrders(N);*/
+						mapy -= 8;
+						mapx += 16;
+					} 		// North
+					else if (input.isKeyPressed(Input.KEY_X)) 	{
+						//rg.state.player.setOrders(S);
+						mapy += 8;
+						mapx -= 16;
+
+						} 		// South
+					else if (input.isKeyPressed(Input.KEY_A)) 	{
+						//rg.state.player.setOrders(W);
+						mapx += 16;
+						mapy += 8;
+						} 		// West
+					else if (input.isKeyPressed(Input.KEY_D)) 	{
+						//rg.state.player.setOrders(E);
+						mapx -= 16;
+						mapy -= 8;
+					} 		// East
+					else if (input.isKeyPressed(Input.KEY_Q)) 	{
+						//rg.state.player.setOrders(NW);
+						mapy -= 8;
+						} 		// Northwest
+					else if (input.isKeyPressed(Input.KEY_E)) 	{
+						//rg.state.player.setOrders(NE);
+						mapx -= 8;
+						} 		// Northeast
+					else if (input.isKeyPressed(Input.KEY_Z)) 	{
+						//rg.state.player.setOrders(SW);
+						mapx += 8;
+						} 		// Southwest
+					else if (input.isKeyPressed(Input.KEY_C)) 	{
+						//rg.state.player.setOrders(SE);
+						mapy += 8;
+						} 		// Southeast
 					else if (input.isKeyPressed(Input.KEY_S)) 	{rg.state.player.setOrders(REST);} 	// Rest
 					else if (input.isKeyPressed(Input.KEY_ESCAPE)) {container.exit();}
 					// Cheats:
@@ -297,8 +330,8 @@ public class PlayingState extends BasicGameState {
 			rg.state.actors.add( new Actor(5, 48, 4)); 
 **/			break;
 		case 2:
-			rg.state.player.setTilePosition(3,3);
-			map = new TiledMap("rogueproject/resource/maps/tinytestmapx.tmx");
+			rg.state.player.setTilePosition(3,9);
+			map = new TiledMap("rogueproject/resource/maps/tinytestmap.tmx");
 /**			// Little Spiders
 			rg.state.actors.add( new Actor(6, 12, 19));
 			rg.state.actors.add( new Actor(6, 7, 31));
