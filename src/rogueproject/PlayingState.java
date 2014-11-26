@@ -46,7 +46,7 @@ public class PlayingState extends BasicGameState {
 	
 	// input direction
 	public static final int WAIT = -1, N = 0, E = 1, S = 2, W = 3, NW = 4, NE = 5, SE = 6, SW = 7, REST = 8;
-	public static int mapx = 0, mapy = 80;
+	public static int mapx = 0, mapy = 0;
 	
 	// collective boolean for of all actors turns
 	public boolean actorsTurns = false; 
@@ -99,6 +99,7 @@ public class PlayingState extends BasicGameState {
 			rg.enterState(RogueGame.STARTUPSTATE);
 		}
 		if(map != null){
+			g.translate(300, 400);
 			map.render(mapx, mapy, 0); //render floor
 			if(rg.state.player != null){
 				rg.state.player.render(g);	//render user
@@ -292,7 +293,7 @@ public class PlayingState extends BasicGameState {
 	public void setLevel(RogueGame rg) throws SlickException{
 		switch(rg.state.player.getDepth()){
 		case 1:
-			rg.state.player.setTilePosition(3, 3);
+			rg.state.player.setTilePosition(1, 2);
 			map = new TiledMap("rogueproject/resource/maps/tinytestmap.tmx");
 /**			//Little Zombies
 			rg.state.actors.add( new Actor(0, 14, 15));
@@ -330,7 +331,7 @@ public class PlayingState extends BasicGameState {
 			rg.state.actors.add( new Actor(5, 48, 4)); 
 **/			break;
 		case 2:
-			rg.state.player.setTilePosition(3,9);
+			rg.state.player.setTilePosition(0,1);
 			map = new TiledMap("rogueproject/resource/maps/tinytestmap.tmx");
 /**			// Little Spiders
 			rg.state.actors.add( new Actor(6, 12, 19));
