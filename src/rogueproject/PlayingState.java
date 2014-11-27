@@ -133,11 +133,11 @@ public class PlayingState extends BasicGameState {
 		
 		RogueGame rg = (RogueGame)game;
 		
-		if(rg.state.actors.size()==0){
+/* 		if(rg.state.actors.size()==0){
 			rg.state.player.setDepth(rg.state.player.getDepth() + 1);
 			rg.enterState(RogueGame.PLAYINGSTATE);
 		}
-		
+*/		
 		Input input = container.getInput();
 		// The player's turn 
 		if(rg.state.player != null){
