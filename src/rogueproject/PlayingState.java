@@ -153,44 +153,44 @@ public class PlayingState extends BasicGameState {
 					// A - restS - D
 					//    /  |  \
 					//   Z   X   C
-					if 		(input.isKeyPressed(Input.KEY_W)) 	{
+					if 		(input.isKeyDown(Input.KEY_W)) 	{
 						/*rg.state.player.setOrders(N);*/
 						mapy -= 8;
 						mapx += 16;
 					} 		// North
-					else if (input.isKeyPressed(Input.KEY_X)) 	{
+					else if (input.isKeyDown(Input.KEY_X)) 	{
 						//rg.state.player.setOrders(S);
 						mapy += 8;
 						mapx -= 16;
 
 						} 		// South
-					else if (input.isKeyPressed(Input.KEY_A)) 	{
+					else if (input.isKeyDown(Input.KEY_A)) 	{
 						//rg.state.player.setOrders(W);
 						mapx += 16;
 						mapy += 8;
 						} 		// West
-					else if (input.isKeyPressed(Input.KEY_D)) 	{
+					else if (input.isKeyDown(Input.KEY_D)) 	{
 						//rg.state.player.setOrders(E);
 						mapx -= 16;
 						mapy -= 8;
 					} 		// East
-					else if (input.isKeyPressed(Input.KEY_Q)) 	{
+					else if (input.isKeyDown(Input.KEY_Q)) 	{
 						//rg.state.player.setOrders(NW);
 						mapy -= 8;
 						} 		// Northwest
-					else if (input.isKeyPressed(Input.KEY_E)) 	{
+					else if (input.isKeyDown(Input.KEY_E)) 	{
 						//rg.state.player.setOrders(NE);
 						mapx -= 8;
 						} 		// Northeast
-					else if (input.isKeyPressed(Input.KEY_Z)) 	{
+					else if (input.isKeyDown(Input.KEY_Z)) 	{
 						//rg.state.player.setOrders(SW);
 						mapx += 8;
 						} 		// Southwest
-					else if (input.isKeyPressed(Input.KEY_C)) 	{
+					else if (input.isKeyDown(Input.KEY_C)) 	{
 						//rg.state.player.setOrders(SE);
 						mapy += 8;
 						} 		// Southeast
-					else if (input.isKeyPressed(Input.KEY_S)) 	{rg.state.player.setOrders(REST);} 	// Rest
+					else if (input.isKeyDown(Input.KEY_S)) 	{rg.state.player.setOrders(REST);} 	// Rest
 					else if (input.isKeyPressed(Input.KEY_ESCAPE)) {container.exit();}
 					// Cheats:
 					/* hard code modulo for the number of dungeons actually playable, 
