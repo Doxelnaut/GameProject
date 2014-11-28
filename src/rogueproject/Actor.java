@@ -77,7 +77,7 @@ public class Actor extends Entity implements Mover{
 	}
 	
 	public Actor(){
-		super(0,0);
+		super(0, 0);
 		nextTile = toNextTile = new Vector(0,0);
 	}
 	/* Getters */

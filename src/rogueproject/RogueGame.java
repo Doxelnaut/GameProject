@@ -57,29 +57,16 @@ public class RogueGame extends StateBasedGame{
 	public final int ScreenHeight;
 	public static final int TILE_SIZE = 16; //DawnLike uses 16x16 tiles. This will mainly help readability.
 	
-	//public final UnicodeFont alagardFont = new UnicodeFont(
-	//		new java.awt.Font("Alagard", Font.BOLD, 20));
-	
 	public static final String GOLDGUI_IMG_RSC = "rogueproject/resource/goldui_big_pieces_0.png"; 
 	public static final String GUI_MENULARGE_IMG_RSC = "rogueproject/resource/menu_large.png";
 
-	public static final String ACTOR_PLAYER0_IMG_RSC = "rogueproject/resource/DawnLike_3/Characters/Player0.png";
-	public static final String ACTOR_PLAYER1_IMG_RSC = "rogueproject/resource/DawnLike_3/Characters/Player1.png";
-	public static final String ACTOR_UNDEAD0_IMG_RSC = "rogueproject/resource/DawnLike_3/Characters/Undead0.png";
-	public static final String ACTOR_UNDEAD1_IMG_RSC = "rogueproject/resource/DawnLike_3/Characters/Undead1.png";
-	public static final String ACTOR_PEST0_IMG_RSC = "rogueproject/resource/DawnLike_3/Characters/Pest0.png";
-	public static final String ACTOR_PEST1_IMG_RSC = "rogueproject/resource/DawnLike_3/Characters/Pest1.png";
+	public static final String PLAYER_IDLE_IMG_RSC = "rogueproject/resource/graphics/TMIM_Heroine/wIdle_0(16,99,112).png";
+	public static final String ACTOR_GOBLIN0_IMG_RSC = "rogueproject/resource/graphics/goblin_spearman_0.png";
+	public static final String ACTOR_GOBLIN1_IMG_RSC = "rogueproject/resource/graphics/goblin_spearman_elite.png";
 	
 	public static final String ALAGARD_FONT_RSC =  "rogueproject/resource/fonts/alagard_by_pix3m-d6awiwp.ttf";
 	
-	// Font from Joel
-	Font awtFont;
-	TrueTypeFont courierBOLD12;
-	TrueTypeFont custom12;
-	
 	GameState state = new GameState();
-	
-	//TODO ArrayList<Objects> objects;
 	
 	public RogueGame(String title, int width, int height) {
 		super(title);
@@ -102,10 +89,9 @@ public class RogueGame extends StateBasedGame{
 		// sounds: ResourceManager.loadSound(SND_RSC);
 		ResourceManager.loadImage(GOLDGUI_IMG_RSC);
 		ResourceManager.loadImage(GUI_MENULARGE_IMG_RSC);
-		ResourceManager.loadImage(ACTOR_PLAYER0_IMG_RSC);
-		ResourceManager.loadImage(ACTOR_PLAYER1_IMG_RSC);
-		ResourceManager.loadImage(ACTOR_UNDEAD0_IMG_RSC);
-		ResourceManager.loadImage(ACTOR_UNDEAD1_IMG_RSC);
+		ResourceManager.loadImage(PLAYER_IDLE_IMG_RSC);
+		ResourceManager.loadImage(ACTOR_GOBLIN0_IMG_RSC);
+		ResourceManager.loadImage(ACTOR_GOBLIN1_IMG_RSC);
 		ResourceManager.loadImage(ACTOR_PEST0_IMG_RSC);
 		ResourceManager.loadImage(ACTOR_PEST1_IMG_RSC);
 
