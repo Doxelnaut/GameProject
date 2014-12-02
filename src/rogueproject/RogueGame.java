@@ -92,9 +92,6 @@ public class RogueGame extends StateBasedGame{
 		ResourceManager.loadImage(PLAYER_IDLE_IMG_RSC);
 		ResourceManager.loadImage(ACTOR_GOBLIN0_IMG_RSC);
 		ResourceManager.loadImage(ACTOR_GOBLIN1_IMG_RSC);
-		ResourceManager.loadImage(ACTOR_PEST0_IMG_RSC);
-		ResourceManager.loadImage(ACTOR_PEST1_IMG_RSC);
-
 
 		state.player = new Player(GameState.WARRIOR);
 	}
