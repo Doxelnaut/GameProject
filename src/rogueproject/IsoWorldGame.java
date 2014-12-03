@@ -99,58 +99,58 @@ public class IsoWorldGame extends BasicGame {
 		ground = new ArrayList<IsoEntity>(100);
 		blocks = new ArrayList<IsoEntity>(100);
 		//character = new ArrayList<IsoEntity>(100);
-		minotaur = new Minotaur(worldSize, new Vector(10*tileSize, 4*tileSize));
-//		@SuppressWarnings("resource")
-//		BufferedReader reader = null;
-//		try {
-//			reader = new BufferedReader(new FileReader("src/resource/Map.txt"));
-//		} catch (FileNotFoundException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-//	        String line = null;
-//	        
-//	        int r = 0;
-//		    try {
-//				while ((line = reader.readLine()) != null) {
-//
-//				    String[] parts = line.split("\\s");
-//				    System.out.println(parts.length);
-//				    for(int i = 0; i < parts.length;i++){
-//				    	ground.add(new Ground(worldSize, new Vector(r*tileSize, i*tileSize)) );
-//				    	if(Integer.valueOf(parts[i]) == 1){
-//							blocks.add(new Block(worldSize,new Vector(r*tileSize, i*tileSize), true) );
-//				    	}
-//				    	else if(Integer.valueOf(parts[i]) == 2){
-//							blocks.add(new Block(worldSize,new Vector(r*tileSize, i*tileSize), false) );
-//
-//				    	}
-//				    	r++;
-//				    }
-//				}
-//			} catch (NumberFormatException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		     
-		for (int r = 0; r < worldSize.getY()/tileSize; r++) {
-			for (int c = 0; c < worldSize.getX()/tileSize; c++) {
-				ground.add(new Ground(worldSize, new Vector(r*tileSize, c*tileSize)) );
-				if(c == 0 || c == WORLD_SIZE_Y/tileSize-1){
-					blocks.add(new Block(worldSize,new Vector(r*tileSize, c*tileSize), true) );
-
-				}
-				if(r == 0 || r == WORLD_SIZE_X/tileSize-1){
-					
-					blocks.add(new Block(worldSize,new Vector(r*tileSize, c*tileSize), true) );
-					
-				}
-				
-			}
+		minotaur = new Minotaur(worldSize, new Vector(1*tileSize, 1*tileSize));
+		@SuppressWarnings("resource")
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new FileReader("src/resource/Map.txt"));
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
+	        String line = null;
+	        
+	        int r = 0;
+		    try {
+				while ((line = reader.readLine()) != null) {
+
+				    String[] parts = line.split("\\s");
+				    System.out.println(parts.length);
+				    for(int i = 0; i < parts.length;i++){
+				    	ground.add(new Ground(worldSize, new Vector(r*tileSize, i*tileSize)) );
+				    	if(Integer.valueOf(parts[i]) == 1){
+							blocks.add(new Block(worldSize,new Vector(r*tileSize, i*tileSize), true) );
+				    	}
+				    	else if(Integer.valueOf(parts[i]) == 2){
+							blocks.add(new Block(worldSize,new Vector(r*tileSize, i*tileSize), false) );
+
+				    	}
+				    }
+				    	r++;
+				}
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		     
+//		for (int r = 0; r < worldSize.getY()/tileSize; r++) {
+//			for (int c = 0; c < worldSize.getX()/tileSize; c++) {
+//				ground.add(new Ground(worldSize, new Vector(r*tileSize, c*tileSize)) );
+//				if(c == 0 || c == WORLD_SIZE_Y/tileSize-1){
+//					blocks.add(new Block(worldSize,new Vector(r*tileSize, c*tileSize), true) );
+//
+//				}
+//				if(r == 0 || r == WORLD_SIZE_X/tileSize-1){
+//					
+//					blocks.add(new Block(worldSize,new Vector(r*tileSize, c*tileSize), true) );
+//					
+//				}
+//				
+//			}
+//		}
 		blocks.add(minotaur);
 		
 
@@ -161,7 +161,6 @@ public class IsoWorldGame extends BasicGame {
 	    g.translate(-camX, -camY);		
 
 		for (IsoEntity ie : ground) {
-			//ie.translate(tempx,tempy);
 			ie.render(g);
 		}
 		
