@@ -242,9 +242,7 @@ public class IsoWorldGame extends BasicGame {
 		}
 		else if (input.isKeyDown(Input.KEY_LEFT)) {
 			minotaur.go(Minotaur.LEFT, x,Minotaur.LEFT);
-			if(canMove()){
-			}
-			else{
+			if(!canMove()){
 				minotaur.halt();
 				minotaur.ungo();
 			}
@@ -252,27 +250,21 @@ public class IsoWorldGame extends BasicGame {
 		}
 		else if (input.isKeyDown(Input.KEY_RIGHT)) {
 			minotaur.go(Minotaur.RIGHT, x,Minotaur.RIGHT);
-			if(canMove()){
-			}
-			else{
+			if(!canMove()){
 				minotaur.halt();
 				minotaur.ungo();
 			}
 		}
 		else if (input.isKeyDown(Input.KEY_UP)) {
 			minotaur.go(Minotaur.UP, x,Minotaur.UP); 
-			if(canMove()){
-			}
-			else{
+			if(!canMove()){
 				minotaur.halt();
 				minotaur.ungo();
 			}
 		}
 		else if (input.isKeyDown(Input.KEY_DOWN)) {
 			minotaur.go(Minotaur.DOWN, x,Minotaur.DOWN);
-			if(canMove()){
-			}
-			else{
+			if(!canMove()){
 				minotaur.halt();
 				minotaur.ungo();
 			}
