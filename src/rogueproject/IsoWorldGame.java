@@ -8,17 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
-
-
-
-
-
-
-
-
 import jig.Entity;
 import jig.Vector;
-import jig.sat.SATImplementation;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
@@ -37,7 +28,6 @@ import org.newdawn.slick.SlickException;
  * the ground is drawn first, then all tiles with a vertical extend
  * are drawn in sorted order.
  * 
- * @author Scott Wallace
  *
  */
 public class IsoWorldGame extends BasicGame {
@@ -60,8 +50,8 @@ public class IsoWorldGame extends BasicGame {
 	public static int tileSize = 16;
 	public static float playerX = 0;
 	public static float playerY = 0;
-	public static float WORLD_SIZE_X = (tileSize * 50);
-	public static float WORLD_SIZE_Y = (tileSize * 50);
+	public static float WORLD_SIZE_X = (tileSize * 100);
+	public static float WORLD_SIZE_Y = (tileSize * 100);
 	
 	public static float VIEWPORT_SIZE_X = 1024;
 	public static float VIEWPORT_SIZE_Y = 720;
@@ -94,7 +84,6 @@ public class IsoWorldGame extends BasicGame {
 		screenHeight = h;
 		
 		Entity.setCoarseGrainedCollisionBoundary(Entity.CIRCLE);
-//		Entity.setSATImplementation(new SATImplementation());
 	}
 
 	@Override
@@ -110,7 +99,6 @@ public class IsoWorldGame extends BasicGame {
 		try {
 			reader = new BufferedReader(new FileReader("src/resource/Map.txt"));
 		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	        String line = null;
@@ -138,10 +126,8 @@ public class IsoWorldGame extends BasicGame {
 				    	r++;
 				}
 			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		     
