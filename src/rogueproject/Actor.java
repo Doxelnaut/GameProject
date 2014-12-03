@@ -348,8 +348,8 @@ public class Actor extends Entity implements Mover{
 	/**
 	 * Reciever method for MoveUpCommand. 
 	 */
-	public void moveUp() {
-//		this.setPosition(this.getPosition().add(new Vector(0, -1))/*.scale(this.speed)*/);
+	public void move(int direction) {
+		//TODO: move character
 	}
 	
 	/**
