@@ -8,17 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
-
-
-
-
-
-
-
-
 import jig.Entity;
 import jig.Vector;
-import jig.sat.SATImplementation;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
@@ -37,7 +28,6 @@ import org.newdawn.slick.SlickException;
  * the ground is drawn first, then all tiles with a vertical extend
  * are drawn in sorted order.
  * 
- * @author Scott Wallace
  *
  */
 public class IsoWorldGame extends BasicGame {
@@ -60,8 +50,8 @@ public class IsoWorldGame extends BasicGame {
 	public static int tileSize = 16;
 	public static float playerX = 0;
 	public static float playerY = 0;
-	public static float WORLD_SIZE_X = (tileSize * 50);
-	public static float WORLD_SIZE_Y = (tileSize * 50);
+	public static float WORLD_SIZE_X = (tileSize * 100);
+	public static float WORLD_SIZE_Y = (tileSize * 100);
 	
 	public static float VIEWPORT_SIZE_X = 1024;
 	public static float VIEWPORT_SIZE_Y = 720;
@@ -78,6 +68,8 @@ public class IsoWorldGame extends BasicGame {
 
 	private ArrayList<IsoEntity> ground;
 	private ArrayList<IsoEntity> blocks;
+	private ArrayList<IsoEntity> walls;
+	private ArrayList<IsoEntity> wallsandblocks;
 	private ArrayList<IsoEntity> stop;
 	private Minotaur minotaur;
 	private Fireball fireball;
@@ -92,13 +84,14 @@ public class IsoWorldGame extends BasicGame {
 		screenHeight = h;
 		
 		Entity.setCoarseGrainedCollisionBoundary(Entity.CIRCLE);
-//		Entity.setSATImplementation(new SATImplementation());
 	}
 
 	@Override
 	public void init(GameContainer container) throws SlickException {
 		ground = new ArrayList<IsoEntity>(100);
 		blocks = new ArrayList<IsoEntity>(100);
+		walls = new ArrayList<IsoEntity>(100);
+		wallsandblocks = new ArrayList<IsoEntity>(200);
 		stop = new ArrayList<IsoEntity>(100);
 		minotaur = new Minotaur(worldSize, new Vector(2*tileSize, 2*tileSize));
 		@SuppressWarnings("resource")
@@ -106,7 +99,6 @@ public class IsoWorldGame extends BasicGame {
 		try {
 			reader = new BufferedReader(new FileReader("src/resource/Map.txt"));
 		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	        String line = null;
@@ -119,13 +111,12 @@ public class IsoWorldGame extends BasicGame {
 				    System.out.println(parts.length);
 				    for(int i = 0; i < parts.length;i++){
 				    	if(Integer.valueOf(parts[i]) == 1){
-							blocks.add(new Block(worldSize,new Vector(r*tileSize, i*tileSize), true) );
+							walls.add(new Block(worldSize,new Vector(r*tileSize, i*tileSize), true) );
 							stop.add(new Ground(worldSize,new Vector(r*tileSize, i*tileSize)) );
 				    	}
 				    	else if(Integer.valueOf(parts[i]) == 2){
 							blocks.add(new Block(worldSize,new Vector(r*tileSize, i*tileSize), false) );
-							stop.add(new Ground(worldSize,new Vector(r*tileSize, i*tileSize)) );
-
+							ground.add(new Ground(worldSize, new Vector(r*tileSize, i*tileSize)) );
 				    	}
 				    	else{
 				    		ground.add(new Ground(worldSize, new Vector(r*tileSize, i*tileSize)) );
@@ -135,15 +126,19 @@ public class IsoWorldGame extends BasicGame {
 				    	r++;
 				}
 			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		     
 		blocks.add(minotaur);
 		
+		for (IsoEntity ie : walls) {
+			wallsandblocks.add(ie);
+		}
+		for (IsoEntity ie : blocks) {
+			wallsandblocks.add(ie);
+		}
 
 	}
 	@Override
@@ -155,9 +150,8 @@ public class IsoWorldGame extends BasicGame {
 			ie.render(g);
 		}
 		
-		
-		Collections.sort(blocks);
-		for (IsoEntity ie : blocks) {
+		Collections.sort(wallsandblocks);
+		for (IsoEntity ie : wallsandblocks) {
 			ie.render(g);
 		}
 		if (fireball != null) fireball.render(g);
@@ -234,9 +228,7 @@ public class IsoWorldGame extends BasicGame {
 		}
 		else if (input.isKeyDown(Input.KEY_LEFT)) {
 			minotaur.go(Minotaur.LEFT, x,Minotaur.LEFT);
-			if(canMove()){
-			}
-			else{
+			if(!canMove()){
 				minotaur.halt();
 				minotaur.ungo();
 			}
@@ -244,27 +236,21 @@ public class IsoWorldGame extends BasicGame {
 		}
 		else if (input.isKeyDown(Input.KEY_RIGHT)) {
 			minotaur.go(Minotaur.RIGHT, x,Minotaur.RIGHT);
-			if(canMove()){
-			}
-			else{
+			if(!canMove()){
 				minotaur.halt();
 				minotaur.ungo();
 			}
 		}
 		else if (input.isKeyDown(Input.KEY_UP)) {
 			minotaur.go(Minotaur.UP, x,Minotaur.UP); 
-			if(canMove()){
-			}
-			else{
+			if(!canMove()){
 				minotaur.halt();
 				minotaur.ungo();
 			}
 		}
 		else if (input.isKeyDown(Input.KEY_DOWN)) {
 			minotaur.go(Minotaur.DOWN, x,Minotaur.DOWN);
-			if(canMove()){
-			}
-			else{
+			if(!canMove()){
 				minotaur.halt();
 				minotaur.ungo();
 			}
@@ -298,13 +284,34 @@ public class IsoWorldGame extends BasicGame {
 				other = iie.next();
 				if (other == minotaur) continue;
 				if (fireball.collides(other) != null) {
+					System.out.println("true");
 					fireball.kaboom();
 					iie.remove();
+					wallsandblocks.clear();
+					
+					for (IsoEntity ie : walls) {
+						wallsandblocks.add(ie);
+					}
+					for (IsoEntity ie : blocks) {
+						wallsandblocks.add(ie);
+					}
+					
+					break;
+				}
+			}
+			for (Iterator<IsoEntity> iie = walls.iterator(); iie.hasNext(); ) {
+				other = iie.next();
+				if (other == minotaur) continue;
+				if (fireball.collides(other) != null) {
+					System.out.println("true");
+					fireball.kaboom();
 					break;
 				}
 			}
 			if (fireball.done()) fireball = null;
 		}
+		
+		
 	}
 	public boolean canMove(){
 		IsoEntity other;
