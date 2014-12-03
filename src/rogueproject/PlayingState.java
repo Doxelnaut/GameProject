@@ -133,29 +133,38 @@ public class PlayingState extends BasicGameState {
 			throws SlickException {
 		
 		RogueGame rg = (RogueGame)game;
+	
+		Input input = container.getInput();
+		InputHandler inputHandler = new InputHandler();
+		ArrayList<Command> commands = inputHandler.handleInput(input);
+		if(commands.size() > 0){
+			for(Command c : commands){
+				c.execute(rg.state.player);
+			}
+		}
 		
 /* 		if(rg.state.actors.size()==0){
 			rg.state.player.setDepth(rg.state.player.getDepth() + 1);
 			rg.enterState(RogueGame.PLAYINGSTATE);
 		}
 */		
-		Input input = container.getInput();
-		// The player's turn 
+//		Input input = container.getInput();
+/*		// The player's turn 
 		if(rg.state.player != null){
 			if(rg.state.player.getTurn()){
 				if(!rg.state.player.getGained()){
 					rg.state.player.gainEnergy();
 					rg.state.player.setGained(true);
 				}
-				if(!rg.state.player.isMoving()){ // handle all user input in this block
+*///			if(!rg.state.player.isMoving()){ // handle all user input in this block
 					// Directional Keys
 					//   Q   W   E
 					//    \  |  /
 					// A - restS - D
 					//    /  |  \
 					//   Z   X   C
-					if 		(input.isKeyDown(Input.KEY_W)) 	{
-						/*rg.state.player.setOrders(N);*/
+/**					if 		(input.isKeyDown(Input.KEY_W)) 	{
+						//rg.state.player.setOrders(N);
 						mapy -= 8;
 						mapx += 16;
 					} 		// North
@@ -193,11 +202,11 @@ public class PlayingState extends BasicGameState {
 						} 		// Southeast
 					else if (input.isKeyDown(Input.KEY_S)) 	{rg.state.player.setOrders(REST);} 	// Rest
 					else if (input.isKeyPressed(Input.KEY_ESCAPE)) {container.exit();}
-					// Cheats:
+**/					// Cheats:
 					/* hard code modulo for the number of dungeons actually playable, 
 					 * then add one, since dungeons start at level 1.
 					 */
-					else if (input.isKeyPressed(Input.KEY_I))	{
+					if (input.isKeyPressed(Input.KEY_I))	{
 						rg.state.player.setDepth(1);
 						map = null;
 						//rg.state.enterState(RogueGame.PLAYINGSTATE);
@@ -215,8 +224,8 @@ public class PlayingState extends BasicGameState {
 							a.setGained(false);
 						}
 					}
-				}
-			}
+//				}
+//			}
 			// update player position
 			if(rg.state.player.isMoving()){
 				if(rg.state.player.getPosition().equals(rg.state.player.getNextTile().scale(RogueGame.TILE_SIZE))){
@@ -235,7 +244,7 @@ public class PlayingState extends BasicGameState {
 					rg.state.occupied[rg.state.player.getTileX()][rg.state.player.getTileY()] = true;
 				}
 			}
-		} 
+//		} 
 			
 
 		

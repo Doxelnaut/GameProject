@@ -102,7 +102,7 @@ public class Actor extends Entity implements Mover{
 	public Vector getTilePosition()	{return new Vector(getTileX(), getTileY());}
 
 	public void getTypeImage(){
-		switch(type){
+/*		switch(type){
 		case 0:	// little zombie
 			anim = new Animation(ResourceManager.getSpriteSheet(
 					RogueGame.ACTOR_UNDEAD0_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
@@ -202,7 +202,7 @@ public class Actor extends Entity implements Mover{
 		default:
 			break;
 		}
-	}
+*/	}
 	
 	/* Setters */
 	
@@ -344,6 +344,13 @@ public class Actor extends Entity implements Mover{
 	}
 	
 	/* Actions */
+
+	/**
+	 * Reciever method for MoveUpCommand. 
+	 */
+	public void moveUp() {
+//		this.setPosition(this.getPosition().add(new Vector(0, -1))/*.scale(this.speed)*/);
+	}
 	
 	/**
 	 * AI actions
