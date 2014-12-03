@@ -265,7 +265,7 @@ class Fireball extends IsoEntity {
 		current = dir;
 		addAnimation(moving[current]);
 		setZHeightFromIsoImage(moving[current].getCurrentFrame(), 32);
-		System.out.println("Fireball zh:" + zHeight);
+		//System.out.println("Fireball zh:" + zHeight);
 		setPosition(wPosition);
 	}
 	public void update(float n) {
