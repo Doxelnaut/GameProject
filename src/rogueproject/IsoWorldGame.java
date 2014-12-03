@@ -78,6 +78,7 @@ public class IsoWorldGame extends BasicGame {
 
 	private ArrayList<IsoEntity> ground;
 	private ArrayList<IsoEntity> blocks;
+	private ArrayList<IsoEntity> stop;
 	private Minotaur minotaur;
 	private Fireball fireball;
 
@@ -98,8 +99,8 @@ public class IsoWorldGame extends BasicGame {
 	public void init(GameContainer container) throws SlickException {
 		ground = new ArrayList<IsoEntity>(100);
 		blocks = new ArrayList<IsoEntity>(100);
-		//character = new ArrayList<IsoEntity>(100);
-		minotaur = new Minotaur(worldSize, new Vector(1*tileSize, 1*tileSize));
+		stop = new ArrayList<IsoEntity>(100);
+		minotaur = new Minotaur(worldSize, new Vector(2*tileSize, 2*tileSize));
 		@SuppressWarnings("resource")
 		BufferedReader reader = null;
 		try {
@@ -119,9 +120,11 @@ public class IsoWorldGame extends BasicGame {
 				    for(int i = 0; i < parts.length;i++){
 				    	if(Integer.valueOf(parts[i]) == 1){
 							blocks.add(new Block(worldSize,new Vector(r*tileSize, i*tileSize), true) );
+							stop.add(new Ground(worldSize,new Vector(r*tileSize, i*tileSize)) );
 				    	}
 				    	else if(Integer.valueOf(parts[i]) == 2){
 							blocks.add(new Block(worldSize,new Vector(r*tileSize, i*tileSize), false) );
+							stop.add(new Ground(worldSize,new Vector(r*tileSize, i*tileSize)) );
 
 				    	}
 				    	else{
@@ -139,21 +142,6 @@ public class IsoWorldGame extends BasicGame {
 				e.printStackTrace();
 			}
 		     
-//		for (int r = 0; r < worldSize.getY()/tileSize; r++) {
-//			for (int c = 0; c < worldSize.getX()/tileSize; c++) {
-//				ground.add(new Ground(worldSize, new Vector(r*tileSize, c*tileSize)) );
-//				if(c == 0 || c == WORLD_SIZE_Y/tileSize-1){
-//					blocks.add(new Block(worldSize,new Vector(r*tileSize, c*tileSize), true) );
-//
-//				}
-//				if(r == 0 || r == WORLD_SIZE_X/tileSize-1){
-//					
-//					blocks.add(new Block(worldSize,new Vector(r*tileSize, c*tileSize), true) );
-//					
-//				}
-//				
-//			}
-//		}
 		blocks.add(minotaur);
 		
 
@@ -192,11 +180,13 @@ public class IsoWorldGame extends BasicGame {
 			if(canMove()){
 				minotaur.go(Minotaur.LEFT, x,Minotaur.UpLEFT); 
 				if(!canMove()){
+					minotaur.halt();
 					minotaur.ungo();
 				}
 
 			}
 			else{
+				minotaur.halt();
 				minotaur.ungo();
 			}
 		}
@@ -205,10 +195,12 @@ public class IsoWorldGame extends BasicGame {
 			if(canMove()){
 				minotaur.go(Minotaur.LEFT, x,Minotaur.DownLEFT); 
 				if(!canMove()){
+					minotaur.halt();
 					minotaur.ungo();
 				}
 			}
 			else{
+				minotaur.halt();
 				minotaur.ungo();
 			}
 		}
@@ -217,10 +209,12 @@ public class IsoWorldGame extends BasicGame {
 			if(canMove()){
 				minotaur.go(Minotaur.RIGHT, x,Minotaur.UpRIGHT); 
 				if(!canMove()){
+					minotaur.halt();
 					minotaur.ungo();
 				}
 			}
 			else{
+				minotaur.halt();
 				minotaur.ungo();
 			}
 		}
@@ -229,17 +223,52 @@ public class IsoWorldGame extends BasicGame {
 			if(canMove()){
 				minotaur.go(Minotaur.RIGHT, x,Minotaur.DownRIGHT);
 				if(!canMove()){
+					minotaur.halt();
 					minotaur.ungo();
 				}
 			}
 			else{
+				minotaur.halt();
 				minotaur.ungo();
 			}
 		}
-		else if (input.isKeyDown(Input.KEY_LEFT)) minotaur.go(Minotaur.LEFT, x,Minotaur.LEFT);
-		else if (input.isKeyDown(Input.KEY_RIGHT)) minotaur.go(Minotaur.RIGHT, x,Minotaur.RIGHT);
-		else if (input.isKeyDown(Input.KEY_UP)) minotaur.go(Minotaur.UP, x,Minotaur.UP); 
-		else if (input.isKeyDown(Input.KEY_DOWN)) minotaur.go(Minotaur.DOWN, x,Minotaur.DOWN);
+		else if (input.isKeyDown(Input.KEY_LEFT)) {
+			minotaur.go(Minotaur.LEFT, x,Minotaur.LEFT);
+			if(canMove()){
+			}
+			else{
+				minotaur.halt();
+				minotaur.ungo();
+			}
+
+		}
+		else if (input.isKeyDown(Input.KEY_RIGHT)) {
+			minotaur.go(Minotaur.RIGHT, x,Minotaur.RIGHT);
+			if(canMove()){
+			}
+			else{
+				minotaur.halt();
+				minotaur.ungo();
+			}
+		}
+		else if (input.isKeyDown(Input.KEY_UP)) {
+			minotaur.go(Minotaur.UP, x,Minotaur.UP); 
+			if(canMove()){
+			}
+			else{
+				minotaur.halt();
+				minotaur.ungo();
+			}
+		}
+		else if (input.isKeyDown(Input.KEY_DOWN)) {
+			minotaur.go(Minotaur.DOWN, x,Minotaur.DOWN);
+			if(canMove()){
+			}
+			else{
+				minotaur.halt();
+				minotaur.ungo();
+			}
+		}
 		
 		else minotaur.halt();
 		
@@ -268,7 +297,6 @@ public class IsoWorldGame extends BasicGame {
 			for (Iterator<IsoEntity> iie = blocks.iterator(); iie.hasNext(); ) {
 				other = iie.next();
 				if (other == minotaur) continue;
-				
 				if (fireball.collides(other) != null) {
 					fireball.kaboom();
 					iie.remove();
@@ -280,17 +308,15 @@ public class IsoWorldGame extends BasicGame {
 	}
 	public boolean canMove(){
 		IsoEntity other;
-		for (Iterator<IsoEntity> iie = ground.iterator(); iie.hasNext(); ) {
+		for (Iterator<IsoEntity> iie = stop.iterator(); iie.hasNext(); ) {
 			other = iie.next();
-		//	if (other == minotaur) continue;
 			
 			if (minotaur.collides(other) != null) {
-				return true;
+				return false;
 			}
 			
 		}
-		System.out.println("false");
-		return false;
+		return true;
 	}
 
 	/**

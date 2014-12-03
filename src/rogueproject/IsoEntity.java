@@ -130,8 +130,10 @@ class Ground extends IsoEntity {
 }
 
 class Block extends IsoEntity {
+	boolean tall;
 	public Block(Vector wWorldSize, Vector wPosition, boolean tall) {
 		super(wWorldSize, IsoWorldGame.tileSize);
+		tall = tall;
 		Image isoImg;
 		if (tall)
 			isoImg = ResourceManager.getImage(IsoWorldGame.tallBlockImgPath); 
@@ -141,6 +143,9 @@ class Block extends IsoEntity {
 		addImage(isoImg);
 		setZHeightFromIsoImage(isoImg);
 		setPosition(wPosition);
+	}
+	public boolean gettall(){
+		return tall;
 	}
 	
 }

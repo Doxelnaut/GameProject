@@ -1,13 +1,14 @@
 
 ## Resolved Issues ## 
+-1-Create new map with isometric tiles
+-2-Generate Isometric player
+-3-Add obstacles to map
  
 
 ## Open Issues ##
--1-Create new map with isometric tiles
 -2-Add Scrolling Mini Map
--2-Generate Isometric player
 -3-Generate Isometric Enemies
--4-Add obstacles to map
+-4-Fix collision with walls
 -5-Add player attack
 -6-Add dropped items
 -7-Add networking capabilities
