@@ -53,9 +53,25 @@ public class RogueGame extends StateBasedGame{
 	// create image, animation, and sound macros
 	// ie: public static final String GAMEOVER_BANNER_RSC = "rogueproject/resource/gameover.png";
 	
-	public final int ScreenWidth;
-	public final int ScreenHeight;
-	public static final int TILE_SIZE = 16; //DawnLike uses 16x16 tiles. This will mainly help readability.
+	public static final int TILE_SIZE = 16; //World Coordinate tile size. Rendering will handle conversion to isometric.
+	public static float playerX = 0;
+	public static float playerY = 0;
+	public static float WORLD_SIZE_X = (TILE_SIZE * 50);
+	public static float WORLD_SIZE_Y = (TILE_SIZE * 50);
+	
+	public static float VIEWPORT_SIZE_X = 1024;
+	public static float VIEWPORT_SIZE_Y = 720;
+	
+	public static float camX = 0;
+	public static float	camY = 0;
+	
+	public static float offsetMaxX = WORLD_SIZE_X - VIEWPORT_SIZE_X;
+	public static float offsetMaxY = WORLD_SIZE_Y - VIEWPORT_SIZE_Y;
+	public static float offsetMinX = 0;
+    public static float offsetMinY = 0;
+	
+	public final float ScreenWidth;
+	public final float ScreenHeight;
 	
 	public static final String GOLDGUI_IMG_RSC = "rogueproject/resource/goldui_big_pieces_0.png"; 
 	public static final String GUI_MENULARGE_IMG_RSC = "rogueproject/resource/menu_large.png";
@@ -68,7 +84,7 @@ public class RogueGame extends StateBasedGame{
 	
 	GameState state = new GameState();
 	
-	public RogueGame(String title, int width, int height) {
+	public RogueGame(String title, float width, float height) {
 		super(title);
 		ScreenHeight = height;
 		ScreenWidth = width;
@@ -99,8 +115,8 @@ public class RogueGame extends StateBasedGame{
 	public static void main(String[] args) {
 		AppGameContainer app;
 		try {
-			app = new AppGameContainer(new RogueGame("El Rogue del Rey", 1024, 720));
-			app.setDisplayMode(1024, 720, false);
+			app = new AppGameContainer(new RogueGame("El Rogue del Rey", RogueGame.VIEWPORT_SIZE_X, RogueGame.VIEWPORT_SIZE_Y));
+			app.setDisplayMode((int)RogueGame.VIEWPORT_SIZE_X, (int)RogueGame.VIEWPORT_SIZE_Y, false);
 			app.setVSync(true);
 			app.start();
 		} catch (SlickException e) {
