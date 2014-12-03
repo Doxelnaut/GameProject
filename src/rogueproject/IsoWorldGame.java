@@ -117,7 +117,6 @@ public class IsoWorldGame extends BasicGame {
 				    String[] parts = line.split("\\s");
 				    System.out.println(parts.length);
 				    for(int i = 0; i < parts.length;i++){
-				    	ground.add(new Ground(worldSize, new Vector(r*tileSize, i*tileSize)) );
 				    	if(Integer.valueOf(parts[i]) == 1){
 							blocks.add(new Block(worldSize,new Vector(r*tileSize, i*tileSize), true) );
 				    	}
@@ -125,6 +124,10 @@ public class IsoWorldGame extends BasicGame {
 							blocks.add(new Block(worldSize,new Vector(r*tileSize, i*tileSize), false) );
 
 				    	}
+				    	else{
+				    		ground.add(new Ground(worldSize, new Vector(r*tileSize, i*tileSize)) );
+				    	}
+
 				    }
 				    	r++;
 				}
@@ -183,21 +186,55 @@ public class IsoWorldGame extends BasicGame {
 		camX = playerX - VIEWPORT_SIZE_X / 2;
 		camY = playerY - VIEWPORT_SIZE_Y / 2;
 
+		//System.out.println(canMove());
 		if (input.isKeyDown(Input.KEY_LEFT) && input.isKeyDown(Input.KEY_UP)){
 			minotaur.go(Minotaur.UP, x,Minotaur.UpLEFT); 
-			minotaur.go(Minotaur.LEFT, x,Minotaur.UpLEFT); 
+			if(canMove()){
+				minotaur.go(Minotaur.LEFT, x,Minotaur.UpLEFT); 
+				if(!canMove()){
+					minotaur.ungo();
+				}
+
+			}
+			else{
+				minotaur.ungo();
+			}
 		}
 		else if (input.isKeyDown(Input.KEY_LEFT) && input.isKeyDown(Input.KEY_DOWN)){
 			minotaur.go(Minotaur.DOWN, x,Minotaur.DownLEFT); 
-			minotaur.go(Minotaur.LEFT, x,Minotaur.DownLEFT); 
+			if(canMove()){
+				minotaur.go(Minotaur.LEFT, x,Minotaur.DownLEFT); 
+				if(!canMove()){
+					minotaur.ungo();
+				}
+			}
+			else{
+				minotaur.ungo();
+			}
 		}
 		else if (input.isKeyDown(Input.KEY_RIGHT) && input.isKeyDown(Input.KEY_UP)){
 			minotaur.go(Minotaur.UP, x,Minotaur.UpRIGHT); 
-			minotaur.go(Minotaur.RIGHT, x,Minotaur.UpRIGHT); 
+			if(canMove()){
+				minotaur.go(Minotaur.RIGHT, x,Minotaur.UpRIGHT); 
+				if(!canMove()){
+					minotaur.ungo();
+				}
+			}
+			else{
+				minotaur.ungo();
+			}
 		}
 		else if (input.isKeyDown(Input.KEY_RIGHT) && input.isKeyDown(Input.KEY_DOWN)){
 			minotaur.go(Minotaur.DOWN, x,Minotaur.DownRIGHT);
-			minotaur.go(Minotaur.RIGHT, x,Minotaur.DownRIGHT);
+			if(canMove()){
+				minotaur.go(Minotaur.RIGHT, x,Minotaur.DownRIGHT);
+				if(!canMove()){
+					minotaur.ungo();
+				}
+			}
+			else{
+				minotaur.ungo();
+			}
 		}
 		else if (input.isKeyDown(Input.KEY_LEFT)) minotaur.go(Minotaur.LEFT, x,Minotaur.LEFT);
 		else if (input.isKeyDown(Input.KEY_RIGHT)) minotaur.go(Minotaur.RIGHT, x,Minotaur.RIGHT);
@@ -205,6 +242,9 @@ public class IsoWorldGame extends BasicGame {
 		else if (input.isKeyDown(Input.KEY_DOWN)) minotaur.go(Minotaur.DOWN, x,Minotaur.DOWN);
 		
 		else minotaur.halt();
+		
+
+	
 		
 		if (input.isKeyPressed(Input.KEY_LCONTROL)) {
 			minotaur.debugThis = !minotaur.debugThis;
@@ -238,8 +278,20 @@ public class IsoWorldGame extends BasicGame {
 			if (fireball.done()) fireball = null;
 		}
 	}
-
-
+	public boolean canMove(){
+		IsoEntity other;
+		for (Iterator<IsoEntity> iie = ground.iterator(); iie.hasNext(); ) {
+			other = iie.next();
+		//	if (other == minotaur) continue;
+			
+			if (minotaur.collides(other) != null) {
+				return true;
+			}
+			
+		}
+		System.out.println("false");
+		return false;
+	}
 
 	/**
 	 * @param args
