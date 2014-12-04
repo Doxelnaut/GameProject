@@ -55,7 +55,7 @@ public class Connection implements Runnable {
 				System.out.print("Error Writing game state to client.");
 			}
 			
-			Command c = socketIn.readObject();
+			//Command c = socketIn.readObject();
 			
 	    }
 	    
