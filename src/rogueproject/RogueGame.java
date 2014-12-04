@@ -77,7 +77,7 @@ public class RogueGame extends StateBasedGame{
 	TrueTypeFont courierBOLD12;
 	TrueTypeFont custom12;
 	
-	GameState state = new GameState();
+	public GameState state = new GameState();
 	
 	//TODO ArrayList<Objects> objects;
 	
@@ -125,5 +125,6 @@ public class RogueGame extends StateBasedGame{
 		}
 
 	}
+	
 	
 }
