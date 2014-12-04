@@ -93,7 +93,7 @@ public class IsoWorldGame extends BasicGame {
 		walls = new ArrayList<IsoEntity>(100);
 		wallsandblocks = new ArrayList<IsoEntity>(200);
 		stop = new ArrayList<IsoEntity>(100);
-		minotaur = new Minotaur(worldSize, new Vector(2*tileSize, 2*tileSize));
+		minotaur = new Minotaur(worldSize, new Vector(2*tileSize, 2*tileSize),GameState.WARRIOR);
 		@SuppressWarnings("resource")
 		BufferedReader reader = null;
 		try {

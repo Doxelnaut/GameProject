@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 import jig.Entity;
 import jig.ResourceManager;
+import jig.Vector;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.StateBasedGame;
-
 import org.newdawn.slick.util.ResourceLoader;
 /* All this to write text. */
 import org.newdawn.slick.UnicodeFont;
@@ -58,7 +58,7 @@ public class RogueGame extends StateBasedGame{
 	public static float playerY = 0;
 	public static float WORLD_SIZE_X = (TILE_SIZE * 50);
 	public static float WORLD_SIZE_Y = (TILE_SIZE * 50);
-	
+	public static Vector WORLD_SIZE = new Vector(WORLD_SIZE_X, WORLD_SIZE_Y);
 	public static float VIEWPORT_SIZE_X = 1024;
 	public static float VIEWPORT_SIZE_Y = 720;
 	
@@ -75,13 +75,27 @@ public class RogueGame extends StateBasedGame{
 	
 	public static final String GOLDGUI_IMG_RSC = "rogueproject/resource/goldui_big_pieces_0.png"; 
 	public static final String GUI_MENULARGE_IMG_RSC = "rogueproject/resource/menu_large.png";
-
 	public static final String PLAYER_IDLE_IMG_RSC = "rogueproject/resource/graphics/TMIM_Heroine/wIdle_0(16,99,112).png";
 	public static final String ACTOR_GOBLIN0_IMG_RSC = "rogueproject/resource/graphics/goblin_spearman_0.png";
 	public static final String ACTOR_GOBLIN1_IMG_RSC = "rogueproject/resource/graphics/goblin_spearman_elite.png";
-	
 	public static final String ALAGARD_FONT_RSC =  "rogueproject/resource/fonts/alagard_by_pix3m-d6awiwp.ttf";
+	public static final String groundSheetPath   = "resource/flagstonetiles.png";
+	public static final String tallBlockImgPath   = "resource/tallcaveblock.png";
+	public static final String shortBlockImgPath   = "resource/shortcaveblock.png";
+	public static final String WalkLeft = "resource/Walk_10(15,69,108).png";
+	public static final String WalkRight = "resource/Walk_2(15,62,111).png";
+	public static final String WalkUp = "resource/Walk_6(15,66,111).png";
+	public static final String WalkDown = "resource/Walk_14(15,61,108).png";
+	public static final String WalkUpLeft = "resource/Walk_8(15,68,110).png";
+	public static final String WalkUpRight = "resource/Walk_4(15,63,112).png";
+	public static final String WalkDownLeft = "resource/Walk_12(15,63,108).png";
+	public static final String WalkDownRight = "resource/Walk_0(15,63,110).png";
+	public static final String fireballSheetPath = "resource/fireball.png";
+	public static final String explosionSheetPath   = "resource/explosion.png";
+	public static final String ouchSoundPath = "resource/ouch.wav";
 	
+
+
 	GameState state = new GameState();
 	
 	public RogueGame(String title, float width, float height) {
@@ -108,8 +122,24 @@ public class RogueGame extends StateBasedGame{
 		ResourceManager.loadImage(PLAYER_IDLE_IMG_RSC);
 		ResourceManager.loadImage(ACTOR_GOBLIN0_IMG_RSC);
 		ResourceManager.loadImage(ACTOR_GOBLIN1_IMG_RSC);
+		ResourceManager.loadImage(groundSheetPath);
+		ResourceManager.loadImage(tallBlockImgPath);
+		ResourceManager.loadImage(shortBlockImgPath);
+		ResourceManager.loadImage(WalkLeft);
+		ResourceManager.loadImage(WalkRight);
+		ResourceManager.loadImage(WalkUp);
+		ResourceManager.loadImage(WalkDown);
+		ResourceManager.loadImage(WalkUpLeft);
+		ResourceManager.loadImage(WalkUpRight);
+		ResourceManager.loadImage(WalkDownLeft);
+		ResourceManager.loadImage(WalkDownRight);
+		ResourceManager.loadImage(fireballSheetPath);
+		ResourceManager.loadImage(explosionSheetPath);
+		ResourceManager.loadImage(ouchSoundPath);
 
-		state.player = new Player(GameState.WARRIOR);
+		
+		
+	//	state.player = new Player(GameState.WARRIOR);
 	}
 	
 	public static void main(String[] args) {
