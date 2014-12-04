@@ -133,71 +133,80 @@ public class PlayingState extends BasicGameState {
 			throws SlickException {
 		
 		RogueGame rg = (RogueGame)game;
+	
+		Input input = container.getInput();
+		InputHandler inputHandler = new InputHandler();
+		ArrayList<Command> commands = inputHandler.handleInput(input);
+		if(commands.size() > 0){
+			for(Command c : commands){
+				c.execute(rg.state.player);
+			}
+		}
 		
-		if(rg.state.actors.size()==0){
+/* 		if(rg.state.actors.size()==0){
 			rg.state.player.setDepth(rg.state.player.getDepth() + 1);
 			rg.enterState(RogueGame.PLAYINGSTATE);
 		}
-		
-		Input input = container.getInput();
-		// The player's turn 
+*/		
+//		Input input = container.getInput();
+/*		// The player's turn 
 		if(rg.state.player != null){
 			if(rg.state.player.getTurn()){
 				if(!rg.state.player.getGained()){
 					rg.state.player.gainEnergy();
 					rg.state.player.setGained(true);
 				}
-				if(!rg.state.player.isMoving()){ // handle all user input in this block
+*///			if(!rg.state.player.isMoving()){ // handle all user input in this block
 					// Directional Keys
 					//   Q   W   E
 					//    \  |  /
 					// A - restS - D
 					//    /  |  \
 					//   Z   X   C
-					if 		(input.isKeyPressed(Input.KEY_W)) 	{
-						/*rg.state.player.setOrders(N);*/
+/**					if 		(input.isKeyDown(Input.KEY_W)) 	{
+						//rg.state.player.setOrders(N);
 						mapy -= 8;
 						mapx += 16;
 					} 		// North
-					else if (input.isKeyPressed(Input.KEY_X)) 	{
+					else if (input.isKeyDown(Input.KEY_X)) 	{
 						//rg.state.player.setOrders(S);
 						mapy += 8;
 						mapx -= 16;
 
 						} 		// South
-					else if (input.isKeyPressed(Input.KEY_A)) 	{
+					else if (input.isKeyDown(Input.KEY_A)) 	{
 						//rg.state.player.setOrders(W);
 						mapx += 16;
 						mapy += 8;
 						} 		// West
-					else if (input.isKeyPressed(Input.KEY_D)) 	{
+					else if (input.isKeyDown(Input.KEY_D)) 	{
 						//rg.state.player.setOrders(E);
 						mapx -= 16;
 						mapy -= 8;
 					} 		// East
-					else if (input.isKeyPressed(Input.KEY_Q)) 	{
+					else if (input.isKeyDown(Input.KEY_Q)) 	{
 						//rg.state.player.setOrders(NW);
 						mapy -= 8;
 						} 		// Northwest
-					else if (input.isKeyPressed(Input.KEY_E)) 	{
+					else if (input.isKeyDown(Input.KEY_E)) 	{
 						//rg.state.player.setOrders(NE);
 						mapx -= 8;
 						} 		// Northeast
-					else if (input.isKeyPressed(Input.KEY_Z)) 	{
+					else if (input.isKeyDown(Input.KEY_Z)) 	{
 						//rg.state.player.setOrders(SW);
 						mapx += 8;
 						} 		// Southwest
-					else if (input.isKeyPressed(Input.KEY_C)) 	{
+					else if (input.isKeyDown(Input.KEY_C)) 	{
 						//rg.state.player.setOrders(SE);
 						mapy += 8;
 						} 		// Southeast
-					else if (input.isKeyPressed(Input.KEY_S)) 	{rg.state.player.setOrders(REST);} 	// Rest
+					else if (input.isKeyDown(Input.KEY_S)) 	{rg.state.player.setOrders(REST);} 	// Rest
 					else if (input.isKeyPressed(Input.KEY_ESCAPE)) {container.exit();}
-					// Cheats:
+**/					// Cheats:
 					/* hard code modulo for the number of dungeons actually playable, 
 					 * then add one, since dungeons start at level 1.
 					 */
-					else if (input.isKeyPressed(Input.KEY_I))	{
+					if (input.isKeyPressed(Input.KEY_I))	{
 						rg.state.player.setDepth(1);
 						map = null;
 						//rg.state.enterState(RogueGame.PLAYINGSTATE);
@@ -215,8 +224,8 @@ public class PlayingState extends BasicGameState {
 							a.setGained(false);
 						}
 					}
-				}
-			}
+//				}
+//			}
 			// update player position
 			if(rg.state.player.isMoving()){
 				if(rg.state.player.getPosition().equals(rg.state.player.getNextTile().scale(RogueGame.TILE_SIZE))){
@@ -235,7 +244,7 @@ public class PlayingState extends BasicGameState {
 					rg.state.occupied[rg.state.player.getTileX()][rg.state.player.getTileY()] = true;
 				}
 			}
-		} 
+//		} 
 			
 
 		
