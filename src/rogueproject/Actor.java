@@ -1,14 +1,14 @@
 package rogueproject;
 
+import java.io.Serializable;
+
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.util.pathfinding.AStarPathFinder;
 import org.newdawn.slick.util.pathfinding.Mover;
 import org.newdawn.slick.util.pathfinding.Path;
 
 import jig.Entity;
-import jig.ResourceManager;
 import jig.Vector;
 
 /**
@@ -33,7 +33,7 @@ import jig.Vector;
  *	Copyright 2014 Zacharias Shufflebarger
  *
  */
-public class Actor extends Entity implements Mover{
+public class Actor extends Entity implements Mover, Serializable{
 	
 	// RPG attributes
 	private int level;
@@ -384,7 +384,7 @@ public class Actor extends Entity implements Mover{
 								return true;
 							}
 							else if (isOccupied(rg.state.occupied)){
-								attackPlayer(rg.state.player);
+								attackPlayer(rg.player);
 								this.consumeEnergy();
 								this.nextTile = this.getPosition();
 								this.turn = false;

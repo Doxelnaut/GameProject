@@ -1,23 +1,18 @@
 package rogueproject;
 
-import java.awt.Font;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.ListIterator;
-
-import jig.Vector;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.UnicodeFont;
-import org.newdawn.slick.font.effects.ColorEffect;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.tiled.TiledMap;
-import org.newdawn.slick.util.pathfinding.*;
 
 /**
  * 
@@ -43,6 +38,11 @@ import org.newdawn.slick.util.pathfinding.*;
 public class PlayingState extends BasicGameState {
 	
 	private TiledMap map;
+	Socket socket;
+	String servName;
+	int port = 1666;
+	ObjectOutputStream socketOut;
+	ObjectInputStream socketIn;
 	
 	// input direction
 	public static final int WAIT = -1, N = 0, E = 1, S = 2, W = 3, NW = 4, NE = 5, SE = 6, SW = 7, REST = 8;
@@ -60,6 +60,28 @@ public class PlayingState extends BasicGameState {
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) 
 			throws SlickException {
+		
+		//display prompt for server address
+		
+				servName = "127.0.0.1";
+				
+				try {
+					socket = new Socket(servName,port);
+				} catch (IOException e) {
+					System.out.println("Error creating client socket.");
+					e.printStackTrace();
+				}
+				
+				//open object streams
+			    try {
+			      socketOut = new ObjectOutputStream(socket.getOutputStream());
+			      socketIn = new ObjectInputStream(socket.getInputStream());
+			    }
+			    catch(IOException e){
+					e.printStackTrace();
+					System.out.println("Error opening streams");
+			    }
+			    
 		
 		RogueGame rg = (RogueGame)game;
 		rg.state.actors = new ArrayList<Actor>();
@@ -118,7 +140,7 @@ public class PlayingState extends BasicGameState {
 					" Armor: " + (int)rg.state.player.getArmor() + 
 					" Experience: " + (int)rg.state.player.getExp()
 					, 100 , 10);
-			g.drawString("Dungeon Level: " + rg.state.player.getDepth(), 100, 25);
+			g.drawString("Dungeon Level: " + rg.player.getDepth(), 100, 25);
 		}
 		
 		for(Actor a : rg.state.actors){
@@ -139,7 +161,12 @@ public class PlayingState extends BasicGameState {
 		ArrayList<Command> commands = inputHandler.handleInput(input);
 		if(commands.size() > 0){
 			for(Command c : commands){
-				c.execute(rg.state.player);
+				try {
+					socketOut.writeObject(c);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -207,12 +234,12 @@ public class PlayingState extends BasicGameState {
 					 * then add one, since dungeons start at level 1.
 					 */
 					if (input.isKeyPressed(Input.KEY_I))	{
-						rg.state.player.setDepth(1);
+						rg.player.setDepth(1);
 						map = null;
 						//rg.state.enterState(RogueGame.PLAYINGSTATE);
 					}
 					else if (input.isKeyPressed(Input.KEY_O)) { 
-						rg.state.player.setDepth(2); 
+						rg.player.setDepth(2); 
 						map = null;
 						//rg.state.enterState(RogueGame.PLAYINGSTATE);
 						}
@@ -300,7 +327,7 @@ public class PlayingState extends BasicGameState {
 	}
 	
 	public void setLevel(RogueGame rg) throws SlickException{
-		switch(rg.state.player.getDepth()){
+		switch(rg.player.getDepth()){
 		case 1:
 			rg.state.player.setTilePosition(1, 2);
 			map = new TiledMap("rogueproject/resource/maps/tinytestmap.tmx");

@@ -7,7 +7,6 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -19,15 +18,20 @@ public class HostState extends BasicGameState {
 	public void init(GameContainer container, StateBasedGame RG)
 			throws SlickException {
 		
+		
+	}
+	
+	public void enter(GameContainer container, StateBasedGame game){
 		connections = new ArrayList<Connection>();
 		ServerSocket ss = null;
 		
 		try {
-			ss = new ServerSocket(6667);
+			ss = new ServerSocket(1666);
+			System.out.println("Created server socket.");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.print("Error creating server socket.");
+			System.out.println("Error creating server socket.");
 		}
 		
 		while (true)
@@ -36,17 +40,18 @@ public class HostState extends BasicGameState {
             Socket s = null;
 			try {
 				s = ss.accept();
+				System.out.println("Connecting to client.");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			RogueGame game = (RogueGame) RG;
-            Connection con = new Connection(s, game.state);
+			RogueGame RG = (RogueGame) game;
+            Connection con = new Connection(s, RG.state);
             Thread thread = new Thread(con);
             thread.start();
+            System.out.println("Started new thread.");
             connections.add(con);
         }
-		
 	}
 	
 	public void render(GameContainer arg0, StateBasedGame arg1, Graphics arg2)

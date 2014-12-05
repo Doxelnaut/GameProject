@@ -1,12 +1,8 @@
 package rogueproject;
 
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -18,10 +14,18 @@ public class Connection implements Runnable {
 	ObjectOutputStream socketOut;
 	ObjectInputStream socketIn;
 	GameState state;
+	Command c;
+	Actor player;
 	
 	Connection(Socket s, GameState gs){
 		socket = s;
 		state = gs;
+		if(state.player == null)
+			player = state.player;
+		else if(state.player2 == null)
+			player = state.player2;
+		//else
+			//handle no more available player spots 
 	}
 
 	@Override
@@ -34,7 +38,9 @@ public class Connection implements Runnable {
 				e.printStackTrace();
 				System.out.print("Error connecting to client");
 				}
-		
+			
+			System.out.println("Connected to " + hostName);		
+			
 		//open object streams
 	    try {
 	      socketOut = new ObjectOutputStream(socket.getOutputStream());
@@ -42,7 +48,7 @@ public class Connection implements Runnable {
 	    }
 	    catch(IOException e){
 			e.printStackTrace();
-			System.out.print("Error opening streams");
+			System.out.println("Error opening streams");
 	    }
 		
 	    while(!quit){
@@ -52,10 +58,17 @@ public class Connection implements Runnable {
 				socketOut.writeObject(state);
 			} catch (IOException e) {
 				e.printStackTrace();
-				System.out.print("Error Writing game state to client.");
+				System.out.println("Error Writing game state to client.");
 			}
 			
-			//Command c = socketIn.readObject();
+			try {
+				c = (Command) socketIn.readObject();
+			} catch (ClassNotFoundException | IOException e) {
+				System.out.println("Error reading command.");
+				e.printStackTrace();
+			}
+			
+			c.execute(player);
 			
 	    }
 	    

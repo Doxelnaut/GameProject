@@ -1,5 +1,7 @@
 package rogueproject;
 
+import java.io.Serializable;
+
 import jig.ResourceManager;
 import jig.Vector;
 
@@ -27,8 +29,12 @@ import org.newdawn.slick.Animation;
  *	Copyright 2014 Zacharias Shufflebarger
  *
  */
-public class Player extends Actor{
+public class Player extends Actor implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int depth; // track the player's depth in the dungeon
 	private int orders = PlayingState.WAIT; // store the input here for acting
 	private int classtype;
