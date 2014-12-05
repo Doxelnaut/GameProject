@@ -16,7 +16,8 @@ public class InputHandler {
 			keys_wd = new MoveCommand(NE),
 			keys_sa = new MoveCommand(SW),
 			keys_sd = new MoveCommand(SE),
-			key_space = new MoveCommand(getShoot()) /*,
+			keys_c = new MoveCommand(0),
+			key_space = new MoveCommand(SHOOT) /*,
 			mouse_left = new MeleeAttackCommand(), 
 			mouse_right = new RangeAttackCommand()*/;
 	
@@ -52,6 +53,9 @@ public class InputHandler {
 		else if(input.isKeyDown(Input.KEY_SPACE)){
 			commands.add(key_space);
 		}
+		else if(input.isKeyDown(Input.KEY_C)){
+			commands.add(keys_c);
+		}
 		/*if(input.isButton1Pressed(Input.MOUSE_LEFT_BUTTON)){
 			commands.add(mouse_left);
 		}
@@ -63,8 +67,6 @@ public class InputHandler {
 		return commands;
 	}
 
-	public static int getShoot() {
-		return SHOOT;
-	}
+	
 	
 }
