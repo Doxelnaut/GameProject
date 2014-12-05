@@ -92,7 +92,7 @@ public class RogueGame extends StateBasedGame{
 	public static final String WalkDownRight = "resource/Walk_0(15,63,110).png";
 	public static final String fireballSheetPath = "resource/fireball.png";
 	public static final String explosionSheetPath   = "resource/explosion.png";
-	public static final String ouchSoundPath = "resource/ouch.wav";
+	//public static final String ouchSoundPath = "resource/ouch.wav";
 	
 
 
@@ -135,9 +135,8 @@ public class RogueGame extends StateBasedGame{
 		ResourceManager.loadImage(WalkDownRight);
 		ResourceManager.loadImage(fireballSheetPath);
 		ResourceManager.loadImage(explosionSheetPath);
-		ResourceManager.loadImage(ouchSoundPath);
+		//ResourceManager.loadImage(ouchSoundPath);
 
-		
 		
 	//	state.player = new Player(GameState.WARRIOR);
 	}

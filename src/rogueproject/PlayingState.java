@@ -53,23 +53,12 @@ public class PlayingState extends BasicGameState {
 	
 	// collective boolean for of all actors turns
 	public boolean actorsTurns = false; 
-	private ArrayList<IsoEntity> ground;
-	private ArrayList<IsoEntity> blocks;
-	private ArrayList<IsoEntity> walls;
-	private ArrayList<IsoEntity> wallsandblocks;
-	private ArrayList<IsoEntity> stop;
-	private Minotaur minotaur;
-	private Fireball fireball;
+
+	//RogueGame rg;
 	@Override
 	public void init(GameContainer container, StateBasedGame game)throws SlickException {
 	
-		ground = new ArrayList<IsoEntity>(100);
-	blocks = new ArrayList<IsoEntity>(100);
-	walls = new ArrayList<IsoEntity>(100);
-	wallsandblocks = new ArrayList<IsoEntity>(200);
-	stop = new ArrayList<IsoEntity>(100);
-	minotaur = new Minotaur(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),GameState.WARRIOR);
-	@SuppressWarnings("resource")
+	
 	BufferedReader reader = null;
 	try {
 		reader = new BufferedReader(new FileReader("src/resource/Map.txt"));
@@ -86,15 +75,15 @@ public class PlayingState extends BasicGameState {
 			    System.out.println(parts.length);
 			    for(int i = 0; i < parts.length;i++){
 			    	if(Integer.valueOf(parts[i]) == 1){
-						walls.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), true) );
-						stop.add(new Ground(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+						GameState.walls.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), true) );
+						GameState.stop.add(new Ground(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
 			    	}
 			    	else if(Integer.valueOf(parts[i]) == 2){
-						blocks.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), false) );
-						ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+			    		GameState.blocks.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), false) );
+			    		GameState.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
 			    	}
 			    	else{
-			    		ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+			    		GameState.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
 			    	}
 
 			    }
@@ -105,14 +94,15 @@ public class PlayingState extends BasicGameState {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	     
-	blocks.add(minotaur);
+		GameState.minotaur = new Minotaur(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),GameState.WARRIOR);
+	   System.out.println( GameState.minotaur);
+	   GameState.blocks.add(GameState.minotaur);
 	
-	for (IsoEntity ie : walls) {
-		wallsandblocks.add(ie);
+	for (IsoEntity ie : GameState.walls) {
+		GameState.wallsandblocks.add(ie);
 	}
-	for (IsoEntity ie : blocks) {
-		wallsandblocks.add(ie);
+	for (IsoEntity ie : GameState.blocks) {
+		GameState.wallsandblocks.add(ie);
 	}
 
 }
@@ -127,34 +117,35 @@ public class PlayingState extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
 		
-		RogueGame rg = (RogueGame)game;
 		
-		if(rg.state.player == null){ // player died, don't render anything.
+		/*
+		if(rg.state.minotaur == null){ // player died, don't render anything.
 			rg.enterState(RogueGame.STARTUPSTATE);
 		}
+		*/
 		
-		if(rg.state.player != null){
-			g.drawString("Level: " + (int)rg.state.player.getLevel() + 
-					" Health: " + (int)rg.state.player.getHitPoints() + 
-					"/" + (int)rg.state.player.getMaxHitPoints() +  
-					" Attack: " + (int)rg.state.player.getAttack() + 
-					" Armor: " + (int)rg.state.player.getArmor() + 
-					" Experience: " + (int)rg.state.player.getExp()
+		if(GameState.minotaur != null){
+			g.drawString("Level: " + (int)GameState.minotaur.getLevel() + 
+					" Health: " + (int)GameState.minotaur.getHitPoints() + 
+					"/" + (int)GameState.minotaur.getMaxHitPoints() +  
+					" Attack: " + (int)GameState.minotaur.getAttack() + 
+					" Armor: " + (int)GameState.minotaur.getArmor() + 
+					" Experience: " + (int)GameState.minotaur.getExperience()
 					, 100 , 10);
-			g.drawString("Dungeon Level: " + rg.state.player.getDepth(), 100, 25);
+			g.drawString("Dungeon Level: " + GameState.minotaur.getDepth(), 100, 25);
 		}
 		
 		g.translate(-RogueGame.camX, -RogueGame.camY);		
 
-		for (IsoEntity ie : ground) {
+		for (IsoEntity ie : GameState.ground) {
 			ie.render(g);
 		}
 		
-		Collections.sort(wallsandblocks);
-		for (IsoEntity ie : wallsandblocks) {
+		Collections.sort(GameState.wallsandblocks);
+		for (IsoEntity ie : GameState.wallsandblocks) {
 			ie.render(g);
 		}
-		if (fireball != null) fireball.render(g);
+		if (GameState.fireball != null) GameState.fireball.render(g);
 		
 		
 		
@@ -163,149 +154,74 @@ public class PlayingState extends BasicGameState {
 	public void update(GameContainer container, StateBasedGame game, int delta)
 			throws SlickException {
 		
-		RogueGame rg = (RogueGame)game;
 		Input input = container.getInput();
 		float x = (60*delta/1000.0f);
-		rg.playerX = minotaur.getX();
-		rg.playerY = minotaur.getY();
-		rg.camX = rg.playerX - rg.VIEWPORT_SIZE_X / 2;
-		rg.camY = rg.playerY - rg.VIEWPORT_SIZE_Y / 2;
+		RogueGame.playerX = GameState.minotaur.getX();
+		RogueGame.playerY = GameState.minotaur.getY();
+		RogueGame.camX = RogueGame.playerX - RogueGame.VIEWPORT_SIZE_X / 2;
+		RogueGame.camY = RogueGame.playerY - RogueGame.VIEWPORT_SIZE_Y / 2;
 
-		Input inputx = container.getInput();
 		InputHandler inputHandler = new InputHandler();
 		ArrayList<Command> commands = inputHandler.handleInput(input);
 		if(commands.size() > 0){
 			for(Command c : commands){
 				System.out.println(c);
-				c.execute(rg.state.player);
+				c.execute(GameState.minotaur,x);
 			}
 		}
-		else minotaur.halt();
-		
-/* 		if(rg.state.actors.size()==0){
-			rg.state.player.setDepth(rg.state.player.getDepth() + 1);
-			rg.enterState(RogueGame.PLAYINGSTATE);
-		}
-*/		
-//		Input input = container.getInput();
-/*		// The player's turn 
-		if(rg.state.player != null){
-			if(rg.state.player.getTurn()){
-				if(!rg.state.player.getGained()){
-					rg.state.player.gainEnergy();
-					rg.state.player.setGained(true);
-				}
-*///			if(!rg.state.player.isMoving()){ // handle all user input in this block
-					// Directional Keys
-					//   Q   W   E
-					//    \  |  /
-					// A - restS - D
-					//    /  |  \
-					//   Z   X   C
-/**					if 		(input.isKeyDown(Input.KEY_W)) 	{
-						//rg.state.player.setOrders(N);
-						mapy -= 8;
-						mapx += 16;
-					} 		// North
-					else if (input.isKeyDown(Input.KEY_X)) 	{
-						//rg.state.player.setOrders(S);
-						mapy += 8;
-						mapx -= 16;
-
-						} 		// South
-					else if (input.isKeyDown(Input.KEY_A)) 	{
-						//rg.state.player.setOrders(W);
-						mapx += 16;
-						mapy += 8;
-						} 		// West
-					else if (input.isKeyDown(Input.KEY_D)) 	{
-						//rg.state.player.setOrders(E);
-						mapx -= 16;
-						mapy -= 8;
-					} 		// East
-					else if (input.isKeyDown(Input.KEY_Q)) 	{
-						//rg.state.player.setOrders(NW);
-						mapy -= 8;
-						} 		// Northwest
-					else if (input.isKeyDown(Input.KEY_E)) 	{
-						//rg.state.player.setOrders(NE);
-						mapx -= 8;
-						} 		// Northeast
-					else if (input.isKeyDown(Input.KEY_Z)) 	{
-						//rg.state.player.setOrders(SW);
-						mapx += 8;
-						} 		// Southwest
-					else if (input.isKeyDown(Input.KEY_C)) 	{
-						//rg.state.player.setOrders(SE);
-						mapy += 8;
-						} 		// Southeast
-					else if (input.isKeyDown(Input.KEY_S)) 	{rg.state.player.setOrders(REST);} 	// Rest
-					else if (input.isKeyPressed(Input.KEY_ESCAPE)) {container.exit();}
-**/				
+		else GameState.minotaur.halt();
+				
 		if (input.isKeyPressed(Input.KEY_LCONTROL)) {
-			minotaur.debugThis = !minotaur.debugThis;
-			if (fireball != null) fireball.debugThis = minotaur.debugThis;
+			GameState.minotaur.debugThis = !GameState.minotaur.debugThis;
+			if (GameState.fireball != null) GameState.fireball.debugThis = GameState.minotaur.debugThis;
 		}
 		
-		for(IsoEntity b : blocks) {
-			if (b != minotaur && b.collides(minotaur) != null) {
+		for(IsoEntity b : GameState.blocks) {
+			if (b != GameState.minotaur && b.collides(GameState.minotaur) != null) {
 				System.out.println("Ouch!");
-				minotaur.sayOuch();
-				minotaur.halt();
-				minotaur.ungo();
+				//minotaur.sayOuch();
+				GameState.minotaur.halt();
+				GameState.minotaur.ungo();
 			}
 		}
 		if (input.isKeyDown(Input.KEY_SPACE)) {
-			fireball = minotaur.launchFireball();
+			GameState.fireball = GameState.minotaur.launchFireball();
 		}
-		if (fireball != null) {
-			fireball.update(x*1.5f);
+		if (GameState.fireball != null) {
+			GameState.fireball.update(x*1.5f);
 			IsoEntity other;
-			for (Iterator<IsoEntity> iie = blocks.iterator(); iie.hasNext(); ) {
+			for (Iterator<IsoEntity> iie = GameState.blocks.iterator(); iie.hasNext(); ) {
 				other = iie.next();
-				if (other == minotaur) continue;
-				if (fireball.collides(other) != null) {
+				if (other == GameState.minotaur) continue;
+				if (GameState.fireball.collides(other) != null) {
 					System.out.println("true");
-					fireball.kaboom();
+					GameState.fireball.kaboom();
 					iie.remove();
-					wallsandblocks.clear();
+					GameState.wallsandblocks.clear();
 					
-					for (IsoEntity ie : walls) {
-						wallsandblocks.add(ie);
+					for (IsoEntity ie : GameState.walls) {
+						GameState.wallsandblocks.add(ie);
 					}
-					for (IsoEntity ie : blocks) {
-						wallsandblocks.add(ie);
+					for (IsoEntity ie : GameState.blocks) {
+						GameState.wallsandblocks.add(ie);
 					}
 					
 					break;
 				}
 			}
-			for (Iterator<IsoEntity> iie = walls.iterator(); iie.hasNext(); ) {
+			for (Iterator<IsoEntity> iie = GameState.walls.iterator(); iie.hasNext(); ) {
 				other = iie.next();
-				if (other == minotaur) continue;
-				if (fireball.collides(other) != null) {
+				if (other == GameState.minotaur) continue;
+				if (GameState.fireball.collides(other) != null) {
 					System.out.println("true");
-					fireball.kaboom();
+					GameState.fireball.kaboom();
 					break;
 				}
 			}
-			if (fireball.done()) fireball = null;
+			if (GameState.fireball.done()) GameState.fireball = null;
 		}
 		
 		
-	}
-	public boolean canMove(){
-		IsoEntity other;
-		for (Iterator<IsoEntity> iie = stop.iterator(); iie.hasNext(); ) {
-			other = iie.next();
-			
-			if (minotaur.collides(other) != null) {
-				return false;
-			}
-			
-		}
-		return true;
-	
 	}
 
 	@Override
@@ -314,9 +230,9 @@ public class PlayingState extends BasicGameState {
 	}
 	
 	public void setLevel(RogueGame rg) throws SlickException{
-		switch(rg.state.player.getDepth()){
+		switch(GameState.minotaur.getDepth()){
 		case 1:
-			rg.state.player.setTilePosition(1, 2);
+			//rg.state.player.setTilePosition(1, 2);
 			//map = new TiledMap("rogueproject/resource/maps/tinytestmap.tmx");
 /**			//Little Zombies
 			rg.state.actors.add( new Actor(0, 14, 15));
@@ -354,7 +270,7 @@ public class PlayingState extends BasicGameState {
 			rg.state.actors.add( new Actor(5, 48, 4)); 
 **/			break;
 		case 2:
-			rg.state.player.setTilePosition(0,1);
+		//	rg.state.player.setTilePosition(0,1);
 			//map = new TiledMap("rogueproject/resource/maps/tinytestmap.tmx");
 /**			// Little Spiders
 			rg.state.actors.add( new Actor(6, 12, 19));
