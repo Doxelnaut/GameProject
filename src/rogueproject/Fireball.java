@@ -9,6 +9,7 @@ public class Fireball extends IsoEntity {
 
 	Animation[] moving = new Animation[5];
 	int current;
+	static boolean shot = false;
 	static final int LEFT = 0;
 	static final int RIGHT = 1;
 	static final int UP = 2;
@@ -17,7 +18,7 @@ public class Fireball extends IsoEntity {
 	Vector domain;
 	
 	public Fireball(Vector wWorldSize, Vector wPosition, int dir) {
-		super(wWorldSize, IsoWorldGame.tileSize);
+		super(wWorldSize, RogueGame.TILE_SIZE);
 		domain = wWorldSize;
 
 		moving[LEFT] = new Animation(ResourceManager.getSpriteSheet(IsoWorldGame.fireballSheetPath, 64, 64), 0,7,7,7, true, 20, true);
@@ -53,5 +54,8 @@ public class Fireball extends IsoEntity {
 				wPosition.getY() < 0 || wPosition.getY() > domain.getY()) return true;
 		if (current == KABOOM) return moving[current].isStopped();
 		return false;
+	}
+	public boolean getShot(){
+		return shot;
 	}
 }
