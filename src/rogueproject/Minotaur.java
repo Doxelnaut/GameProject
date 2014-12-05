@@ -295,5 +295,112 @@ public class Minotaur extends IsoEntity {
 		}
 		return true;
 	}
+
+	public void start(float x, float direction) {
+		isShooting();
+		if(direction == 9){
+			System.out.println("SHOOT");
+			
+			//System.out.println(GameState.current);
+				
+				shoot();
+			//	GameState.fireball = GameState.launchFireball();
+				
+				
+		
+			
+		}
+		
+			if(direction == 0){
+				System.out.println("crouch");
+				toggleCrouch();
+			}
+			else if(direction == 5){
+				go(UP, x,UpRIGHT); 
+				if(canMove()){
+					go(RIGHT, x,UpRIGHT); 
+					if(!canMove()){
+						halt();
+						ungo();
+					}
+
+				}
+				else{
+					halt();
+					ungo();
+				}
+			}
+			else if(direction == 6){
+				go(UP, x,UpLEFT); 
+				if(canMove()){
+					go(LEFT, x,UpLEFT); 
+					if(!canMove()){
+						halt();
+						ungo();
+					}
+				}
+				else{
+					halt();
+					ungo();
+				}
+			}
+			else if(direction == 7){
+				go(DOWN, x,DownLEFT); 
+				if(canMove()){
+					go(LEFT, x,DownLEFT); 
+					if(!canMove()){
+						halt();
+						ungo();
+					}
+				}
+				else{
+					halt();
+					ungo();
+				}
+			}
+			else if(direction == 8){
+				go(DOWN, x,DownRIGHT);
+				if(canMove()){
+					go(RIGHT, x,DownRIGHT);
+					if(!canMove()){
+						halt();
+						ungo();
+					}
+				}
+				else{
+					halt();
+					ungo();
+				}
+			}
+			else if (direction == 1){
+				go(UP, x,UP);
+				if(!canMove()){
+					halt();
+					ungo();
+				}
+			}
+			else if (direction == 4){
+				go(LEFT, x,LEFT);
+				if(!canMove()){
+					halt();
+					ungo();
+				}
+			}
+			else if (direction == 3){
+				go(DOWN, x,DOWN);
+				if(!canMove()){
+					halt();
+					ungo();
+				}
+			}
+			else if (direction == 2){
+				go(RIGHT, x,RIGHT);
+				if(!canMove()){
+					halt();
+					ungo();
+				}
+			}
+		}		
+	}
 	
-}
+
