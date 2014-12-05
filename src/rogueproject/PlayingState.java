@@ -59,58 +59,58 @@ public class PlayingState extends BasicGameState {
 	public void init(GameContainer container, StateBasedGame game)throws SlickException {
 	
 	
-	BufferedReader reader = null;
-	try {
-		reader = new BufferedReader(new FileReader("src/resource/Map.txt"));
-	} catch (FileNotFoundException e1) {
-		e1.printStackTrace();
-	}
-        String line = null;
-        
-        int r = 0;
-	    try {
-			while ((line = reader.readLine()) != null) {
-
-			    String[] parts = line.split("\\s");
-			    System.out.println(parts.length);
-			    for(int i = 0; i < parts.length;i++){
-			    	if(Integer.valueOf(parts[i]) == 1){
-						GameState.walls.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), true) );
-						GameState.stop.add(new Ground(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
-			    	}
-			    	else if(Integer.valueOf(parts[i]) == 2){
-			    		GameState.blocks.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), false) );
-			    		GameState.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
-			    	}
-			    	else{
-			    		GameState.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
-			    	}
-
-			    }
-			    	r++;
-			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		GameState.minotaur = new Minotaur(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),GameState.WARRIOR);
-	   System.out.println( GameState.minotaur);
-	   GameState.blocks.add(GameState.minotaur);
 	
-	for (IsoEntity ie : GameState.walls) {
-		GameState.wallsandblocks.add(ie);
-	}
-	for (IsoEntity ie : GameState.blocks) {
-		GameState.wallsandblocks.add(ie);
-	}
-
 }
 
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) 
 			throws SlickException {
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new FileReader("src/resource/Map.txt"));
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
+	        String line = null;
+	        
+	        int r = 0;
+		    try {
+				while ((line = reader.readLine()) != null) {
+
+				    String[] parts = line.split("\\s");
+				    System.out.println(parts.length);
+				    for(int i = 0; i < parts.length;i++){
+				    	if(Integer.valueOf(parts[i]) == 1){
+							GameState.walls.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), true) );
+							GameState.stop.add(new Ground(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+				    	}
+				    	else if(Integer.valueOf(parts[i]) == 2){
+				    		GameState.blocks.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), false) );
+				    		GameState.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+				    	}
+				    	else{
+				    		GameState.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+				    	}
+
+				    }
+				    	r++;
+				}
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			GameState.minotaur = new Minotaur(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),GameState.WARRIOR);
+		   System.out.println( GameState.minotaur);
+		   GameState.blocks.add(GameState.minotaur);
 		
+		for (IsoEntity ie : GameState.walls) {
+			GameState.wallsandblocks.add(ie);
+		}
+		for (IsoEntity ie : GameState.blocks) {
+			GameState.wallsandblocks.add(ie);
+		}
+
 	}
 	
 	@Override
@@ -124,16 +124,6 @@ public class PlayingState extends BasicGameState {
 		}
 		*/
 		
-		if(GameState.minotaur != null){
-			g.drawString("Level: " + (int)GameState.minotaur.getLevel() + 
-					" Health: " + (int)GameState.minotaur.getHitPoints() + 
-					"/" + (int)GameState.minotaur.getMaxHitPoints() +  
-					" Attack: " + (int)GameState.minotaur.getAttack() + 
-					" Armor: " + (int)GameState.minotaur.getArmor() + 
-					" Experience: " + (int)GameState.minotaur.getExperience()
-					, 100 , 10);
-			g.drawString("Dungeon Level: " + GameState.minotaur.getDepth(), 100, 25);
-		}
 		
 		g.translate(-RogueGame.camX, -RogueGame.camY);		
 
@@ -146,8 +136,20 @@ public class PlayingState extends BasicGameState {
 			ie.render(g);
 		}
 		if (GameState.fireball != null) GameState.fireball.render(g);
-		
-		
+		g.translate(RogueGame.camX, RogueGame.camY);		
+
+		if(GameState.minotaur != null){
+			g.drawString("Level: " + (int)GameState.minotaur.getLevel() + 
+					" Health: " + (int)GameState.minotaur.getHitPoints() + 
+					"/" + (int)GameState.minotaur.getMaxHitPoints() +  
+					" Attack: " + (int)GameState.minotaur.getAttack() + 
+					" Armor: " + (int)GameState.minotaur.getArmor() + 
+					" Experience: " + (int)GameState.minotaur.getExperience()
+					, 100 , 10);
+			g.drawString("Dungeon Level: " + GameState.minotaur.getDepth(), 100, 25);
+		}
+		g.translate(-RogueGame.camX, -RogueGame.camY);		
+
 		
 	}
 	@Override
