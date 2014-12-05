@@ -166,7 +166,7 @@ public class PlayingState extends BasicGameState {
 		ArrayList<Command> commands = inputHandler.handleInput(input);
 		if(commands.size() > 0){
 			for(Command c : commands){
-				System.out.println(c);
+				//System.out.println(c);
 				
 				c.execute(GameState.minotaur,x);
 

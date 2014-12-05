@@ -82,6 +82,7 @@ public class RogueGame extends StateBasedGame{
 	public static final String groundSheetPath   = "resource/flagstonetiles.png";
 	public static final String tallBlockImgPath   = "resource/tallcaveblock.png";
 	public static final String shortBlockImgPath   = "resource/shortcaveblock.png";
+	
 	public static final String WalkLeft = "resource/Walk_10(15,69,108).png";
 	public static final String WalkRight = "resource/Walk_2(15,62,111).png";
 	public static final String WalkUp = "resource/Walk_6(15,66,111).png";
@@ -90,6 +91,34 @@ public class RogueGame extends StateBasedGame{
 	public static final String WalkUpRight = "resource/Walk_4(15,63,112).png";
 	public static final String WalkDownLeft = "resource/Walk_12(15,63,108).png";
 	public static final String WalkDownRight = "resource/Walk_0(15,63,110).png";
+	
+	public static final String fireLeft = "resource/Walk_Fire_10(4,95,109).png";
+	public static final String fireRight = "resource/Walk_Fire_2(4,57,108).png";
+	public static final String fireUp = "resource/Walk_Fire_6(4,85,112).png";
+	public static final String fireDown = "resource/Walk_Fire_14(4,67,104).png";
+	public static final String fireUpLeft = "resource/Walk_Fire_8(4,104,110).png";
+	public static final String fireUpRight = "resource/Walk_Fire_4(4,59,117).png";
+	public static final String fireDownLeft = "resource/Walk_Fire_12(4,67,107).png";
+	public static final String fireDownRight = "resource/Walk_Fire_0(4,62,105).png";
+	
+	public static final String crouchLeft = "resource/Crouch_10(15,79,68).png";
+	public static final String crouchRight = "resource/Crouch_2(15,38,90).png";
+	public static final String crouchUp = "resource/Crouch_6(15,73,92).png";
+	public static final String crouchDown = "resource/Crouch_14(15,41,63).png";
+	public static final String crouchUpLeft = "resource/Crouch_8(15,87,80).png";
+	public static final String crouchUpRight = "resource/Crouch_4(15,46,96).png";
+	public static final String crouchDownLeft = "resource/Crouch_12(15,56,61).png";
+	public static final String crouchDownRight = "resource/Crouch_0(15,35,76).png";
+	
+	public static final String fireCrouchLeft = "resource/Crouch_Fire_10(4,83,76).png";
+	public static final String fireCrouchRight = "resource/Crouch_Fire_2(4,39,76).png";
+	public static final String fireCrouchUp = "resource/Crouch_Fire_6(4,71,81).png";
+	public static final String fireCrouchDown = "resource/Crouch_Fire_14(4,49,70).png";
+	public static final String fireCrouchUpLeft = "resource/Crouch_Fire_8(4,91,80).png";
+	public static final String fireCrouchUpRight = "resource/Crouch_Fire_4(4,42,85).png";
+	public static final String fireCrouchDownLeft = "resource/Crouch_Fire_12(4,55,73).png";
+	public static final String fireCrouchDownRight = "resource/Crouch_Fire_0(4,44,72).png";
+	
 	public static final String fireballSheetPath = "resource/fireball.png";
 	public static final String explosionSheetPath   = "resource/explosion.png";
 	//public static final String ouchSoundPath = "resource/ouch.wav";
@@ -135,9 +164,33 @@ public class RogueGame extends StateBasedGame{
 		ResourceManager.loadImage(WalkDownRight);
 		ResourceManager.loadImage(fireballSheetPath);
 		ResourceManager.loadImage(explosionSheetPath);
+		ResourceManager.loadImage(fireLeft);
+		ResourceManager.loadImage(fireRight);
+		ResourceManager.loadImage(fireUp);
+		ResourceManager.loadImage(fireDown);
+		ResourceManager.loadImage(fireUpLeft);
+		ResourceManager.loadImage(fireUpRight);
+		ResourceManager.loadImage(fireDownLeft);
+		ResourceManager.loadImage(fireDownRight);
+		ResourceManager.loadImage(crouchLeft);
+		ResourceManager.loadImage(crouchRight);
+		ResourceManager.loadImage(crouchUp);
+		ResourceManager.loadImage(crouchDown);
+		ResourceManager.loadImage(crouchUpLeft);
+		ResourceManager.loadImage(crouchUpRight);
+		ResourceManager.loadImage(crouchDownLeft);
+		ResourceManager.loadImage(crouchDownRight);
+		ResourceManager.loadImage(fireCrouchLeft);
+		ResourceManager.loadImage(fireCrouchRight);
+		ResourceManager.loadImage(fireCrouchUp);
+		ResourceManager.loadImage(fireCrouchDown);
+		ResourceManager.loadImage(fireCrouchUpLeft);
+		ResourceManager.loadImage(fireCrouchUpRight);
+		ResourceManager.loadImage(fireCrouchDownLeft);
+		ResourceManager.loadImage(fireCrouchDownRight);
 		//ResourceManager.loadImage(ouchSoundPath);
 
-		
+
 	//	state.player = new Player(GameState.WARRIOR);
 	}
 	
