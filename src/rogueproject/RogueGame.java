@@ -187,15 +187,10 @@ public class RogueGame extends StateBasedGame{
 		ResourceManager.loadImage(fireCrouchDownRight);
 		//ResourceManager.loadImage(ouchSoundPath);
 
-<<<<<<< HEAD
-		player = new Player(GameState.WARRIOR);
-		player2 = new Player(GameState.WARRIOR);
 		state.player = player;
 		state.player2 = player2;
 		
-=======
 
->>>>>>> branch 'Develop' of ssh://git@github.com/D3LTR0N-Z3R0/GameProject.git
 	//	state.player = new Player(GameState.WARRIOR);
 	}
 	

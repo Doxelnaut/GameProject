@@ -10,14 +10,12 @@ public class GameState implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	public static final int WARRIOR = 0;
-
-	Player player;
-	Player player2;
 	
 	boolean[][] blocked;
 	boolean[][] occupied; // for collision detection with actors
 	NodeMap pathmap;
-	public static Minotaur minotaur;
+	public static Player player;
+	public static Player player2;
 	ArrayList<IsoEntity> actors;
 	public static ArrayList<IsoEntity> ground;
 	public static ArrayList<IsoEntity> blocks;

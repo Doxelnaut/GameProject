@@ -149,9 +149,9 @@ public class PlayingState extends BasicGameState {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			GameState.minotaur = new Minotaur(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),GameState.WARRIOR);
-		   System.out.println( GameState.minotaur);
-		   GameState.blocks.add(GameState.minotaur);
+			GameState.player = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),GameState.WARRIOR);
+		   System.out.println( GameState.player);
+		   GameState.blocks.add(GameState.player);
 		
 		for (IsoEntity ie : GameState.walls) {
 			GameState.wallsandblocks.add(ie);
@@ -168,7 +168,7 @@ public class PlayingState extends BasicGameState {
 		
 		
 		
-		if(GameState.minotaur == null){ // player died, don't render anything.
+		if(GameState.player == null){ // player died, don't render anything.
 			rg.enterState(RogueGame.STARTUPSTATE);
 		}
 		
@@ -187,16 +187,16 @@ public class PlayingState extends BasicGameState {
 		if (GameState.fireball != null) GameState.fireball.render(g);
 		g.translate(RogueGame.camX, RogueGame.camY);		
 
-		if(GameState.minotaur != null){
-			g.drawString("Level: " + (int)GameState.minotaur.getLevel() + 
-					" Health: " + (int)GameState.minotaur.getHitPoints() + 
-					"/" + (int)GameState.minotaur.getMaxHitPoints() +  
-					" Attack: " + (int)GameState.minotaur.getAttack() + 
-					" Armor: " + (int)GameState.minotaur.getArmor() + 
-					" Experience: " + (int)GameState.minotaur.getExperience()
+		if(GameState.player != null){
+			g.drawString("Level: " + (int)GameState.player.getLevel() + 
+					" Health: " + (int)GameState.player.getHitPoints() + 
+					"/" + (int)GameState.player.getMaxHitPoints() +  
+					" Attack: " + (int)GameState.player.getAttack() + 
+					" Armor: " + (int)GameState.player.getArmor() + 
+					" Experience: " + (int)GameState.player.getExperience()
 					, 100 , 10);
 			g.drawString("Dungeon Level: " + rg.player.getDepth(), 100, 25);
-			g.drawString("Dungeon Level: " + GameState.minotaur.getDepth(), 100, 25);
+			g.drawString("Dungeon Level: " + GameState.player.getDepth(), 100, 25);
 		}
 		g.translate(-RogueGame.camX, -RogueGame.camY);		
 
@@ -209,8 +209,8 @@ public class PlayingState extends BasicGameState {
 		Input input = container.getInput();
 		float x = (60*delta/1000.0f);
 		
-		RogueGame.playerX = GameState.minotaur.getX();
-		RogueGame.playerY = GameState.minotaur.getY();
+		RogueGame.playerX = GameState.player.getX();
+		RogueGame.playerY = GameState.player.getY();
 		RogueGame.camX = RogueGame.playerX - RogueGame.VIEWPORT_SIZE_X / 2;
 		RogueGame.camY = RogueGame.playerY - RogueGame.VIEWPORT_SIZE_Y / 2;
 
@@ -218,7 +218,6 @@ public class PlayingState extends BasicGameState {
 		ArrayList<Command> commands = inputHandler.handleInput(input);
 		if(commands.size() > 0){
 			for(Command c : commands){
-<<<<<<< HEAD
 				try {
 					socketOut.writeObject(c);
 				} catch (IOException e) {
@@ -226,27 +225,25 @@ public class PlayingState extends BasicGameState {
 					e.printStackTrace();
 				}
 				System.out.println(c);
-=======
 				//System.out.println(c);
->>>>>>> branch 'Develop' of ssh://git@github.com/D3LTR0N-Z3R0/GameProject.git
 				
-				c.execute(GameState.minotaur,x);
+				c.execute(GameState.player,x);
 
 			}
 		}
-		else GameState.minotaur.halt();
+		else GameState.player.halt();
 				
 		if (input.isKeyPressed(Input.KEY_LCONTROL)) {
-			GameState.minotaur.debugThis = !GameState.minotaur.debugThis;
-			if (GameState.fireball != null) GameState.fireball.debugThis = GameState.minotaur.debugThis;
+			GameState.player.debugThis = !GameState.player.debugThis;
+			if (GameState.fireball != null) GameState.fireball.debugThis = GameState.player.debugThis;
 		}
 		
 		for(IsoEntity b : GameState.blocks) {
-			if (b != GameState.minotaur && b.collides(GameState.minotaur) != null) {
+			if (b != GameState.player && b.collides(GameState.player) != null) {
 				System.out.println("Ouch!");
-				//minotaur.sayOuch();
-				GameState.minotaur.halt();
-				GameState.minotaur.ungo();
+				//player.sayOuch();
+				GameState.player.halt();
+				GameState.player.ungo();
 			}
 		}
 		
@@ -345,7 +342,7 @@ public class PlayingState extends BasicGameState {
 			IsoEntity other;
 			for (Iterator<IsoEntity> iie = GameState.blocks.iterator(); iie.hasNext(); ) {
 				other = iie.next();
-				if (other == GameState.minotaur) continue;
+				if (other == GameState.player) continue;
 				if (GameState.fireball.collides(other) != null) {
 					System.out.println("true");
 					GameState.fireball.kaboom();
@@ -364,7 +361,7 @@ public class PlayingState extends BasicGameState {
 			}
 			for (Iterator<IsoEntity> iie = GameState.walls.iterator(); iie.hasNext(); ) {
 				other = iie.next();
-				if (other == GameState.minotaur) continue;
+				if (other == GameState.player) continue;
 				if (GameState.fireball.collides(other) != null) {
 					System.out.println("true");
 					GameState.fireball.kaboom();
@@ -384,7 +381,7 @@ public class PlayingState extends BasicGameState {
 	
 	public void setLevel(RogueGame rg) throws SlickException{
 
-		switch(GameState.minotaur.getDepth()){
+		switch(GameState.player.getDepth()){
 		case 1:
 			//rg.state.player.setTilePosition(1, 2);
 			//map = new TiledMap("rogueproject/resource/maps/tinytestmap.tmx");

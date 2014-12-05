@@ -140,7 +140,7 @@ public class Player extends IsoEntity {
 		for (Iterator<IsoEntity> iie = GameState.stop.iterator(); iie.hasNext(); ) {
 			other = iie.next();
 			
-			if (GameState.minotaur.collides(other) != null) {
+			if (GameState.player.collides(other) != null) {
 				return false;
 			}
 			

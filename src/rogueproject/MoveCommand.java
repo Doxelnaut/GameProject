@@ -9,8 +9,8 @@ public class MoveCommand extends Command {
 		
 	}
 	
-	public void execute(Minotaur minotaur, float x){
-		minotaur.start(direction, x);
+	public void execute(Player player, float x){
+		player.start(direction, x);
 		
 		
 		
