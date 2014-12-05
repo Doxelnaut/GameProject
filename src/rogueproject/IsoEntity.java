@@ -16,7 +16,138 @@ public class IsoEntity extends Entity implements Comparable<IsoEntity> {
 	Vector wPosition; // position in world coordinates
 	float zHeight;
 	Vector footing;
-	
+	private int level;
+	private float maxHitPoints;
+	private float hitPoints;
+	private float attack;
+	private float armor;
+	private int experience; // for leveling up. Player accrues the experience enemies hold.
+	// Graphics attributes
+	private int type; // Player, creature, etc.
+	private int depth; // track the player's depth in the dungeon
+	private int orders = PlayingState.WAIT; // store the input here for acting
+	private int classtype;
+	private float energy, gain; // energy is used for actions per turn
+	public Vector getwWorldOrigin() {
+		return wWorldOrigin;
+	}
+
+	public void setwWorldOrigin(Vector wWorldOrigin) {
+		this.wWorldOrigin = wWorldOrigin;
+	}
+
+	public float getzHeight() {
+		return zHeight;
+	}
+
+	public void setzHeight(float zHeight) {
+		this.zHeight = zHeight;
+	}
+
+	public Vector getFooting() {
+		return footing;
+	}
+
+	public void setFooting(Vector footing) {
+		this.footing = footing;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	public float getMaxHitPoints() {
+		return maxHitPoints;
+	}
+
+	public void setMaxHitPoints(float maxHitPoints) {
+		this.maxHitPoints = maxHitPoints;
+	}
+
+	public float getHitPoints() {
+		return hitPoints;
+	}
+
+	public void setHitPoints(float hitPoints) {
+		this.hitPoints = hitPoints;
+	}
+
+	public float getAttack() {
+		return attack;
+	}
+
+	public void setAttack(float attack) {
+		this.attack = attack;
+	}
+
+	public float getArmor() {
+		return armor;
+	}
+
+	public void setArmor(float armor) {
+		this.armor = armor;
+	}
+
+	public int getExperience() {
+		return experience;
+	}
+
+	public void setExperience(int experience) {
+		this.experience = experience;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public int getDepth() {
+		return depth;
+	}
+
+	public void setDepth(int depth) {
+		this.depth = depth;
+	}
+
+	public int getOrders() {
+		return orders;
+	}
+
+	public void setOrders(int orders) {
+		this.orders = orders;
+	}
+
+	public int getClasstype() {
+		return classtype;
+	}
+
+	public void setClasstype(int classtype) {
+		this.classtype = classtype;
+	}
+
+	public float getEnergy() {
+		return energy;
+	}
+
+	public void setEnergy(float energy) {
+		this.energy = energy;
+	}
+
+	public float getGain() {
+		return gain;
+	}
+
+	public void setGain(float gain) {
+		this.gain = gain;
+	}
+
 	public IsoEntity(Vector wWorldSz, float wTileSz) {
 		super();
 		wTileSize = wTileSz;

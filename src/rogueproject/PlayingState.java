@@ -54,11 +54,9 @@ public class PlayingState extends BasicGameState {
 	// collective boolean for of all actors turns
 	public boolean actorsTurns = false; 
 
-	//RogueGame rg;
+	RogueGame rg;
 	@Override
 	public void init(GameContainer container, StateBasedGame game)throws SlickException {
-	
-	
 	
 }
 
@@ -118,11 +116,11 @@ public class PlayingState extends BasicGameState {
 			throws SlickException {
 		
 		
-		/*
-		if(rg.state.minotaur == null){ // player died, don't render anything.
+		
+		if(GameState.minotaur == null){ // player died, don't render anything.
 			rg.enterState(RogueGame.STARTUPSTATE);
 		}
-		*/
+		
 		
 		
 		g.translate(-RogueGame.camX, -RogueGame.camY);		
@@ -158,6 +156,7 @@ public class PlayingState extends BasicGameState {
 		
 		Input input = container.getInput();
 		float x = (60*delta/1000.0f);
+		
 		RogueGame.playerX = GameState.minotaur.getX();
 		RogueGame.playerY = GameState.minotaur.getY();
 		RogueGame.camX = RogueGame.playerX - RogueGame.VIEWPORT_SIZE_X / 2;
@@ -168,7 +167,9 @@ public class PlayingState extends BasicGameState {
 		if(commands.size() > 0){
 			for(Command c : commands){
 				System.out.println(c);
+				
 				c.execute(GameState.minotaur,x);
+
 			}
 		}
 		else GameState.minotaur.halt();
@@ -186,9 +187,7 @@ public class PlayingState extends BasicGameState {
 				GameState.minotaur.ungo();
 			}
 		}
-		if (input.isKeyDown(Input.KEY_SPACE)) {
-			GameState.fireball = GameState.minotaur.launchFireball();
-		}
+		
 		if (GameState.fireball != null) {
 			GameState.fireball.update(x*1.5f);
 			IsoEntity other;

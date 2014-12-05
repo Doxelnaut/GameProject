@@ -10,18 +10,7 @@ import org.newdawn.slick.Sound;
 
 public class Minotaur extends IsoEntity {
 	Animation[] walking = new Animation[8];
-	private int level;
-	private float maxHitPoints;
-	private float hitPoints;
-	private float attack;
-	private float armor;
-	private int experience; // for leveling up. Player accrues the experience enemies hold.
-	// Graphics attributes
-	private int type; // Player, creature, etc.
-	private int depth; // track the player's depth in the dungeon
-	private int orders = PlayingState.WAIT; // store the input here for acting
-	private int classtype;
-	private float energy, gain; // energy is used for actions per turn
+	
 	static final int LEFT = 0;
 	static final int RIGHT = 1;
 	static final int UP = 2;
@@ -44,11 +33,10 @@ public class Minotaur extends IsoEntity {
 		
 		removeAnimation(walking[current]);
 		wWorldSz = wWorldSize;
-		
-		type = charClass;
+		this.setType(charClass);
 		
 		getTypeImage();
-		
+		setTypeAttributes();
 		addAnimation(walking[current]);
 		setZHeightFromIsoImage(walking[current].getCurrentFrame(), 32);
 		setPosition(wPosition);
@@ -56,7 +44,7 @@ public class Minotaur extends IsoEntity {
 		}
 	
 	private void getTypeImage() {
-		switch(type){
+		switch(this.getType()){
 			case(GameState.WARRIOR):{
 				walking[LEFT] = new Animation(ResourceManager.getSpriteSheet(IsoWorldGame.WalkLeft, 99, 135), 0,0,14,0, true, 70, true);
 				walking[RIGHT] = new Animation(ResourceManager.getSpriteSheet(IsoWorldGame.WalkRight,99, 135), 0,0,14,0, true, 70, true);
@@ -76,7 +64,37 @@ public class Minotaur extends IsoEntity {
 			}
 		}
 	}
-
+	public void setTypeAttributes(){
+		switch(this.getType()){
+		case 0:
+			this.setLevel(1);
+			this.setMaxHitPoints(10);
+			this.setHitPoints(10);
+			this.setAttack(2);
+			this.setArmor(0);
+			this.setEnergy(0);
+			this.setGain(1);
+			this.setExperience(0);
+			break;
+		default:
+			break;
+		}
+	}
+	public void attackActor(IsoEntity enemy){
+		// damage done to enemy is player's attack minus enemies armor. if that is less than 0, do 0 damage instead.
+		enemy.setHitPoints(enemy.getHitPoints() - Math.max(this.getAttack() - enemy.getArmor(), 0));
+		if(enemy.getHitPoints() <= 0){
+			this.setExperience(this.getExperience() + enemy.getExperience());
+		}
+		while(this.getExperience() > (this.getLevel() * 5)){ //defeating the enemy leads to a level up!
+			System.out.println("levelup!");
+			this.setExperience(this.getExperience() - (this.getLevel() * 5));
+			this.setLevel(this.getLevel() + 1);
+			this.setHitPoints(this.getHitPoints() + 5);
+			this.setAttack(this.getAttack() + 1);
+			this.setArmor(this.getArmor() + 0.5f);
+		}
+	}
 	public void sayOuch() {
 		if (ouch.playing()) return;
 		ouch.play();
@@ -126,100 +144,5 @@ public class Minotaur extends IsoEntity {
 		return true;
 	
 	}
-
-	public int getDepth()		{return this.depth;}
-
-	public int getLevel() {
-		return level;
-	}
-
-	public void setLevel(int level) {
-		this.level = level;
-	}
-
-	public float getMaxHitPoints() {
-		return maxHitPoints;
-	}
-
-	public void setMaxHitPoints(float maxHitPoints) {
-		this.maxHitPoints = maxHitPoints;
-	}
-
-	public float getHitPoints() {
-		return hitPoints;
-	}
-
-	public void setHitPoints(float hitPoints) {
-		this.hitPoints = hitPoints;
-	}
-
-	public float getAttack() {
-		return attack;
-	}
-
-	public void setAttack(float attack) {
-		this.attack = attack;
-	}
-
-	public float getArmor() {
-		return armor;
-	}
-
-	public void setArmor(float armor) {
-		this.armor = armor;
-	}
-
-	public int getExperience() {
-		return experience;
-	}
-
-	public void setExperience(int experience) {
-		this.experience = experience;
-	}
-
-	public int getType() {
-		return type;
-	}
-
-	public void setType(int type) {
-		this.type = type;
-	}
-
-	public int getOrders() {
-		return orders;
-	}
-
-	public void setOrders(int orders) {
-		this.orders = orders;
-	}
-
-	public int getClasstype() {
-		return classtype;
-	}
-
-	public void setClasstype(int classtype) {
-		this.classtype = classtype;
-	}
-
-	public float getEnergy() {
-		return energy;
-	}
-
-	public void setEnergy(float energy) {
-		this.energy = energy;
-	}
-
-	public float getGain() {
-		return gain;
-	}
-
-	public void setGain(float gain) {
-		this.gain = gain;
-	}
-
-	public void setDepth(int depth) {
-		this.depth = depth;
-	}
-
 	
 }

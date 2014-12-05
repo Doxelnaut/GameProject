@@ -56,8 +56,8 @@ public class RogueGame extends StateBasedGame{
 	public static final int TILE_SIZE = 16; //World Coordinate tile size. Rendering will handle conversion to isometric.
 	public static float playerX = 0;
 	public static float playerY = 0;
-	public static float WORLD_SIZE_X = (TILE_SIZE * 50);
-	public static float WORLD_SIZE_Y = (TILE_SIZE * 50);
+	public static float WORLD_SIZE_X = (TILE_SIZE * 100);
+	public static float WORLD_SIZE_Y = (TILE_SIZE * 100);
 	public static Vector WORLD_SIZE = new Vector(WORLD_SIZE_X, WORLD_SIZE_Y);
 	public static float VIEWPORT_SIZE_X = 1024;
 	public static float VIEWPORT_SIZE_Y = 720;

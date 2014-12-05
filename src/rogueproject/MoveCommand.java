@@ -11,6 +11,9 @@ public class MoveCommand extends Command {
 	@Override
 	public void execute(Minotaur minotaur, float x){
 		System.out.println(minotaur + " " + x + " " + direction);
+		if(direction == InputHandler.getShoot()){
+			GameState.fireball = GameState.minotaur.launchFireball();
+		}
 		if(direction == 5){
 			minotaur.go(Minotaur.UP, x,Minotaur.UpRIGHT); 
 			if(Minotaur.canMove()){
@@ -96,6 +99,7 @@ public class MoveCommand extends Command {
 				minotaur.ungo();
 			}
 		}
+		
 	}
 	
 }
