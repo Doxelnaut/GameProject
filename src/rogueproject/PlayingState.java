@@ -71,6 +71,8 @@ public class PlayingState extends BasicGameState {
 	public void enter(GameContainer container, StateBasedGame game) 
 			throws SlickException {
 		
+		
+		/*
 		//display prompt for server address
 		
 				servName = "127.0.0.1";
@@ -92,7 +94,7 @@ public class PlayingState extends BasicGameState {
 					System.out.println("Error opening streams");
 			    }
 			    
-		
+		*/
 		RogueGame rg = (RogueGame)game;
 		rg.state.actors = new ArrayList<IsoEntity>();
 		setLevel(rg);

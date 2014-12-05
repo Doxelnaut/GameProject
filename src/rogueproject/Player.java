@@ -1,145 +1,156 @@
 package rogueproject;
 
-import java.io.Serializable;
+import java.util.Iterator;
 
 import jig.ResourceManager;
 import jig.Vector;
 
 import org.newdawn.slick.Animation;
+import org.newdawn.slick.Sound;
 
-/**
- * 
- * @author Zacharias Shufflebarger
- *
- *	This file is part of El Rogue del Rey.
- *
- *  El Rogue del Rey is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  El Rogue del Rey is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with El Rogue del Rey.  If not, see <http://www.gnu.org/licenses/>.
- *
- *	Copyright 2014 Zacharias Shufflebarger
- *
- */
-public class Player extends Actor implements Serializable{
+public class Player extends IsoEntity {
+	Animation[] walking = new Animation[8];
+	
+	static final int LEFT = 0;
+	static final int RIGHT = 1;
+	static final int UP = 2;
+	static final int DOWN = 3;
+	static final int UpLEFT = 4;
+	static final int UpRIGHT = 5;
+	static final int DownLEFT = 6;
+	static final int DownRIGHT = 7;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private int depth; // track the player's depth in the dungeon
-	private int orders = PlayingState.WAIT; // store the input here for acting
 	private int classtype;
-	//private boolean turn = true;
-	private Animation anim;
+
+
+	int current;
+	Vector wWorldSz;
+	Vector lastWPosition;
 	
-	public Player(int charClass){
-		super();
+	Sound ouch;
+	
+	public Player(Vector wWorldSize, Vector wPosition,int charClass) {
+		super(wWorldSize, IsoWorldGame.tileSize);
+		wWorldSz = wWorldSize;
+		
 		classtype = charClass;
-		depth = 1;
-		setTypeAttributes();
+		
+		removeAnimation(walking[current]);
+		wWorldSz = wWorldSize;
+		this.setType(charClass);
+		
 		getTypeImage();
-		addAnimation(anim);
-		anim.setLooping(true);
-		this.setTurn(true);
-	}
-	/* Getters */
+		setTypeAttributes();
+		addAnimation(walking[current]);
+		setZHeightFromIsoImage(walking[current].getCurrentFrame(), 32);
+		setPosition(wPosition);
+		lastWPosition = wPosition;
+		}
 	
-	public int getDepth()		{return this.depth;}
-	public int getOrders()		{return this.orders;}
-	
-	@Override
-	public void getTypeImage(){
-		switch(this.classtype){
-		case 0:			
-			this.anim = new Animation(ResourceManager.getSpriteSheet(
-					RogueGame.PLAYER_IDLE_IMG_RSC, 152, 136)
-					, 0, 0, 0, 0, true, 300, true);
-			break;
-		default:
-			break;
+	private void getTypeImage() {
+		switch(this.getType()){
+			case(GameState.WARRIOR):{
+				walking[LEFT] = new Animation(ResourceManager.getSpriteSheet(IsoWorldGame.WalkLeft, 99, 135), 0,0,14,0, true, 70, true);
+				walking[RIGHT] = new Animation(ResourceManager.getSpriteSheet(IsoWorldGame.WalkRight,99, 135), 0,0,14,0, true, 70, true);
+				walking[UP] = new Animation(ResourceManager.getSpriteSheet(IsoWorldGame.WalkUp, 95, 135), 0,0,14,0, true, 70, true);
+				walking[DOWN] = new Animation(ResourceManager.getSpriteSheet(IsoWorldGame.WalkDown, 93, 135), 0,0,14,0, true, 70, true);
+				walking[UpLEFT] = new Animation(ResourceManager.getSpriteSheet(IsoWorldGame.WalkUpLeft, 101, 127), 0,0,14,0, true, 70, true);
+				walking[UpRIGHT] = new Animation(ResourceManager.getSpriteSheet(IsoWorldGame.WalkUpRight, 85, 138), 0,0,14,0, true, 70, true);
+				walking[DownLEFT] = new Animation(ResourceManager.getSpriteSheet(IsoWorldGame.WalkDownLeft, 83, 139), 0,0,14,0, true, 70, true);
+				walking[DownRIGHT] = new Animation(ResourceManager.getSpriteSheet(IsoWorldGame.WalkDownRight, 105, 127), 0,0,14,0, true, 70, true);
+				current = RIGHT;
+				
+				
+				
+				//System.out.println("Minotaur zh:" + zHeight);
+				
+				//ouch = ResourceManager.getSound(IsoWorldGame.ouchSoundPath);
+			}
 		}
 	}
-	
-	/* Setters */
-	
-	@Override
 	public void setTypeAttributes(){
 		switch(this.getType()){
 		case 0:
 			this.setLevel(1);
 			this.setMaxHitPoints(10);
-			this.setHitPonts(10);
+			this.setHitPoints(10);
 			this.setAttack(2);
 			this.setArmor(0);
 			this.setEnergy(0);
 			this.setGain(1);
-			this.setExp(0);
+			this.setExperience(0);
 			break;
 		default:
 			break;
 		}
 	}
+	public void attackActor(IsoEntity enemy){
+		// damage done to enemy is player's attack minus enemies armor. if that is less than 0, do 0 damage instead.
+		enemy.setHitPoints(enemy.getHitPoints() - Math.max(this.getAttack() - enemy.getArmor(), 0));
+		if(enemy.getHitPoints() <= 0){
+			this.setExperience(this.getExperience() + enemy.getExperience());
+		}
+		while(this.getExperience() > (this.getLevel() * 5)){ //defeating the enemy leads to a level up!
+			System.out.println("levelup!");
+			this.setExperience(this.getExperience() - (this.getLevel() * 5));
+			this.setLevel(this.getLevel() + 1);
+			this.setHitPoints(this.getHitPoints() + 5);
+			this.setAttack(this.getAttack() + 1);
+			this.setArmor(this.getArmor() + 0.5f);
+		}
+	}
+	public void sayOuch() {
+		if (ouch.playing()) return;
+		ouch.play();
+	}
 	
-	public void setDepth(int set)		{this.depth = set;}
-	public void setOrders(int set)		{this.orders = set;}
+	public void go(int dir, float n,int image) {
+		if (current != image) {
+			removeAnimation(walking[current]);
+			current = image;
+			addAnimation(walking[current]);
+		}
+		if (walking[current].isStopped()) walking[current].start();
+		
 	
-	/* Actions */
+		float x, y;
+		if (dir < 2) {x = n; y = 0;} 
+		else {x = 0; y=n;}
+		if (dir % 2 == 0) {x = -x; y = -y;}
+		
+		lastWPosition = getPosition();
+		setPosition(lastWPosition.add(new Vector(x,y)));
+	}
 	
-	@Override
-	public boolean act(RogueGame rg){
-		if(this.orders != PlayingState.WAIT && getEnergy() >= 1){ // only act if the action is not wait and there is enough energy to act
-			setNextTile(getOrders());
-			this.orders = PlayingState.WAIT;
-			// rest
-			if(this.getNextTile().equals(this.getTilePosition())){
-				// TODO make rest regen health
-				this.setHitPonts(this.getHitPoints() + 0.25f);
-				this.consumeEnergy();
-				this.setTurn(false);
-				return true;
-			}
-			// if the player indicates a direction that is not an obstacle, enemy, or object, move into the open tile.
-			else if (!isBlocked(rg.state.blocked) && !isOccupied(rg.state.occupied)){
-				move();
-				this.consumeEnergy();
-				return true;
-			}
-			// if the indicated direction is an enemy, attack it.
-			else if (isOccupied(rg.state.occupied)){
-				for(Actor a : rg.state.actors){
-					if(a.getTilePosition().equals(this.getNextTile())){
-						attackActor(a);
-						this.consumeEnergy();
-						setNextTile(PlayingState.WAIT);
-						this.setTurn(false);
-					}
-				}
-					// TODO add 
-					//			// if the indicated direction is an object, interact with it.
-					//			else if (rg.objects[(int)this.getNextTile().getX()][(int)this.getNextTile().getY()] != null){
-					//				interact(rg.objects[(int)this.getNextTile().getX()][(int)this.getNextTile().getY()]);
-					//			}
-				return true;
-			}
-			else{
-				setNextTile(PlayingState.WAIT); // go nowhere
+	/**
+	 * Undo the minotaur's last move, e.g., if he hit something.
+	 */
+	public void ungo() {
+		setPosition(lastWPosition);
+	}
+	public void halt() {
+		walking[current].stop();
+	}
+	public Fireball launchFireball() {
+		Fireball f = new Fireball(wWorldSz, wPosition, current);
+		return f;
+	}
+	public static boolean canMove(){
+		IsoEntity other;
+		for (Iterator<IsoEntity> iie = GameState.stop.iterator(); iie.hasNext(); ) {
+			other = iie.next();
+			
+			if (GameState.minotaur.collides(other) != null) {
 				return false;
 			}
-		} else if (getEnergy() < 1){
-			return false;
+			
 		}
-		return false;
-	}
-
+		return true;
 	
+	}
+	
+	int getCharClass(){
+		return classtype;
+	}
 	
 }
