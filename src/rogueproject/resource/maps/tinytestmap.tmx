@@ -2685,7 +2685,7 @@
  </tileset>
  <layer name="Tile Layer 3" width="100" height="100">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3IOQEAMBADoKzXx7/dxkcZWJgkq3adujXOOeecc84555xzzjnnnHPOOeecc84555xzzjnnnHPOOeecc84555xzzjnnnHPOOeecc84555xzzjnnnHPOOeecc84555xzzjnnnHPOOeecc84555xzzjnnnHPOOeecc859eg9oU3PKQJwAAA==
+   H4sIAAAAAAAAC12QQQ6AIAwEQUUB4YCK/v+nLsmYNB4m0Ha3LXTn3C662MQtknjELC7hReEexIH2QnOKiXj4VzSZ3ER+zGmcK76FWqBWme3ZqdHnNDtU+n9zPPs85Dq5bwf7pm7eUEw8apF5m+lTf/5sNA1N4e7ZL5OPxMn8U6LfgiegiXheb6Azg5ABAAA=
   </data>
  </layer>
  <layer name="Tile Layer 2" width="100" height="100">

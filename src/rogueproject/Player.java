@@ -55,11 +55,8 @@ public class Player extends Actor{
 		switch(this.classtype){
 		case 0:			
 			this.anim = new Animation(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_PLAYER0_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
+					RogueGame.PLAYER_IDLE_IMG_RSC, 152, 136)
 					, 0, 0, 0, 0, true, 300, true);
-			this.anim.addFrame(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_PLAYER1_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					.getSprite(0, 0), 300);
 			break;
 		default:
 			break;

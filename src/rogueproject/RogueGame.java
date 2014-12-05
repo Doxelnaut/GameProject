@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 import jig.Entity;
 import jig.ResourceManager;
+import jig.Vector;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.StateBasedGame;
-
 import org.newdawn.slick.util.ResourceLoader;
 /* All this to write text. */
 import org.newdawn.slick.UnicodeFont;
@@ -53,35 +53,52 @@ public class RogueGame extends StateBasedGame{
 	// create image, animation, and sound macros
 	// ie: public static final String GAMEOVER_BANNER_RSC = "rogueproject/resource/gameover.png";
 	
-	public final int ScreenWidth;
-	public final int ScreenHeight;
-	public static final int TILE_SIZE = 16; //DawnLike uses 16x16 tiles. This will mainly help readability.
+	public static final int TILE_SIZE = 16; //World Coordinate tile size. Rendering will handle conversion to isometric.
+	public static float playerX = 0;
+	public static float playerY = 0;
+	public static float WORLD_SIZE_X = (TILE_SIZE * 50);
+	public static float WORLD_SIZE_Y = (TILE_SIZE * 50);
+	public static Vector WORLD_SIZE = new Vector(WORLD_SIZE_X, WORLD_SIZE_Y);
+	public static float VIEWPORT_SIZE_X = 1024;
+	public static float VIEWPORT_SIZE_Y = 720;
 	
-	//public final UnicodeFont alagardFont = new UnicodeFont(
-	//		new java.awt.Font("Alagard", Font.BOLD, 20));
+	public static float camX = 0;
+	public static float	camY = 0;
+	
+	public static float offsetMaxX = WORLD_SIZE_X - VIEWPORT_SIZE_X;
+	public static float offsetMaxY = WORLD_SIZE_Y - VIEWPORT_SIZE_Y;
+	public static float offsetMinX = 0;
+    public static float offsetMinY = 0;
+	
+	public final float ScreenWidth;
+	public final float ScreenHeight;
 	
 	public static final String GOLDGUI_IMG_RSC = "rogueproject/resource/goldui_big_pieces_0.png"; 
 	public static final String GUI_MENULARGE_IMG_RSC = "rogueproject/resource/menu_large.png";
-
-	public static final String ACTOR_PLAYER0_IMG_RSC = "rogueproject/resource/DawnLike_3/Characters/Player0.png";
-	public static final String ACTOR_PLAYER1_IMG_RSC = "rogueproject/resource/DawnLike_3/Characters/Player1.png";
-	public static final String ACTOR_UNDEAD0_IMG_RSC = "rogueproject/resource/DawnLike_3/Characters/Undead0.png";
-	public static final String ACTOR_UNDEAD1_IMG_RSC = "rogueproject/resource/DawnLike_3/Characters/Undead1.png";
-	public static final String ACTOR_PEST0_IMG_RSC = "rogueproject/resource/DawnLike_3/Characters/Pest0.png";
-	public static final String ACTOR_PEST1_IMG_RSC = "rogueproject/resource/DawnLike_3/Characters/Pest1.png";
-	
+	public static final String PLAYER_IDLE_IMG_RSC = "rogueproject/resource/graphics/TMIM_Heroine/wIdle_0(16,99,112).png";
+	public static final String ACTOR_GOBLIN0_IMG_RSC = "rogueproject/resource/graphics/goblin_spearman_0.png";
+	public static final String ACTOR_GOBLIN1_IMG_RSC = "rogueproject/resource/graphics/goblin_spearman_elite.png";
 	public static final String ALAGARD_FONT_RSC =  "rogueproject/resource/fonts/alagard_by_pix3m-d6awiwp.ttf";
+	public static final String groundSheetPath   = "resource/flagstonetiles.png";
+	public static final String tallBlockImgPath   = "resource/tallcaveblock.png";
+	public static final String shortBlockImgPath   = "resource/shortcaveblock.png";
+	public static final String WalkLeft = "resource/Walk_10(15,69,108).png";
+	public static final String WalkRight = "resource/Walk_2(15,62,111).png";
+	public static final String WalkUp = "resource/Walk_6(15,66,111).png";
+	public static final String WalkDown = "resource/Walk_14(15,61,108).png";
+	public static final String WalkUpLeft = "resource/Walk_8(15,68,110).png";
+	public static final String WalkUpRight = "resource/Walk_4(15,63,112).png";
+	public static final String WalkDownLeft = "resource/Walk_12(15,63,108).png";
+	public static final String WalkDownRight = "resource/Walk_0(15,63,110).png";
+	public static final String fireballSheetPath = "resource/fireball.png";
+	public static final String explosionSheetPath   = "resource/explosion.png";
+	//public static final String ouchSoundPath = "resource/ouch.wav";
 	
-	// Font from Joel
-	Font awtFont;
-	TrueTypeFont courierBOLD12;
-	TrueTypeFont custom12;
-	
+
+
 	GameState state = new GameState();
 	
-	//TODO ArrayList<Objects> objects;
-	
-	public RogueGame(String title, int width, int height) {
+	public RogueGame(String title, float width, float height) {
 		super(title);
 		ScreenHeight = height;
 		ScreenWidth = width;
@@ -102,22 +119,33 @@ public class RogueGame extends StateBasedGame{
 		// sounds: ResourceManager.loadSound(SND_RSC);
 		ResourceManager.loadImage(GOLDGUI_IMG_RSC);
 		ResourceManager.loadImage(GUI_MENULARGE_IMG_RSC);
-		ResourceManager.loadImage(ACTOR_PLAYER0_IMG_RSC);
-		ResourceManager.loadImage(ACTOR_PLAYER1_IMG_RSC);
-		ResourceManager.loadImage(ACTOR_UNDEAD0_IMG_RSC);
-		ResourceManager.loadImage(ACTOR_UNDEAD1_IMG_RSC);
-		ResourceManager.loadImage(ACTOR_PEST0_IMG_RSC);
-		ResourceManager.loadImage(ACTOR_PEST1_IMG_RSC);
+		ResourceManager.loadImage(PLAYER_IDLE_IMG_RSC);
+		ResourceManager.loadImage(ACTOR_GOBLIN0_IMG_RSC);
+		ResourceManager.loadImage(ACTOR_GOBLIN1_IMG_RSC);
+		ResourceManager.loadImage(groundSheetPath);
+		ResourceManager.loadImage(tallBlockImgPath);
+		ResourceManager.loadImage(shortBlockImgPath);
+		ResourceManager.loadImage(WalkLeft);
+		ResourceManager.loadImage(WalkRight);
+		ResourceManager.loadImage(WalkUp);
+		ResourceManager.loadImage(WalkDown);
+		ResourceManager.loadImage(WalkUpLeft);
+		ResourceManager.loadImage(WalkUpRight);
+		ResourceManager.loadImage(WalkDownLeft);
+		ResourceManager.loadImage(WalkDownRight);
+		ResourceManager.loadImage(fireballSheetPath);
+		ResourceManager.loadImage(explosionSheetPath);
+		//ResourceManager.loadImage(ouchSoundPath);
 
-
-		state.player = new Player(GameState.WARRIOR);
+		
+	//	state.player = new Player(GameState.WARRIOR);
 	}
 	
 	public static void main(String[] args) {
 		AppGameContainer app;
 		try {
-			app = new AppGameContainer(new RogueGame("El Rogue del Rey", 1024, 720));
-			app.setDisplayMode(1024, 720, false);
+			app = new AppGameContainer(new RogueGame("El Rogue del Rey", RogueGame.VIEWPORT_SIZE_X, RogueGame.VIEWPORT_SIZE_Y));
+			app.setDisplayMode((int)RogueGame.VIEWPORT_SIZE_X, (int)RogueGame.VIEWPORT_SIZE_Y, false);
 			app.setVSync(true);
 			app.start();
 		} catch (SlickException e) {
