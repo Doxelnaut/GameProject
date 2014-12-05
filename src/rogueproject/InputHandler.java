@@ -6,7 +6,7 @@ import org.newdawn.slick.Input;
 
 public class InputHandler {
 
-	private static final int N=1, E=2, S=3, W=4, NE=5, NW=6, SW=7, SE=8;
+	private static final int N=1, E=2, S=3, W=4, NE=5, NW=6, SW=7, SE=8, SHOOT = 9;
 	
 	private Command key_w = new MoveCommand(N), 
 			key_a = new MoveCommand(W), 
@@ -15,7 +15,8 @@ public class InputHandler {
 			keys_wa = new MoveCommand(NW),
 			keys_wd = new MoveCommand(NE),
 			keys_sa = new MoveCommand(SW),
-			keys_sd = new MoveCommand(SE)/*,
+			keys_sd = new MoveCommand(SE),
+			key_space = new MoveCommand(getShoot()) /*,
 			mouse_left = new MeleeAttackCommand(), 
 			mouse_right = new RangeAttackCommand()*/;
 	
@@ -48,6 +49,9 @@ public class InputHandler {
 		else if(input.isKeyDown(Input.KEY_D)){
 			commands.add(key_d);
 		}
+		else if(input.isKeyDown(Input.KEY_SPACE)){
+			commands.add(key_space);
+		}
 		/*if(input.isButton1Pressed(Input.MOUSE_LEFT_BUTTON)){
 			commands.add(mouse_left);
 		}
@@ -57,6 +61,10 @@ public class InputHandler {
 		
 		// no buttons pressed, no command created
 		return commands;
+	}
+
+	public static int getShoot() {
+		return SHOOT;
 	}
 	
 }

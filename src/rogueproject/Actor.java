@@ -438,9 +438,9 @@ public class Actor extends Entity implements Mover, Serializable{
 		}
 	}
 	
-	public void attackPlayer(Player enemy){
+	public void attackPlayer(Actor player){
 		// damage done to enemy is player's attack minus enemies armor. if that is less than 0, do 0 damage instead.
-		enemy.setHitPonts(enemy.getHitPoints() - Math.max(this.getAttack() - enemy.getArmor(), 0));
+		player.setHitPonts(player.getHitPoints() - Math.max(this.getAttack() - player.getArmor(), 0));
 	}
 	
 	public void gainEnergy(){
@@ -449,7 +449,7 @@ public class Actor extends Entity implements Mover, Serializable{
 	
 	public void consumeEnergy(){
 		energy--;
-	}
+	} 
 	
 	/**
 	 * The basic move instruction for the player. Sets the player's destination to a 
