@@ -56,14 +56,22 @@ public class HostState extends BasicGameState {
 			    	else if(Integer.valueOf(parts[i]) == 2){
 			    		RogueGame.blocks.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), false) );
 			    		RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+			    		RG.state.map[i] =2;
 			    	}
 			    	else{
 			    		RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+			    		RG.state.map[i] = 0;
 			    	}
 
 			    }
 			    	r++;
 			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		ServerSocket ss = null;
 		
 		try {
@@ -75,7 +83,7 @@ public class HostState extends BasicGameState {
 			System.out.println("Error creating server socket.");
 		}
 		
-		while (true)
+		while(true)
         {
         	//loop to accept incoming connections
             Socket s = null;
@@ -86,7 +94,8 @@ public class HostState extends BasicGameState {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-            Connection con = new Connection(s, RG.state);
+			
+            Connection con = new Connection(s, RG);
             Thread thread = new Thread(con);
             thread.start();
             System.out.println("Started new thread.");

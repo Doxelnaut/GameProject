@@ -13,17 +13,13 @@ public class Connection implements Runnable {
 	boolean quit = false;
 	ObjectOutputStream socketOut;
 	ObjectInputStream socketIn;
-	GameState state;
+	RogueGame state;
 	Command c;
-	Actor player;
+	Player player;
 	
-	Connection(Socket s, GameState gs){
+	Connection(Socket s, RogueGame gs){
 		socket = s;
 		state = gs;
-		if(state.player == null)
-			player = state.player;
-		else if(state.player2 == null)
-			player = state.player2;
 		//else
 			//handle no more available player spots 
 	}
@@ -31,7 +27,7 @@ public class Connection implements Runnable {
 	@Override
 	public void run() {
 		
-			
+			player = state.player;
 			try {
 				estConn();
 			} catch (IOException e) {
@@ -51,10 +47,16 @@ public class Connection implements Runnable {
 			System.out.println("Error opening streams");
 	    }
 		
+	    try {
+			socketOut.writeObject(state.state.map);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	    while(!quit){
 	    	//loop to write game state to client and get user input from client
 		    	
-			try {
+			/*try {
 				socketOut.writeObject(state);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -68,7 +70,8 @@ public class Connection implements Runnable {
 				e.printStackTrace();
 			}
 			
-			c.execute(player);
+			c.execute(player,0);
+			*/
 			
 	    }
 	    

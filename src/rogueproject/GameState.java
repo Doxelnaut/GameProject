@@ -13,6 +13,8 @@ public class GameState implements Serializable{
 	int[] map;
 	
 	GameState(){
+		
+		map = new int[1000];
 		return;
 	}
 }
