@@ -118,21 +118,20 @@ public class PlayingState extends BasicGameState {
 				/*while ((line = reader.readLine()) != null) {
 				    String[] parts = line.split("\\s");
 				    System.out.println(parts.length);*/
-				    for(int i = 0; i< 100;i++){
+				    for(int i = 0; i< 1000;i++){
 				    	if(rg.state.map[i] == 1){
-							RogueGame.walls.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), true) );
-							RogueGame.stop.add(new Ground(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+							RogueGame.walls.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, (i%100)*RogueGame.TILE_SIZE), true) );
+							RogueGame.stop.add(new Ground(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, (i%100)*RogueGame.TILE_SIZE)) );
 				    	}
 				    	else if(rg.state.map[i] == 2){
-				    		RogueGame.blocks.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), false) );
-				    		RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+				    		RogueGame.blocks.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, (i%100)*RogueGame.TILE_SIZE), false) );
+				    		RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, (i%100)*RogueGame.TILE_SIZE)) );
 				    	}
 				    	else{
-				    		RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+				    		RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, (i%100)*RogueGame.TILE_SIZE)) );
 				    	}
-
-				    }
 				    	r++;
+				    }
 				
 			} catch (NumberFormatException e) {
 				e.printStackTrace();}

@@ -37,14 +37,13 @@ public class Player extends Actor {
 	
 	public Player(Vector wWorldSize, Vector wPosition,int charClass) {
 		super(wWorldSize, RogueGame.TILE_SIZE);
+		this.type = 0;
 		getTypeImage();
 		setTypeAttributes();
 		wWorldSz = wWorldSize;
 		
 		removeAnimation(walking[current]);
-		wWorldSz = wWorldSize;
-		this.setType(charClass);
-		
+		wWorldSz = wWorldSize;		
 		addAnimation(walking[current]);
 		setZHeightFromIsoImage(walking[current].getCurrentFrame(), 32);
 		setPosition(wPosition);
