@@ -2,6 +2,8 @@
 package rogueproject;
 
 
+import java.util.ArrayList;
+
 import jig.Entity;
 import jig.ResourceManager;
 import jig.Vector;
@@ -117,7 +119,13 @@ public class RogueGame extends StateBasedGame{
 	public static final String explosionSheetPath   = "resource/explosion.png";
 	//public static final String ouchSoundPath = "resource/ouch.wav";
 	
-
+	ArrayList<IsoEntity> actors;
+	public static ArrayList<IsoEntity> ground;
+	public static ArrayList<IsoEntity> blocks;
+	public static ArrayList<IsoEntity> walls;
+	public static ArrayList<IsoEntity> wallsandblocks;
+	public static ArrayList<IsoEntity> stop;
+	public static Fireball fireball;
 
 	GameState state = new GameState();
 	
@@ -130,6 +138,12 @@ public class RogueGame extends StateBasedGame{
 		ScreenWidth = width;
 		
 		Entity.setCoarseGrainedCollisionBoundary(Entity.AABB);
+		
+		ground = new ArrayList<IsoEntity>(100);
+		blocks = new ArrayList<IsoEntity>(100);
+		walls = new ArrayList<IsoEntity>(100);
+		wallsandblocks = new ArrayList<IsoEntity>(200);
+		stop = new ArrayList<IsoEntity>(100);
 				
 	}
 	
@@ -187,8 +201,6 @@ public class RogueGame extends StateBasedGame{
 		ResourceManager.loadImage(fireCrouchDownRight);
 		//ResourceManager.loadImage(ouchSoundPath);
 
-		state.player = player;
-		state.player2 = player2;
 		
 
 	//	state.player = new Player(GameState.WARRIOR);
