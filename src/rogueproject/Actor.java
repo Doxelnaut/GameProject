@@ -35,195 +35,15 @@ import jig.Vector;
  */
 public class Actor extends IsoEntity {
 	
-	// RPG attributes
-	private int level;
-	private float attack;
-<<<<<<< HEAD
-	// Graphics attributes
-
-	public boolean energyGained = false; // false = no energy gained this turn.
-	private float energy, gain; // energy is used for actions per turn
-	// consider also attackCost to differentiate from movement and attack costs
-	// i.e. faster movement, but regular attack speed.
 	
-	public int playerType = 0;
-	public int enemyType = 1;
-	
-	/* Constructors */
-	/**
-	 * 
-	 * @param settype actor type
-	 * @param setx tile x coordinate
-	 * @param sety tile y coordinate
-	 */	
-	public Actor(Vector wWorldSize, int type){
-		super(wWorldSize, RogueGame.TILE_SIZE);
-		this.type = type;
-		this.energy = 0;
-		this.setTypeAttributes();
-	
-	}
-
-	/* Getters */
-	
-	public int getLevel()			{return level;}
-	public float getMaxHitPoints()	{return maxHitPoints;}
-	public float getHitPoints()		{return hitPoints;}
-	public float getAttack()		{return attack;}
-	public float getArmor()			{return armor;}
-	public int getType()			{return type;}
-	public float getEnergy()		{return energy;}
-	public float getGain()			{return gain;}
-	public boolean getGained()		{return this.energyGained;}
-	public int getExp()				{return this.experience;}
-
-	public int getTileX()			{return (int) (getX() / RogueGame.TILE_SIZE);}
-	public int getTileY()			{return (int) (getY()/ RogueGame.TILE_SIZE);}
-	public Vector getTilePosition()	{return new Vector(getTileX(), getTileY());}
-
-
-
-	/* Setters */
-	
-	public void setLevel(int set)			{this.level = set;}
-	public void setMaxHitPoints(float set)	{this.maxHitPoints = set;}
-	public void setHitPoints(float set)	 	{this.hitPoints = Math.min(set, this.maxHitPoints);}
-	public void setAttack(float set)		{this.attack = set;}
-	public void setArmor(float set)			{this.armor = set;}
-	public void setEnergy(float set)		{this.energy = set;}
-	public void setGain(float set)			{this.gain = set;}
-	public void setGained(boolean set)		{this.energyGained = set;}
-	public void setExp(int set)				{this.experience = set;}
-	
-	
-	public void setTilePosition(int setx, int sety){
-		this.setPosition(setx * RogueGame.TILE_SIZE, sety * RogueGame.TILE_SIZE);
-	}
-	
-	public void setTypeAttributes(){
-		switch(this.getType()){
-		// Undead
-		case 0: // little zombie
-			this.setLevel(1);
-			this.setMaxHitPoints(7);
-			this.setHitPoints(7);
-			this.setAttack(1);
-			this.setArmor(0);
-			this.setGain(0.5f);
-			this.setExp(1);
-			break;
-		case 1: // little mummy
-			this.setLevel(1);
-			this.setMaxHitPoints(5);
-			this.setHitPoints(5);
-			this.setAttack(1);
-			this.setArmor(0);
-			this.setGain(1);
-			this.setExp(2);
-			break;
-		case 2: // skeleton
-			this.setLevel(1);
-			this.setMaxHitPoints(5);
-			this.setHitPoints(5);
-			this.setAttack(1);
-			this.setArmor(1);
-			this.setGain(1.5f);
-			this.setExp(3);
-			break;
-		case 3: // large zombie
-			this.setLevel(1);
-			this.setMaxHitPoints(9);
-			this.setHitPoints(5);
-			this.setAttack(1);
-			this.setArmor(0);
-			this.setGain(0.75f);
-			this.setExp(3);
-			break;
-		case 4: // large mummy
-			this.setLevel(1);
-			this.setMaxHitPoints(8);
-			this.setHitPoints(5);
-			this.setAttack(1);
-			this.setArmor(1);
-			this.setGain(1);
-			this.setExp(3);
-			break;
-		case 5: // death
-			this.setLevel(1);
-			this.setMaxHitPoints(12);
-			this.setHitPoints(12);
-			this.setAttack(3);
-			this.setArmor(1);
-			this.setGain(0.8f);
-			this.setExp(5);
-			break;
-		// Pests
-		case 6: // little spider
-			this.setLevel(2);
-			this.setMaxHitPoints(15);
-			this.setHitPoints(15);
-			this.setAttack(2);
-			this.setArmor(1);
-			this.setGain(1);
-			this.setExp(4);
-			break;
-		case 7: // little scorpion
-			this.setLevel(2);
-			this.setMaxHitPoints(15);
-			this.setHitPoints(15);
-			this.setAttack(2.25f);
-			this.setArmor(1.5f);
-			this.setGain(1);
-			this.setExp(5);
-			break;
-		case 8: // slug
-			this.setLevel(2);
-			this.setMaxHitPoints(20);
-			this.setHitPoints(20);
-			this.setAttack(2);
-			this.setArmor(3);
-			this.setGain(0.7f);
-			this.setExp(6);
-			break;
-		case 9: // large spider
-			this.setLevel(2);
-			this.setMaxHitPoints(20);
-			this.setHitPoints(20);
-			this.setAttack(3);
-			this.setArmor(1.5f);
-			this.setGain(1.5f);
-			this.setExp(7);
-			break;
-		case 10: // large scorpion
-			this.setLevel(2);
-			this.setMaxHitPoints(20);
-			this.setHitPoints(20);
-			this.setAttack(3);
-			this.setArmor(2);
-			this.setGain(1.4f);
-			this.setExp(8);
-			break;
-		case 11: // red leech
-			this.setLevel(2);
-			this.setMaxHitPoints(20);
-			this.setHitPoints(20);
-			this.setAttack(5);
-			this.setArmor(2);
-			this.setGain(1);
-			this.setExp(15);
-			break;
-		default:
-			break;
-		}
-		
-=======
-
 	private float maxHitPoints;
 	private float hitPoints;
 	private float armor;
 	private int experience; // for leveling up. Player accrues the experience enemies hold.
 	// Graphics attributes
 	private int type; // Player, creature, etc.
+	private int level;
+	private float attack;
 	
 	public int playerType = 0;
 	public int enemyType = 1;
@@ -284,7 +104,6 @@ public class Actor extends IsoEntity {
 	
 	public void setTypeAttributes(){
 		//TODO
->>>>>>> branch 'Develop' of ssh://git@github.com/D3LTR0N-Z3R0/GameProject.git
 	}
 	
 	/* Actions */

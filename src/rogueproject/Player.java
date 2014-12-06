@@ -36,23 +36,12 @@ public class Player extends Actor {
 	Sound ouch;
 	
 	public Player(Vector wWorldSize, Vector wPosition,int charClass) {
-<<<<<<< HEAD
-		super(wWorldSize, RogueGame.TILE_SIZE);
-		this.type = 0;
-=======
 		super(wWorldSize);
->>>>>>> branch 'Develop' of ssh://git@github.com/D3LTR0N-Z3R0/GameProject.git
+		this.setType(charClass);
 		getTypeImage();
 		setTypeAttributes();
 		wWorldSz = wWorldSize;
-		
 		removeAnimation(walking[current]);
-<<<<<<< HEAD
-		wWorldSz = wWorldSize;		
-=======
-		this.setType(charClass);
-		
->>>>>>> branch 'Develop' of ssh://git@github.com/D3LTR0N-Z3R0/GameProject.git
 		addAnimation(walking[current]);
 		setZHeightFromIsoImage(walking[current].getCurrentFrame(), 32);
 		setPosition(wPosition);
