@@ -137,9 +137,8 @@ public class PlayingState extends BasicGameState {
 			} catch (NumberFormatException e) {
 				e.printStackTrace();}
 		    
-			RogueGame.player = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),0);
-		   System.out.println( RogueGame.player);
-		   RogueGame.blocks.add(RogueGame.player);
+		    RogueGame.player = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),0);
+		    RogueGame.blocks.add(RogueGame.player);
 		
 		for (IsoEntity ie : RogueGame.walls) {
 			RogueGame.wallsandblocks.add(ie);

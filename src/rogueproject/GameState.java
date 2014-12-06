@@ -14,7 +14,7 @@ public class GameState implements Serializable{
 	
 	GameState(){
 		
-		map = new int[100];
+		map = new int[1000];
 		return;
 	}
 }
