@@ -9,10 +9,9 @@ public class Command {
 	
 	/**
 	 * Generic method to be overridden by child classes.
-	 * @param minotaur 
-	 * @param x 
+	 * @param actor
 	 */
-	public void execute(Player player, float x){}
+	public void execute(Actor actor){}
 
 	
 	

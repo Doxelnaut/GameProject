@@ -2,6 +2,8 @@ package rogueproject;
 
 import java.util.ArrayList;
 
+import jig.Vector;
+
 import org.newdawn.slick.Input;
 
 public class InputHandler {
@@ -17,8 +19,8 @@ public class InputHandler {
 			keys_sa = new MoveCommand(SW),
 			keys_sd = new MoveCommand(SE),
 			keys_c = new MoveCommand(0),
-			key_space = new MoveCommand(SHOOT) /*,
-			mouse_left = new MeleeAttackCommand(), 
+			key_space = new MoveCommand(SHOOT) ,
+			mouse_left/*, 
 			mouse_right = new RangeAttackCommand()*/;
 	
 	/**
@@ -56,10 +58,11 @@ public class InputHandler {
 		else if(input.isKeyDown(Input.KEY_C)){
 			commands.add(keys_c);
 		}
-		/*if(input.isButton1Pressed(Input.MOUSE_LEFT_BUTTON)){
+		if(input.isButton1Pressed(Input.MOUSE_LEFT_BUTTON)){
+			mouse_left = new ShootCommand(new Vector(input.getMouseX(), input.getMouseY()));
 			commands.add(mouse_left);
 		}
-		else if(input.isButton3Pressed(Input.MOUSE_RIGHT_BUTTON)){
+		/*else if(input.isButton3Pressed(Input.MOUSE_RIGHT_BUTTON)){
 			commands.add(mouse_right);
 		}*/
 		
