@@ -16,14 +16,7 @@ public class IsoEntity extends Entity implements Comparable<IsoEntity> {
 	Vector wPosition; // position in world coordinates
 	float zHeight;
 	Vector footing;
-	protected float maxHitPoints;
-	protected float hitPoints;
-	protected float armor;
-	protected int experience; // for leveling up. Player accrues the experience enemies hold.
-	// Graphics attributes
-	protected int type; // Player, creature, etc.
-	protected int classtype;
-	protected float energy, gain; // energy is used for actions per turn
+	
 	public Vector getwWorldOrigin() {
 		return wWorldOrigin;
 	}
@@ -48,69 +41,7 @@ public class IsoEntity extends Entity implements Comparable<IsoEntity> {
 		this.footing = footing;
 	}
 
-	public float getMaxHitPoints() {
-		return maxHitPoints;
-	}
-
-	public void setMaxHitPoints(float maxHitPoints) {
-		this.maxHitPoints = maxHitPoints;
-	}
-
-	public float getHitPoints() {
-		return hitPoints;
-	}
-
-	public void setHitPoints(float hitPoints) {
-		this.hitPoints = hitPoints;
-	}
-
-	public float getArmor() {
-		return armor;
-	}
-
-	public void setArmor(float armor) {
-		this.armor = armor;
-	}
-
-	public int getExperience() {
-		return experience;
-	}
-
-	public void setExperience(int experience) {
-		this.experience = experience;
-	}
-
-	public int getType() {
-		return type;
-	}
-
-	public void setType(int type) {
-		this.type = type;
-	}
-
-	public int getClasstype() {
-		return classtype;
-	}
-
-	public void setClasstype(int classtype) {
-		this.classtype = classtype;
-	}
-
-	public float getEnergy() {
-		return energy;
-	}
-
-	public void setEnergy(float energy) {
-		this.energy = energy;
-	}
-
-	public float getGain() {
-		return gain;
-	}
-
-	public void setGain(float gain) {
-		this.gain = gain;
-	}
+	
 
 	public IsoEntity(Vector wWorldSz, float wTileSz) {
 		super();

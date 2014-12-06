@@ -119,6 +119,8 @@ public class RogueGame extends StateBasedGame{
 	public static final String explosionSheetPath   = "resource/explosion.png";
 	//public static final String ouchSoundPath = "resource/ouch.wav";
 	
+	public static final int WARRIOR = 1;
+	
 	ArrayList<IsoEntity> actors;
 	public static ArrayList<IsoEntity> ground;
 	public static ArrayList<IsoEntity> blocks;
@@ -129,7 +131,7 @@ public class RogueGame extends StateBasedGame{
 
 	GameState state = new GameState();
 	
-	Player player;
+	static Player player;
 	Player player2;
 	
 	public RogueGame(String title, float width, float height) {
