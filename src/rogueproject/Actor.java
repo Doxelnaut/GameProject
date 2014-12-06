@@ -33,7 +33,7 @@ import jig.Vector;
  *	Copyright 2014 Zacharias Shufflebarger
  *
  */
-public class Actor extends Entity implements Mover, Serializable{
+public class Actor extends IsoEntity implements Mover{
 	
 	// RPG attributes
 	private int level;
@@ -55,6 +55,9 @@ public class Actor extends Entity implements Mover, Serializable{
 	// consider also attackCost to differentiate from movement and attack costs
 	// i.e. faster movement, but regular attack speed.
 	
+	public int playerType = 0;
+	public int enemyType = 1;
+	
 	/* Constructors */
 	/**
 	 * 
@@ -62,24 +65,19 @@ public class Actor extends Entity implements Mover, Serializable{
 	 * @param setx tile x coordinate
 	 * @param sety tile y coordinate
 	 */	
-	public Actor(int settype, int setx, int sety){
-		super((setx * RogueGame.TILE_SIZE), //multiply to scale tile coordinates to x and y on screen
-				(sety * RogueGame.TILE_SIZE));
+	public Actor(Vector wWorldSize, Vector wPosition, int type){
+		super(wWorldSize, RogueGame.TILE_SIZE);
 		this.nextTile = getTilePosition();
 		this.toNextTile = new Vector(0,0);
-		this.type = settype;
 		this.getTypeImage();
+		this.type = type;
 		this.addAnimation(anim);
 		this.anim.setLooping(true);
 		this.energy = 0;
 		this.setTypeAttributes();
 		this.turn = false;
 	}
-	
-	public Actor(){
-		super(0, 0);
-		nextTile = toNextTile = new Vector(0,0);
-	}
+
 	/* Getters */
 	
 	public int getLevel()			{return level;}

@@ -8,7 +8,7 @@ import jig.Vector;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Sound;
 
-public class Player extends IsoEntity {
+public class Player extends Actor {
 	Animation[] walking = new Animation[8];
 	
 	static final int LEFT = 0;
@@ -30,7 +30,7 @@ public class Player extends IsoEntity {
 	Sound ouch;
 	
 	public Player(Vector wWorldSize, Vector wPosition,int charClass) {
-		super(wWorldSize, IsoWorldGame.tileSize);
+		super(wWorldSize, wPosition,0);
 		wWorldSz = wWorldSize;
 		
 		classtype = charClass;
@@ -47,7 +47,7 @@ public class Player extends IsoEntity {
 		lastWPosition = wPosition;
 		}
 	
-	private void getTypeImage() {
+	public void getTypeImage() {
 		switch(this.getType()){
 			case(GameState.WARRIOR):{
 				walking[LEFT] = new Animation(ResourceManager.getSpriteSheet(IsoWorldGame.WalkLeft, 99, 135), 0,0,14,0, true, 70, true);
