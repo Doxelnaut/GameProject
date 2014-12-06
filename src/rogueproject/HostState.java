@@ -6,10 +6,15 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+
+import jig.Vector;
 
 public class HostState extends BasicGameState {
 	
@@ -23,6 +28,42 @@ public class HostState extends BasicGameState {
 	
 	public void enter(GameContainer container, StateBasedGame game){
 		connections = new ArrayList<Connection>();
+		
+		RogueGame RG = (RogueGame) game;
+		
+		//Create map to transfer to client
+		
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new FileReader("src/resource/Map.txt"));
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
+	        String line = null;
+	        
+	        int r = 0;
+		try {
+			while ((line = reader.readLine()) != null) {
+
+			    String[] parts = line.split("\\s");
+			    System.out.println(parts.length);
+			    for(int i = 0; i < parts.length;i++){
+			    	if(Integer.valueOf(parts[i]) == 1){
+						RogueGame.walls.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), true) );
+						RogueGame.stop.add(new Ground(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+						RG.state.map[i] = 1;
+			    	}
+			    	else if(Integer.valueOf(parts[i]) == 2){
+			    		RogueGame.blocks.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), false) );
+			    		RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+			    	}
+			    	else{
+			    		RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+			    	}
+
+			    }
+			    	r++;
+			}
 		ServerSocket ss = null;
 		
 		try {
@@ -45,7 +86,6 @@ public class HostState extends BasicGameState {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			RogueGame RG = (RogueGame) game;
             Connection con = new Connection(s, RG.state);
             Thread thread = new Thread(con);
             thread.start();
