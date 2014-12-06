@@ -310,33 +310,10 @@ public class PlayingState extends BasicGameState {
 					/* hard code modulo for the number of dungeons actually playable, 
 					 * then add one, since dungeons start at level 1.
 					 */
-					if (input.isKeyPressed(Input.KEY_I))	{
-						rg.player.setDepth(1);
-						map = null;
-						//rg.state.enterState(RogueGame.PLAYINGSTATE);
-					}
-					else if (input.isKeyPressed(Input.KEY_O)) { 
-						rg.player.setDepth(2); 
-						map = null;
-						//rg.state.enterState(RogueGame.PLAYINGSTATE);
-						}
-					rg.state.player.act(rg);
-					if(!rg.state.player.getTurn()){ // not player's turn after taking action
-						// set actors' turns
-						for(IsoEntity a : rg.state.actors){
-							a.setTurn(true);
-							a.setGained(false);
-						}
-					}
+					
 //				}
 //			}
-			// update player position
-			if(rg.state.player.isMoving()){
-				if(rg.state.player.getPosition().equals(rg.state.player.getNextTile().scale(RogueGame.TILE_SIZE))){
-					//player reached destination.
-					rg.state.player.setMoving(false);
-					// end player's turn and begin actors' turns
-					rg.state.player.setTurn(false);
+			
 		if (GameState.fireball != null) {
 			GameState.fireball.update(x*1.5f);
 			IsoEntity other;
@@ -370,8 +347,7 @@ public class PlayingState extends BasicGameState {
 			}
 			if (GameState.fireball.done()) GameState.fireball = null;
 		}
-				}
-			}
+				
 	}
 
 	@Override
@@ -421,9 +397,7 @@ public class PlayingState extends BasicGameState {
 			rg.state.actors.add( new Actor(5, 48, 4)); 
 **/			break;
 		case 2:
-			rg.state.player.setTilePosition(3,3);
-			rg.state.player.setTilePosition(0,1);
-			map = new TiledMap("rogueproject/resource/maps/tinytestmap.tmx");
+			
 		//	rg.state.player.setTilePosition(0,1);
 			//map = new TiledMap("rogueproject/resource/maps/tinytestmap.tmx");
 /**			// Little Spiders

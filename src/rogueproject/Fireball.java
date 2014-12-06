@@ -21,11 +21,11 @@ public class Fireball extends IsoEntity {
 		super(wWorldSize, RogueGame.TILE_SIZE);
 		domain = wWorldSize;
 
-		moving[LEFT] = new Animation(ResourceManager.getSpriteSheet(IsoWorldGame.fireballSheetPath, 64, 64), 0,7,7,7, true, 20, true);
-		moving[RIGHT] = new Animation(ResourceManager.getSpriteSheet(IsoWorldGame.fireballSheetPath, 64, 64), 0,3,7,3, true, 20, true);
-		moving[UP] = new Animation(ResourceManager.getSpriteSheet(IsoWorldGame.fireballSheetPath, 64, 64), 0,1,7,1, true, 20, true);
-		moving[DOWN] = new Animation(ResourceManager.getSpriteSheet(IsoWorldGame.fireballSheetPath, 64, 64), 0,5,7,5, true, 20, true);
-		moving[KABOOM] = new Animation(ResourceManager.getSpriteSheet(IsoWorldGame.explosionSheetPath, 256, 128), 20);
+		moving[LEFT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireballSheetPath, 64, 64), 0,7,7,7, true, 20, true);
+		moving[RIGHT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireballSheetPath, 64, 64), 0,3,7,3, true, 20, true);
+		moving[UP] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireballSheetPath, 64, 64), 0,1,7,1, true, 20, true);
+		moving[DOWN] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireballSheetPath, 64, 64), 0,5,7,5, true, 20, true);
+		moving[KABOOM] = new Animation(ResourceManager.getSpriteSheet(RogueGame.explosionSheetPath, 256, 128), 20);
 		current = dir;
 		addAnimation(moving[current]);
 		setZHeightFromIsoImage(moving[current].getCurrentFrame(), 32);

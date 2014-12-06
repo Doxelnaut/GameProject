@@ -12,6 +12,8 @@ public class Command {
 	 * @param minotaur 
 	 * @param x 
 	 */
-	public void execute(Minotaur minotaur, float x){}
+	public void execute(Player player, float x){}
+
+	
 	
 }

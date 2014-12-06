@@ -36,7 +36,7 @@ public class Player extends IsoEntity {
 	Sound ouch;
 	
 	public Player(Vector wWorldSize, Vector wPosition,int charClass) {
-		super(wWorldSize, IsoWorldGame.tileSize);
+		super(wWorldSize, RogueGame.TILE_SIZE);
 		getTypeImage();
 		setTypeAttributes();
 		wWorldSz = wWorldSize;
