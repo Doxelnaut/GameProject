@@ -16,18 +16,14 @@ public class IsoEntity extends Entity implements Comparable<IsoEntity> {
 	Vector wPosition; // position in world coordinates
 	float zHeight;
 	Vector footing;
-	private int level;
-	private float maxHitPoints;
-	private float hitPoints;
-	private float attack;
-	private float armor;
-	private int experience; // for leveling up. Player accrues the experience enemies hold.
+	protected float maxHitPoints;
+	protected float hitPoints;
+	protected float armor;
+	protected int experience; // for leveling up. Player accrues the experience enemies hold.
 	// Graphics attributes
-	private int type; // Player, creature, etc.
-	private int depth; // track the player's depth in the dungeon
-	private int orders = PlayingState.WAIT; // store the input here for acting
-	private int classtype;
-	private float energy, gain; // energy is used for actions per turn
+	protected int type; // Player, creature, etc.
+	protected int classtype;
+	protected float energy, gain; // energy is used for actions per turn
 	public Vector getwWorldOrigin() {
 		return wWorldOrigin;
 	}
@@ -52,14 +48,6 @@ public class IsoEntity extends Entity implements Comparable<IsoEntity> {
 		this.footing = footing;
 	}
 
-	public int getLevel() {
-		return level;
-	}
-
-	public void setLevel(int level) {
-		this.level = level;
-	}
-
 	public float getMaxHitPoints() {
 		return maxHitPoints;
 	}
@@ -74,14 +62,6 @@ public class IsoEntity extends Entity implements Comparable<IsoEntity> {
 
 	public void setHitPoints(float hitPoints) {
 		this.hitPoints = hitPoints;
-	}
-
-	public float getAttack() {
-		return attack;
-	}
-
-	public void setAttack(float attack) {
-		this.attack = attack;
 	}
 
 	public float getArmor() {
@@ -106,22 +86,6 @@ public class IsoEntity extends Entity implements Comparable<IsoEntity> {
 
 	public void setType(int type) {
 		this.type = type;
-	}
-
-	public int getDepth() {
-		return depth;
-	}
-
-	public void setDepth(int depth) {
-		this.depth = depth;
-	}
-
-	public int getOrders() {
-		return orders;
-	}
-
-	public void setOrders(int orders) {
-		this.orders = orders;
 	}
 
 	public int getClasstype() {
@@ -186,34 +150,6 @@ public class IsoEntity extends Entity implements Comparable<IsoEntity> {
 		
 	}
 
-	/**
-	 * Takes a position in the world coordinate system and computes
-	 * a position in the (screen) rendering coordinate system
-	 * 
-	 *     p = rendering position anchor
-	 *     W = wPosition 'center'
-	 *     
-	 *       wTileSize*2
-	 *      <   > 
-	 *     |     |
-	 *     p     +             ---------
-	 *         ++ ++           ^        ^ wTileSize
-	 *       ++     ++                  v
-	 *     ++         ++           -----
-	 *     | ++     ++ |               ^
-	 *     |   ++ ++   |
-	 *     |     +     |
-	 *     |     |     |
-	 *     |           |
-	 *     |     |     |                zHeight
-	 *     |     |     |               v
-	 *     ++    W    ++              --
-	 *       ++  |  ++          iso image size
-	 *         ++|++          v
-	 *           +            ----
-	 */
-	
-	
 	public void setPosition(Vector w) {
 		wPosition = w;
 		Vector p = new Vector(wWorldOrigin.getX() + 2*wTileSize + (2*w.getX() + 2*w.getY()),
