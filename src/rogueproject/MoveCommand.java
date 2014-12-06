@@ -9,11 +9,8 @@ public class MoveCommand extends Command {
 		
 	}
 	
-	public void execute(Player player, float x){
-		player.start(direction, x);
-		
-		
-		
-	
+	@Override
+	public void execute(Actor actor){
+		actor.move(this.direction);
 	}
 }
