@@ -37,13 +37,11 @@ public class Player extends Actor {
 	
 	public Player(Vector wWorldSize, Vector wPosition,int charClass) {
 		super(wWorldSize);
+		this.setType(charClass);
 		getTypeImage();
 		setTypeAttributes();
 		wWorldSz = wWorldSize;
-		
 		removeAnimation(walking[current]);
-		this.setType(charClass);
-		
 		addAnimation(walking[current]);
 		setZHeightFromIsoImage(walking[current].getCurrentFrame(), 32);
 		setPosition(wPosition);

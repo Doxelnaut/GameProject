@@ -8,9 +8,7 @@ import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
-
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.ListIterator;
@@ -48,7 +46,7 @@ import org.newdawn.slick.tiled.TiledMap;
  */
 public class PlayingState extends BasicGameState {
 	
-	private TiledMap map;
+
 	Socket socket;
 	String servName;
 	int port = 1666;
@@ -62,7 +60,8 @@ public class PlayingState extends BasicGameState {
 	public boolean actorsTurns = false; 
 
 	RogueGame rg;
-	@Override
+	
+	
 	public void init(GameContainer container, StateBasedGame game)throws SlickException {
 	
 }
@@ -71,8 +70,9 @@ public class PlayingState extends BasicGameState {
 	public void enter(GameContainer container, StateBasedGame game) 
 			throws SlickException {
 		
+		rg = (RogueGame) game;
 		
-		/*
+		
 		//display prompt for server address
 		
 				servName = "127.0.0.1";
@@ -94,8 +94,17 @@ public class PlayingState extends BasicGameState {
 					System.out.println("Error opening streams");
 			    }
 			    
-		*/
 		
+		
+	   try {
+		rg.state.map = (int[]) socketIn.readObject();
+	} catch (IOException | ClassNotFoundException e) {
+		e.printStackTrace();
+		System.out.println("Error getting map from server.");
+	}
+	   
+	   
+		/*
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new FileReader("src/resource/Map.txt"));
@@ -103,43 +112,38 @@ public class PlayingState extends BasicGameState {
 			e1.printStackTrace();
 		}
 	        String line = null;
-	        
+	        */
 	        int r = 0;
 		    try {
-				while ((line = reader.readLine()) != null) {
-
+				/*while ((line = reader.readLine()) != null) {
 				    String[] parts = line.split("\\s");
-				    System.out.println(parts.length);
-				    for(int i = 0; i < parts.length;i++){
-				    	if(Integer.valueOf(parts[i]) == 1){
-							GameState.walls.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), true) );
-							GameState.stop.add(new Ground(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+				    System.out.println(parts.length);*/
+				    for(int i = 0; i< 1000;i++){
+				    	if(rg.state.map[i] == 1){
+							RogueGame.walls.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, (i%100)*RogueGame.TILE_SIZE), true) );
+							RogueGame.stop.add(new Ground(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, (i%100)*RogueGame.TILE_SIZE)) );
 				    	}
-				    	else if(Integer.valueOf(parts[i]) == 2){
-				    		GameState.blocks.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), false) );
-				    		GameState.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+				    	else if(rg.state.map[i] == 2){
+				    		RogueGame.blocks.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, (i%100)*RogueGame.TILE_SIZE), false) );
+				    		RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, (i%100)*RogueGame.TILE_SIZE)) );
 				    	}
 				    	else{
-				    		GameState.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+				    		RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, (i%100)*RogueGame.TILE_SIZE)) );
 				    	}
-
-				    }
 				    	r++;
-				}
+				    }
+				
 			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			RogueGame.player = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),GameState.WARRIOR);
-		   System.out.println( GameState.player);
-		   GameState.blocks.add(GameState.player);
+				e.printStackTrace();}
+		    
+		    RogueGame.player = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),1);
+		    RogueGame.blocks.add(RogueGame.player);
 		
-		for (IsoEntity ie : GameState.walls) {
-			GameState.wallsandblocks.add(ie);
+		for (IsoEntity ie : RogueGame.walls) {
+			RogueGame.wallsandblocks.add(ie);
 		}
-		for (IsoEntity ie : GameState.blocks) {
-			GameState.wallsandblocks.add(ie);
+		for (IsoEntity ie : RogueGame.blocks) {
+			RogueGame.wallsandblocks.add(ie);
 		}
 
 	}
@@ -150,7 +154,7 @@ public class PlayingState extends BasicGameState {
 		
 		
 		
-		if(GameState.player == null){ // player died, don't render anything.
+		if(RogueGame.player == null){ // player died, don't render anything.
 			rg.enterState(RogueGame.STARTUPSTATE);
 		}
 		
@@ -158,24 +162,24 @@ public class PlayingState extends BasicGameState {
 		
 		g.translate(-RogueGame.camX, -RogueGame.camY);		
 
-		for (IsoEntity ie : GameState.ground) {
+		for (IsoEntity ie : RogueGame.ground) {
 			ie.render(g);
 		}
 		
-		Collections.sort(GameState.wallsandblocks);
-		for (IsoEntity ie : GameState.wallsandblocks) {
+		Collections.sort(RogueGame.wallsandblocks);
+		for (IsoEntity ie : RogueGame.wallsandblocks) {
 			ie.render(g);
 		}
-		if (GameState.fireball != null) GameState.fireball.render(g);
+		if (RogueGame.fireball != null) RogueGame.fireball.render(g);
 		g.translate(RogueGame.camX, RogueGame.camY);		
 
-		if(GameState.player != null){
-			g.drawString("Level: " + (int)GameState.player.getLevel() + 
-					" Health: " + (int)GameState.player.getHitPoints() + 
-					"/" + (int)GameState.player.getMaxHitPoints() +  
-					" Attack: " + (int)GameState.player.getAttack() + 
-					" Armor: " + (int)GameState.player.getArmor() + 
-					" Experience: " + (int)GameState.player.getExperience()
+		if(RogueGame.player != null){
+			g.drawString("Level: " + (int)RogueGame.player.getLevel() + 
+					" Health: " + (int)RogueGame.player.getHitPoints() + 
+					"/" + (int)RogueGame.player.getMaxHitPoints() +  
+					" Attack: " + (int)RogueGame.player.getAttack() + 
+					" Armor: " + (int)RogueGame.player.getArmor() + 
+					" Experience: " + (int)RogueGame.player.getExp()
 					, 100 , 10);
 			g.drawString("Dungeon Level: " , 100, 25);
 		}
@@ -190,8 +194,8 @@ public class PlayingState extends BasicGameState {
 		Input input = container.getInput();
 		float x = (60*delta/1000.0f);
 		
-		RogueGame.playerX = GameState.player.getX();
-		RogueGame.playerY = GameState.player.getY();
+		RogueGame.playerX = RogueGame.player.getX();
+		RogueGame.playerY = RogueGame.player.getY();
 		RogueGame.camX = RogueGame.playerX - RogueGame.VIEWPORT_SIZE_X / 2;
 		RogueGame.camY = RogueGame.playerY - RogueGame.VIEWPORT_SIZE_Y / 2;
 
@@ -208,23 +212,23 @@ public class PlayingState extends BasicGameState {
 				System.out.println(c);
 				//System.out.println(c);
 				
-				c.execute(GameState.player);
+				c.execute(RogueGame.player);
 
 			}
 		}
-		else GameState.player.halt();
+		else RogueGame.player.halt();
 				
 		if (input.isKeyPressed(Input.KEY_LCONTROL)) {
-			GameState.player.debugThis = !GameState.player.debugThis;
-			if (GameState.fireball != null) GameState.fireball.debugThis = GameState.player.debugThis;
+			RogueGame.player.debugThis = !RogueGame.player.debugThis;
+			if (RogueGame.fireball != null) RogueGame.fireball.debugThis = RogueGame.player.debugThis;
 		}
 		
-		for(IsoEntity b : GameState.blocks) {
-			if (b != GameState.player && b.collides(GameState.player) != null) {
+		for(IsoEntity b : RogueGame.blocks) {
+			if (b != RogueGame.player && b.collides(RogueGame.player) != null) {
 				System.out.println("Ouch!");
 				//player.sayOuch();
-				GameState.player.halt();
-				GameState.player.ungo();
+				RogueGame.player.halt();
+				RogueGame.player.ungo();
 			}
 		}
 		
@@ -295,43 +299,42 @@ public class PlayingState extends BasicGameState {
 //				}
 //			}
 			
-		if (GameState.fireball != null) {
-			GameState.fireball.update(x*1.5f);
+		if (RogueGame.fireball != null) {
+			RogueGame.fireball.update(x*1.5f);
 			IsoEntity other;
-			for (Iterator<IsoEntity> iie = GameState.blocks.iterator(); iie.hasNext(); ) {
+			for (Iterator<IsoEntity> iie = RogueGame.blocks.iterator(); iie.hasNext(); ) {
 				other = iie.next();
-				if (other == GameState.player) continue;
-				if (GameState.fireball.collides(other) != null) {
+				if (other == RogueGame.player) continue;
+				if (RogueGame.fireball.collides(other) != null) {
 					System.out.println("true");
-					GameState.fireball.kaboom();
+					RogueGame.fireball.kaboom();
 					iie.remove();
-					GameState.wallsandblocks.clear();
+					RogueGame.wallsandblocks.clear();
 					
-					for (IsoEntity ie : GameState.walls) {
-						GameState.wallsandblocks.add(ie);
+					for (IsoEntity ie : RogueGame.walls) {
+						RogueGame.wallsandblocks.add(ie);
 					}
-					for (IsoEntity ie : GameState.blocks) {
-						GameState.wallsandblocks.add(ie);
+					for (IsoEntity ie : RogueGame.blocks) {
+						RogueGame.wallsandblocks.add(ie);
 					}
 					
 					break;
 				}
 			}
-			for (Iterator<IsoEntity> iie = GameState.walls.iterator(); iie.hasNext(); ) {
+			for (Iterator<IsoEntity> iie = RogueGame.walls.iterator(); iie.hasNext(); ) {
 				other = iie.next();
-				if (other == GameState.player) continue;
-				if (GameState.fireball.collides(other) != null) {
+				if (other == RogueGame.player) continue;
+				if (RogueGame.fireball.collides(other) != null) {
 					System.out.println("true");
-					GameState.fireball.kaboom();
+					RogueGame.fireball.kaboom();
 					break;
 				}
 			}
-			if (GameState.fireball.done()) GameState.fireball = null;
+			if (RogueGame.fireball.done()) RogueGame.fireball = null;
 		}
 				
 	}
 
-	@Override
 	public int getID() {
 		return RogueGame.PLAYINGSTATE;
 	}

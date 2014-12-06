@@ -35,16 +35,15 @@ import jig.Vector;
  */
 public class Actor extends IsoEntity {
 	
-	// RPG attributes
-	private int level;
-	private float attack;
-
+	
 	private float maxHitPoints;
 	private float hitPoints;
 	private float armor;
 	private int experience; // for leveling up. Player accrues the experience enemies hold.
 	// Graphics attributes
 	private int type; // Player, creature, etc.
+	private int level;
+	private float attack;
 	
 	public int playerType = 0;
 	public int enemyType = 1;
