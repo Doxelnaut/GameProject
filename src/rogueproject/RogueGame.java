@@ -129,8 +129,8 @@ public class RogueGame extends StateBasedGame{
 
 	GameState state = new GameState();
 	
-	Player player;
-	Player player2;
+	public static Player player;
+	public static Player player2;
 	
 	public RogueGame(String title, float width, float height) {
 		super(title);

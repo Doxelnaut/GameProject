@@ -53,7 +53,7 @@ public class Player extends Actor {
 	
 	public void getTypeImage() {
 		switch(this.getType()){
-			case(GameState.WARRIOR):{
+			case(0):
 				walking[LEFT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkLeft, 99, 135), 0,0,14,0, true, 70, true);
 				walking[RIGHT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkRight,99, 135), 0,0,14,0, true, 70, true);
 				walking[UP] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkUp, 95, 135), 0,0,14,0, true, 70, true);
@@ -97,7 +97,7 @@ public class Player extends Actor {
 				//ouch = ResourceManager.getSound(IsoWorldGame.ouchSoundPath);
 			}
 		}
-	}
+	
 	public void setTypeAttributes(){
 		switch(this.getType()){
 		case 0:
@@ -192,10 +192,10 @@ public class Player extends Actor {
 	}
 	public static boolean canMove(){
 		IsoEntity other;
-		for (Iterator<IsoEntity> iie = GameState.stop.iterator(); iie.hasNext(); ) {
+		for (Iterator<IsoEntity> iie = RogueGame.stop.iterator(); iie.hasNext(); ) {
 			other = iie.next();
 			
-			if (GameState.player.collides(other) != null) {
+			if (RogueGame.player.collides(other) != null) {
 				return false;
 			}
 			
