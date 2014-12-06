@@ -8,13 +8,13 @@ import org.newdawn.slick.Image;
 public class Block extends IsoEntity {
 	boolean tall;
 	public Block(Vector wWorldSize, Vector wPosition, boolean tall) {
-		super(wWorldSize, IsoWorldGame.tileSize);
+		super(wWorldSize, RogueGame.TILE_SIZE);
 		this.tall = tall;
 		Image isoImg;
 		if (tall)
-			isoImg = ResourceManager.getImage(IsoWorldGame.tallBlockImgPath); 
+			isoImg = ResourceManager.getImage(RogueGame.tallBlockImgPath); 
 		else
-			isoImg = ResourceManager.getImage(IsoWorldGame.shortBlockImgPath);
+			isoImg = ResourceManager.getImage(RogueGame.shortBlockImgPath);
 		
 		addImage(isoImg);
 		setZHeightFromIsoImage(isoImg);
