@@ -82,107 +82,7 @@ public class Actor extends IsoEntity {
 	public Vector getTilePosition()	{return new Vector(getTileX(), getTileY());}
 
 	public void getTypeImage(){
-/*		switch(type){
-		case 0:	// little zombie
-			anim = new Animation(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_UNDEAD0_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					, 0, 0, 0, 0, true, 300, true);
-			anim.addFrame(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_UNDEAD1_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					.getSprite(0, 0), 300);
-			break;
-		case 1: // little mummy
-			anim = new Animation(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_UNDEAD0_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					, 0, 1, 0, 1, true, 300, true);
-			anim.addFrame(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_UNDEAD1_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					.getSprite(0, 1), 300);
-			break;
-		case 2: // skeleton
-			anim = new Animation(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_UNDEAD0_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					, 0, 2, 0, 2, true, 300, true);
-			anim.addFrame(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_UNDEAD1_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					.getSprite(0, 2), 300);
-			break;
-		case 3: // large zombie
-			anim = new Animation(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_UNDEAD0_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					, 5, 0, 5, 0, true, 300, true);
-			anim.addFrame(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_UNDEAD1_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					.getSprite(5, 0), 300);
-			break;
-		case 4: // large mummy
-			anim = new Animation(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_UNDEAD0_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					, 5, 1, 5, 1, true, 300, true);
-			anim.addFrame(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_UNDEAD1_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					.getSprite(5, 1), 300);
-			break;
-		case 5: // death
-			anim = new Animation(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_UNDEAD0_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					, 0, 5, 0, 5, true, 300, true);
-			anim.addFrame(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_UNDEAD1_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					.getSprite(0, 5), 300);
-			break;
-		case 6: // little spider
-			anim = new Animation(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_PEST0_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					, 0, 2, 0, 2, true, 300, true);
-			anim.addFrame(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_PEST1_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					.getSprite(0, 2), 300);
-			break;
-		case 7: // little scorpion
-			anim = new Animation(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_PEST0_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					, 3, 2, 3, 2, true, 300, true);
-			anim.addFrame(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_PEST1_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					.getSprite(3, 2), 300);
-			break;
-		case 8: // slug 
-			anim = new Animation(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_PEST0_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					, 3, 7, 3, 7, true, 300, true);
-			anim.addFrame(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_PEST1_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					.getSprite(3, 7), 300);
-			break;
-		case 9: // large spider
-			anim = new Animation(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_PEST0_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					, 2, 2, 2, 2, true, 300, true);
-			anim.addFrame(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_PEST1_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					.getSprite(2, 2), 300);
-			break;
-		case 10: // large scorpion
-			anim = new Animation(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_PEST0_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					, 5, 2, 5, 2, true, 300, true);
-			anim.addFrame(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_PEST1_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					.getSprite(5, 2), 300);
-			break;
-		case 11: // red leech
-			anim = new Animation(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_PEST0_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					, 4, 3, 4, 3, true, 300, true);
-			anim.addFrame(ResourceManager.getSpriteSheet(
-					RogueGame.ACTOR_PEST1_IMG_RSC, RogueGame.TILE_SIZE, RogueGame.TILE_SIZE)
-					.getSprite(4, 3), 300);
-			break;
-		default:
-			break;
-		}
-*/	}
+	}
 	
 	/* Setters */
 	
@@ -202,120 +102,7 @@ public class Actor extends IsoEntity {
 	}
 	
 	public void setTypeAttributes(){
-		switch(this.getType()){
-		// Undead
-		case 0: // little zombie
-			this.setLevel(1);
-			this.setMaxHitPoints(7);
-			this.setHitPonts(7);
-			this.setAttack(1);
-			this.setArmor(0);
-			this.setGain(0.5f);
-			this.setExp(1);
-			break;
-		case 1: // little mummy
-			this.setLevel(1);
-			this.setMaxHitPoints(5);
-			this.setHitPonts(5);
-			this.setAttack(1);
-			this.setArmor(0);
-			this.setGain(1);
-			this.setExp(2);
-			break;
-		case 2: // skeleton
-			this.setLevel(1);
-			this.setMaxHitPoints(5);
-			this.setHitPonts(5);
-			this.setAttack(1);
-			this.setArmor(1);
-			this.setGain(1.5f);
-			this.setExp(3);
-			break;
-		case 3: // large zombie
-			this.setLevel(1);
-			this.setMaxHitPoints(9);
-			this.setHitPonts(5);
-			this.setAttack(1);
-			this.setArmor(0);
-			this.setGain(0.75f);
-			this.setExp(3);
-			break;
-		case 4: // large mummy
-			this.setLevel(1);
-			this.setMaxHitPoints(8);
-			this.setHitPonts(5);
-			this.setAttack(1);
-			this.setArmor(1);
-			this.setGain(1);
-			this.setExp(3);
-			break;
-		case 5: // death
-			this.setLevel(1);
-			this.setMaxHitPoints(12);
-			this.setHitPonts(12);
-			this.setAttack(3);
-			this.setArmor(1);
-			this.setGain(0.8f);
-			this.setExp(5);
-			break;
-		// Pests
-		case 6: // little spider
-			this.setLevel(2);
-			this.setMaxHitPoints(15);
-			this.setHitPonts(15);
-			this.setAttack(2);
-			this.setArmor(1);
-			this.setGain(1);
-			this.setExp(4);
-			break;
-		case 7: // little scorpion
-			this.setLevel(2);
-			this.setMaxHitPoints(15);
-			this.setHitPonts(15);
-			this.setAttack(2.25f);
-			this.setArmor(1.5f);
-			this.setGain(1);
-			this.setExp(5);
-			break;
-		case 8: // slug
-			this.setLevel(2);
-			this.setMaxHitPoints(20);
-			this.setHitPonts(20);
-			this.setAttack(2);
-			this.setArmor(3);
-			this.setGain(0.7f);
-			this.setExp(6);
-			break;
-		case 9: // large spider
-			this.setLevel(2);
-			this.setMaxHitPoints(20);
-			this.setHitPonts(20);
-			this.setAttack(3);
-			this.setArmor(1.5f);
-			this.setGain(1.5f);
-			this.setExp(7);
-			break;
-		case 10: // large scorpion
-			this.setLevel(2);
-			this.setMaxHitPoints(20);
-			this.setHitPonts(20);
-			this.setAttack(3);
-			this.setArmor(2);
-			this.setGain(1.4f);
-			this.setExp(8);
-			break;
-		case 11: // red leech
-			this.setLevel(2);
-			this.setMaxHitPoints(20);
-			this.setHitPonts(20);
-			this.setAttack(5);
-			this.setArmor(2);
-			this.setGain(1);
-			this.setExp(15);
-			break;
-		default:
-			break;
-		}
+		
 	}
 	
 	/* Actions */
@@ -327,7 +114,9 @@ public class Actor extends IsoEntity {
 		//TODO: move character
 	}
 	
-
+	public void shoot(Vector direction){
+		//TODO: shoot bullets
+	}
 	
 	/* Update */
 	public void update(final int delta){

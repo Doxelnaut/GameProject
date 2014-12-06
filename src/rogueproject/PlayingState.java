@@ -208,7 +208,7 @@ public class PlayingState extends BasicGameState {
 				System.out.println(c);
 				//System.out.println(c);
 				
-				c.execute(GameState.player,x);
+				c.execute(GameState.player);
 
 			}
 		}
