@@ -95,25 +95,7 @@ public class PlayingState extends BasicGameState {
 			    }
 			    
 		*/
-		RogueGame rg = (RogueGame)game;
-		rg.state.actors = new ArrayList<IsoEntity>();
-		setLevel(rg);
 		
-		rg.state.blocked = new boolean[map.getWidth()][map.getHeight()];
-		rg.state.occupied = new boolean[map.getWidth()][map.getHeight()]; 
-		rg.state.pathmap = new NodeMap(map);
-				
-		// Build collision detection for map tiles, and fill occupied with false values.
-		for (int i = 0; i < map.getWidth(); i++){
-			for (int j = 0; j < map.getHeight(); j++){
-				rg.state.occupied[i][j] = false; // initialize occupied
-				int tileID = map.getTileId(i, j, 0);
-				String value = map.getTileProperty(tileID, "blocked", "false");
-				if ("true".equals(value)){
-					rg.state.blocked[i][j] = true;
-				}
-			}
-		}
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new FileReader("src/resource/Map.txt"));
@@ -195,8 +177,7 @@ public class PlayingState extends BasicGameState {
 					" Armor: " + (int)GameState.player.getArmor() + 
 					" Experience: " + (int)GameState.player.getExperience()
 					, 100 , 10);
-			g.drawString("Dungeon Level: " + rg.player.getDepth(), 100, 25);
-			g.drawString("Dungeon Level: " + GameState.player.getDepth(), 100, 25);
+			g.drawString("Dungeon Level: " , 100, 25);
 		}
 		g.translate(-RogueGame.camX, -RogueGame.camY);		
 
@@ -357,84 +338,6 @@ public class PlayingState extends BasicGameState {
 	
 	public void setLevel(RogueGame rg) throws SlickException{
 
-		switch(GameState.player.getDepth()){
-		case 1:
-			//rg.state.player.setTilePosition(1, 2);
-			//map = new TiledMap("rogueproject/resource/maps/tinytestmap.tmx");
-/**			//Little Zombies
-			rg.state.actors.add( new Actor(0, 14, 15));
-			rg.state.actors.add( new Actor(0, 10, 16));
-			rg.state.actors.add( new Actor(0, 12, 28));
-			rg.state.actors.add( new Actor(0, 6, 29));
-			rg.state.actors.add( new Actor(0, 24, 38));
-			rg.state.actors.add( new Actor(0, 25, 29));
-			rg.state.actors.add( new Actor(0, 23, 7));
-			rg.state.actors.add( new Actor(0, 40, 19));
-			rg.state.actors.add( new Actor(0, 24, 37));
-			rg.state.actors.add( new Actor(0, 26, 12));
-			//Little Mummies
-			rg.state.actors.add( new Actor(1, 31, 22));
-			rg.state.actors.add( new Actor(1, 25, 21));
-			rg.state.actors.add( new Actor(1, 23, 40));
-			//Skeletons
-			rg.state.actors.add( new Actor(2, 9, 30));
-			rg.state.actors.add( new Actor(2, 45, 24));
-			rg.state.actors.add( new Actor(2, 49, 26));
-			rg.state.actors.add( new Actor(2, 37, 36));
-			rg.state.actors.add( new Actor(2, 47, 38));
-			//Large Zombies
-			rg.state.actors.add( new Actor(3, 41, 9));
-			rg.state.actors.add( new Actor(3, 43, 9));
-			rg.state.actors.add( new Actor(3, 34, 36));
-			rg.state.actors.add( new Actor(3, 34, 30));
-			rg.state.actors.add( new Actor(3, 48, 18));
-			rg.state.actors.add( new Actor(3, 56, 19));
-			//Large Mummies
-			rg.state.actors.add( new Actor(4, 55, 25));
-			rg.state.actors.add( new Actor(4, 56, 24));
-			rg.state.actors.add( new Actor(4, 54, 13));
-			//Death
-			rg.state.actors.add( new Actor(5, 48, 4)); 
-**/			break;
-		case 2:
-			
-		//	rg.state.player.setTilePosition(0,1);
-			//map = new TiledMap("rogueproject/resource/maps/tinytestmap.tmx");
-/**			// Little Spiders
-			rg.state.actors.add( new Actor(6, 12, 19));
-			rg.state.actors.add( new Actor(6, 7, 31));
-			rg.state.actors.add( new Actor(6, 13, 34));
-			rg.state.actors.add( new Actor(6, 6, 6));
-			rg.state.actors.add( new Actor(6, 27, 16));
-			rg.state.actors.add( new Actor(6, 37, 21));
-			rg.state.actors.add( new Actor(6, 39, 31));
-			rg.state.actors.add( new Actor(6, 51, 34));
-			rg.state.actors.add( new Actor(6, 28, 5));
-			rg.state.actors.add( new Actor(6, 59, 16));
-			// Little Scorpions
-			rg.state.actors.add( new Actor(7, 39, 29));
-			rg.state.actors.add( new Actor(7, 34, 41));
-			rg.state.actors.add( new Actor(7, 41, 29));
-			rg.state.actors.add( new Actor(7, 34, 14));
-			rg.state.actors.add( new Actor(7, 6, 5));
-			// Slugs
-			rg.state.actors.add( new Actor(8, 27, 39));
-			rg.state.actors.add( new Actor(8, 37, 41));
-			rg.state.actors.add( new Actor(8, 37, 42));
-			// Large Spiders
-			rg.state.actors.add( new Actor(9, 48, 10));
-			rg.state.actors.add( new Actor(9, 22, 5));
-			rg.state.actors.add( new Actor(9, 55, 19));
-			// Large Scorpions
-			rg.state.actors.add( new Actor(10, 46, 8));
-			rg.state.actors.add( new Actor(10, 25, 6));
-			rg.state.actors.add( new Actor(10, 54, 33));
-			// Red Leech
-			rg.state.actors.add( new Actor(11, 48, 8));
-**/			break;
-		default:
-			break;
-		}
 	}
 
 }

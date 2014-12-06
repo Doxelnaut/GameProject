@@ -8,7 +8,7 @@ import jig.Vector;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Sound;
 
-public class Player extends IsoEntity {
+public class Player extends Actor {
 	Animation[] walking = new Animation[8];
 	Animation[] walkingFIRE = new Animation[8];
 	Animation[] crouching = new Animation[8];
@@ -51,7 +51,7 @@ public class Player extends IsoEntity {
 		lastWPosition = wPosition;
 		}
 	
-	private void getTypeImage() {
+	public void getTypeImage() {
 		switch(this.getType()){
 			case(GameState.WARRIOR):{
 				walking[LEFT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkLeft, 99, 135), 0,0,14,0, true, 70, true);

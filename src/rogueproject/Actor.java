@@ -37,20 +37,10 @@ public class Actor extends IsoEntity {
 	
 	// RPG attributes
 	private int level;
-	private float maxHitPoints;
-	private float hitPoints;
 	private float attack;
-	private float armor;
-	private int experience; // for leveling up. Player accrues the experience enemies hold.
 	// Graphics attributes
-	private int type; // Player, creature, etc.
-	private Animation anim;
-	// Action attributes
-	private boolean turn;
+
 	public boolean energyGained = false; // false = no energy gained this turn.
-	private boolean moving = false;
-	private Vector nextTile, // adjacent tile to interact with.
-					toNextTile; // direction vector from actor to nextTile
 	private float energy, gain; // energy is used for actions per turn
 	// consider also attackCost to differentiate from movement and attack costs
 	// i.e. faster movement, but regular attack speed.
@@ -65,17 +55,13 @@ public class Actor extends IsoEntity {
 	 * @param setx tile x coordinate
 	 * @param sety tile y coordinate
 	 */	
-	public Actor(Vector wWorldSize, Vector wPosition, int type){
+	public Actor(Vector wWorldSize, int type){
 		super(wWorldSize, RogueGame.TILE_SIZE);
-		this.nextTile = getTilePosition();
-		this.toNextTile = new Vector(0,0);
 		this.getTypeImage();
 		this.type = type;
-		this.addAnimation(anim);
-		this.anim.setLooping(true);
 		this.energy = 0;
 		this.setTypeAttributes();
-		this.turn = false;
+	
 	}
 
 	/* Getters */
@@ -88,11 +74,7 @@ public class Actor extends IsoEntity {
 	public int getType()			{return type;}
 	public float getEnergy()		{return energy;}
 	public float getGain()			{return gain;}
-	public boolean isMoving()		{return moving;}
-	public Vector getNextTile()		{return nextTile;}
-	public boolean getTurn()		{return this.turn;}
 	public boolean getGained()		{return this.energyGained;}
-	public Vector getToNextTile()	{return this.toNextTile;}
 	public int getExp()				{return this.experience;}
 
 	public int getTileX()			{return (int) (getX() / RogueGame.TILE_SIZE);}
@@ -211,14 +193,9 @@ public class Actor extends IsoEntity {
 	public void setArmor(float set)			{this.armor = set;}
 	public void setEnergy(float set)		{this.energy = set;}
 	public void setGain(float set)			{this.gain = set;}
-	public void setTurn(boolean set)		{this.turn = set;}
 	public void setGained(boolean set)		{this.energyGained = set;}
-	public void setToNextTile(Vector set)	{this.toNextTile = set;}
 	public void setExp(int set)				{this.experience = set;}
 	
-	public void setMoving(boolean setmoving){
-		moving = setmoving;
-	}
 	
 	public void setTilePosition(int setx, int sety){
 		this.setPosition(setx * RogueGame.TILE_SIZE, sety * RogueGame.TILE_SIZE);
@@ -354,7 +331,6 @@ public class Actor extends IsoEntity {
 	
 	/* Update */
 	public void update(final int delta){
-		translate(toNextTile);
 	}
 	
 	/* Render */
@@ -379,9 +355,5 @@ public class Actor extends IsoEntity {
 		setPosition(getPosition().add(new Vector(-RogueGame.TILE_SIZE/2, -RogueGame.TILE_SIZE/2)));
 	}
 
-	public void remove(){
-		this.removeAnimation(anim);
-		anim = null;
-	}
 	
 }
