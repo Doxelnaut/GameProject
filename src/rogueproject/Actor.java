@@ -38,12 +38,13 @@ public class Actor extends IsoEntity {
 	// RPG attributes
 	private int level;
 	private float attack;
-	// Graphics attributes
 
-	public boolean energyGained = false; // false = no energy gained this turn.
-	private float energy, gain; // energy is used for actions per turn
-	// consider also attackCost to differentiate from movement and attack costs
-	// i.e. faster movement, but regular attack speed.
+	private float maxHitPoints;
+	private float hitPoints;
+	private float armor;
+	private int experience; // for leveling up. Player accrues the experience enemies hold.
+	// Graphics attributes
+	private int type; // Player, creature, etc.
 	
 	public int playerType = 0;
 	public int enemyType = 1;
@@ -59,11 +60,17 @@ public class Actor extends IsoEntity {
 		super(wWorldSize, RogueGame.TILE_SIZE);
 		this.getTypeImage();
 		this.type = type;
-		this.energy = 0;
 		this.setTypeAttributes();
 	
 	}
 
+	/**
+	 * Constructor for Player
+	 */
+	public Actor(Vector wWorldSize){
+		super(wWorldSize, RogueGame.TILE_SIZE);
+	}
+	
 	/* Getters */
 	
 	public int getLevel()			{return level;}
@@ -72,9 +79,6 @@ public class Actor extends IsoEntity {
 	public float getAttack()		{return attack;}
 	public float getArmor()			{return armor;}
 	public int getType()			{return type;}
-	public float getEnergy()		{return energy;}
-	public float getGain()			{return gain;}
-	public boolean getGained()		{return this.energyGained;}
 	public int getExp()				{return this.experience;}
 
 	public int getTileX()			{return (int) (getX() / RogueGame.TILE_SIZE);}
@@ -88,13 +92,11 @@ public class Actor extends IsoEntity {
 	
 	public void setLevel(int set)			{this.level = set;}
 	public void setMaxHitPoints(float set)	{this.maxHitPoints = set;}
-	public void setHitPonts(float set)	 	{this.hitPoints = Math.min(set, this.maxHitPoints);}
+	public void setHitPoints(float set)	 	{this.hitPoints = Math.min(set, this.maxHitPoints);}
 	public void setAttack(float set)		{this.attack = set;}
 	public void setArmor(float set)			{this.armor = set;}
-	public void setEnergy(float set)		{this.energy = set;}
-	public void setGain(float set)			{this.gain = set;}
-	public void setGained(boolean set)		{this.energyGained = set;}
 	public void setExp(int set)				{this.experience = set;}
+	public void setType(int set)			{this.type = set;}
 	
 	
 	public void setTilePosition(int setx, int sety){
@@ -102,7 +104,7 @@ public class Actor extends IsoEntity {
 	}
 	
 	public void setTypeAttributes(){
-		
+		//TODO
 	}
 	
 	/* Actions */

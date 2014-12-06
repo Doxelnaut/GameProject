@@ -131,7 +131,7 @@ public class PlayingState extends BasicGameState {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			GameState.player = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),GameState.WARRIOR);
+			RogueGame.player = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),GameState.WARRIOR);
 		   System.out.println( GameState.player);
 		   GameState.blocks.add(GameState.player);
 		

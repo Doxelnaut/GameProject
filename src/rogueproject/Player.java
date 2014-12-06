@@ -36,13 +36,12 @@ public class Player extends Actor {
 	Sound ouch;
 	
 	public Player(Vector wWorldSize, Vector wPosition,int charClass) {
-		super(wWorldSize, RogueGame.TILE_SIZE);
+		super(wWorldSize);
 		getTypeImage();
 		setTypeAttributes();
 		wWorldSz = wWorldSize;
 		
 		removeAnimation(walking[current]);
-		wWorldSz = wWorldSize;
 		this.setType(charClass);
 		
 		addAnimation(walking[current]);
@@ -53,7 +52,7 @@ public class Player extends Actor {
 	
 	public void getTypeImage() {
 		switch(this.getType()){
-			case(GameState.WARRIOR):{
+			case(RogueGame.WARRIOR):{
 				walking[LEFT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkLeft, 99, 135), 0,0,14,0, true, 70, true);
 				walking[RIGHT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkRight,99, 135), 0,0,14,0, true, 70, true);
 				walking[UP] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkUp, 95, 135), 0,0,14,0, true, 70, true);
@@ -106,29 +105,29 @@ public class Player extends Actor {
 			this.setHitPoints(10);
 			this.setAttack(2);
 			this.setArmor(0);
-			this.setEnergy(0);
-			this.setGain(1);
-			this.setExperience(0);
+			this.setExp(0);
 			break;
 		default:
 			break;
 		}
 	}
-	public void attackActor(IsoEntity enemy){
-		// damage done to enemy is player's attack minus enemies armor. if that is less than 0, do 0 damage instead.
-		enemy.setHitPoints(enemy.getHitPoints() - Math.max(this.getAttack() - enemy.getArmor(), 0));
-		if(enemy.getHitPoints() <= 0){
-			this.setExperience(this.getExperience() + enemy.getExperience());
-		}
-		while(this.getExperience() > (this.getLevel() * 5)){ //defeating the enemy leads to a level up!
-			System.out.println("levelup!");
-			this.setExperience(this.getExperience() - (this.getLevel() * 5));
-			this.setLevel(this.getLevel() + 1);
-			this.setHitPoints(this.getHitPoints() + 5);
-			this.setAttack(this.getAttack() + 1);
-			this.setArmor(this.getArmor() + 0.5f);
-		}
-	}
+	
+//	public void attackActor(Actor enemy){
+//		// damage done to enemy is player's attack minus enemies armor. if that is less than 0, do 0 damage instead.
+//		enemy.setHitPoints(enemy.getHitPoints() - Math.max(this.getAttack() - enemy.getArmor(), 0));
+//		if(enemy.getHitPoints() <= 0){
+//			this.setExp(this.getExp() + enemy.getExp());
+//		}
+//		while(this.getExp() > (this.getLevel() * 5)){ //defeating the enemy leads to a level up!
+//			System.out.println("levelup!");
+//			this.setExp(this.getExp() - (this.getLevel() * 5));
+//			this.setLevel(this.getLevel() + 1);
+//			this.setHitPoints(this.getHitPoints() + 5);
+//			this.setAttack(this.getAttack() + 1);
+//			this.setArmor(this.getArmor() + 0.5f);
+//		}
+//	}
+	
 	public void sayOuch() {
 		if (ouch.playing()) return;
 		ouch.play();
@@ -177,6 +176,7 @@ public class Player extends Actor {
 	public void ungo() {
 		setPosition(lastWPosition);
 	}
+	
 	public void halt() {
 		if(crouch == false){
 			walking[current].stop();
@@ -186,10 +186,12 @@ public class Player extends Actor {
 			crouching[current].stop();
 		}
 	}
+	
 	public Fireball launchFireball() {
 		Fireball f = new Fireball(wWorldSz, wPosition, current);
 		return f;
 	}
+	
 	public static boolean canMove(){
 		IsoEntity other;
 		for (Iterator<IsoEntity> iie = GameState.stop.iterator(); iie.hasNext(); ) {
@@ -257,6 +259,7 @@ public class Player extends Actor {
 	public boolean getCrouch(){
 		return crouch;
 	}
+	
 	public void toggleCrouch(){
 		
 		if(crouch == true){
