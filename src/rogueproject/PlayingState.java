@@ -102,36 +102,28 @@ public class PlayingState extends BasicGameState {
 		e.printStackTrace();
 		System.out.println("Error getting map from server.");
 	}
-	   
-	   
-		/*
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new FileReader("src/resource/Map.txt"));
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		}
-	        String line = null;
-	        */
-	        int r = 0;
-		    try {
-				/*while ((line = reader.readLine()) != null) {
-				    String[] parts = line.split("\\s");
-				    System.out.println(parts.length);*/
-				    for(int i = 0; i< 1000;i++){
-				    	if(rg.state.map[i] == 1){
-							RogueGame.walls.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, (i%100)*RogueGame.TILE_SIZE), true) );
-							RogueGame.stop.add(new Ground(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, (i%100)*RogueGame.TILE_SIZE)) );
-				    	}
-				    	else if(rg.state.map[i] == 2){
-				    		RogueGame.blocks.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, (i%100)*RogueGame.TILE_SIZE), false) );
-				    		RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, (i%100)*RogueGame.TILE_SIZE)) );
-				    	}
-				    	else{
-				    		RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, (i%100)*RogueGame.TILE_SIZE)) );
-				    	}
-				    	r++;
-				    }
+	
+	int r = 0;
+	int c = 0;
+	try {
+		for(int j = 0; j < 100; j ++){
+			for(int i = 0; i< 100;i++){
+				if(rg.state.map[c] == 1){
+					RogueGame.walls.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), true) );
+					RogueGame.stop.add(new Ground(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+				}
+				else if(rg.state.map[c] == 2){
+					RogueGame.blocks.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), false) );
+					RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+				}
+				else{
+				    RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+				}
+				c++;
+			 }
+			
+		    r++;
+		    }
 				
 			} catch (NumberFormatException e) {
 				e.printStackTrace();}

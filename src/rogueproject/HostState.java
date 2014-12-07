@@ -42,6 +42,7 @@ public class HostState extends BasicGameState {
 	        String line = null;
 	        
 	        int r = 0;
+	        int c = 0;
 		try {
 			while ((line = reader.readLine()) != null) {
 
@@ -51,18 +52,19 @@ public class HostState extends BasicGameState {
 			    	if(Integer.valueOf(parts[i]) == 1){
 						RogueGame.walls.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), true) );
 						RogueGame.stop.add(new Ground(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
-						RG.state.map[i] = 1;
+						RG.state.map[c] = 1;
 			    	}
 			    	else if(Integer.valueOf(parts[i]) == 2){
 			    		RogueGame.blocks.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), false) );
 			    		RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
-			    		RG.state.map[i] =2;
+			    		RG.state.map[c] =2;
 			    	}
 			    	else{
 			    		RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
-			    		RG.state.map[i] = 0;
+			    		RG.state.map[c] = 0;
 			    	}
 
+			    	c++;
 			    }
 			    	r++;
 			}
