@@ -6,6 +6,8 @@ import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
+import jig.Vector;
+
 public class Connection implements Runnable {
 	
 	private Socket socket;
@@ -13,19 +15,36 @@ public class Connection implements Runnable {
 	boolean quit = false;
 	ObjectOutputStream socketOut;
 	ObjectInputStream socketIn;
-	RogueGame state;
+	RogueGame RG;
 	Command c;
 	Player player;
-	
 	Connection(Socket s, RogueGame gs){
 		socket = s;
-		state = gs;
+		RG = gs;
 	}
 
 	@Override
 	public void run() {
 		
-			player = state.player;
+		//create player
+		if(RogueGame.player == null){
+			RG.player = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),1);
+			RogueGame.blocks.add(RG.player);
+			player = RG.player;
+			RG.state.player.setX(player.getX());
+			RG.state.player.setY(player.getY());
+			RG.state.firstPlayer = true;
+		}
+		
+		else if( RG.player2 == null){
+			RG.player2 = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),1);
+			RogueGame.blocks.add(RG.player2);
+			player = RG.player2;
+			RG.state.player.setX(player.getX());
+			RG.state.player.setY(player.getY());
+			RG.state.secondPlayer= true;
+		}
+	
 			try {
 				estConn();
 			} catch (IOException e) {
@@ -46,21 +65,20 @@ public class Connection implements Runnable {
 	    }
 		
 	    try {
-			socketOut.writeObject(state.state.map);
+			socketOut.writeObject(RG.state);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	    while(!quit){
 	    	//loop to write game state to client and get user input from client
 		    	
-		/*	try {
-				socketOut.writeObject(state);
+			try {
+				socketOut.writeObject(RG.state);
 			} catch (IOException e) {
 				e.printStackTrace();
 				System.out.println("Error Writing game state to client.");
 			}
-			*/
+			
 			try {
 				c = (Command) socketIn.readObject();
 			} catch (ClassNotFoundException | IOException e) {
@@ -68,7 +86,20 @@ public class Connection implements Runnable {
 				e.printStackTrace();
 			}
 			
-			c.execute(player);
+			if(c != null){
+				System.out.println("Command from server: " + c.toString());
+				c.execute(player);
+			}
+			
+			if(player == RG.player){
+			RG.state.player.setX(player.getX());
+			RG.state.player.setY(player.getY());
+		//	RG.state.player.setTheta(player.getRotation());
+			}
+			else if(player == RG.player2){
+				RG.state.player2.setX(player.getX());
+				RG.state.player2.setY(player.getY());
+			}
 			
 			
 	    }

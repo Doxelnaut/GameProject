@@ -145,7 +145,7 @@ public class HostState extends BasicGameState {
 		hostAddressButton.render(g);
 		
 		
-		//displays one or both clients names
+	/*	//displays one or both clients names
 		if(connections.size() == 1){
 			clientAddressButton = new Button(connections.get(0).hostName,
 					(RG.ScreenWidth * 0.5f), (RG.ScreenHeight * 0.43f), 20);
@@ -162,7 +162,7 @@ public class HostState extends BasicGameState {
 			clientAddress2Button.render(g);
 
 		}
-		
+		*/
 		hostAddress1Button.render(g);
 		
 	}
