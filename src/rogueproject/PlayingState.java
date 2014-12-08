@@ -205,8 +205,8 @@ public class PlayingState extends BasicGameState {
 		if(secondPlayer){
 			RogueGame.player2.setPosition(RG.state.player2.getX(),RG.state.player2.getY());
 			
-			RogueGame.camX = RogueGame.player2.getPosition().getX() - RogueGame.player.getX() /3;
-			RogueGame.camY = RogueGame.player2.getPosition().getX() + RogueGame.player.getX() /2;
+			RogueGame.camX = RogueGame.player2.getPosition().getX() - RogueGame.VIEWPORT_SIZE_X / 2;
+			RogueGame.camY = RogueGame.player2.getPosition().getX() + RogueGame.VIEWPORT_SIZE_Y / 2;
 			
 			RogueGame.player.setPosition(RG.state.player.getX(), RG.state.player.getY());
 			
@@ -216,14 +216,15 @@ public class PlayingState extends BasicGameState {
 			
 			RogueGame.player.setPosition(RG.state.player.getX(), RG.state.player.getY());
 			
-			RogueGame.camX = RogueGame.player.getPosition().getX() - RogueGame.player.getX() /3; //- RogueGame.VIEWPORT_SIZE_X / 2;
-			RogueGame.camY = RogueGame.player.getPosition().getY() + RogueGame.player.getY()/2; //- RogueGame.VIEWPORT_SIZE_Y / 2;
+			RogueGame.camX = RogueGame.player.getPosition().getX() - RogueGame.VIEWPORT_SIZE_X / 2;
+			RogueGame.camY = RogueGame.player.getPosition().getY() + RogueGame.VIEWPORT_SIZE_Y / 2;
 			
 			if(RG.state.secondPlayer){
 				RogueGame.player2.setPosition(RG.state.player2.getX(), RG.state.player2.getY());
 			}
 		}	
 				
+		
 		
 		//build command object
 		InputHandler inputHandler = new InputHandler();
@@ -242,6 +243,9 @@ public class PlayingState extends BasicGameState {
 				System.out.println("Command from user: " + c.toString());
 				c.execute(player);
 			}
+			
+			RG.state.player.setX(player.getPosition().getX());
+			RG.state.player.setY(player.getPosition().getY());
 		}
 		else {
 			RogueGame.player.halt();
