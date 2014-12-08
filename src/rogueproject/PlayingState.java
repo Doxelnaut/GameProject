@@ -160,7 +160,7 @@ public class PlayingState extends BasicGameState {
 			RG.enterState(RogueGame.STARTUPSTATE);
 		}
 
-		g.translate(-RogueGame.camX, -RogueGame.camY);		
+		g.translate(-RG.camX, -RG.camY);		
 
 		for (IsoEntity ie : RogueGame.ground) {
 			ie.render(g);
@@ -209,10 +209,10 @@ public class PlayingState extends BasicGameState {
 			player.setY(RG.state.player2.getY());
 			//RG.player.setRotation(RG.state.player.getTheta());
 			
-			RogueGame.player2X = player.getX();
-			RogueGame.player2Y = player.getY();
-			RogueGame.camX = RogueGame.playerX - RogueGame.VIEWPORT_SIZE_X / 2;
-			RogueGame.camY = RogueGame.playerY - RogueGame.VIEWPORT_SIZE_Y / 2;
+			RogueGame.player2X = RogueGame.player.getX();
+			RogueGame.player2Y = RogueGame.player.getY();
+			RG.camX = RG.player2X - RogueGame.VIEWPORT_SIZE_X / 2;
+			RG.camY = RG.player2Y - RogueGame.VIEWPORT_SIZE_Y / 2;
 			
 			RogueGame.playerX = RG.player.getX();
 			RogueGame.playerY = RG.player.getY();
@@ -224,10 +224,10 @@ public class PlayingState extends BasicGameState {
 			player.setY(RG.state.player.getY());
 			//RG.player.setRotation(RG.state.player.getTheta());
 			
-			RogueGame.playerX = player.getX();
-			RogueGame.playerY = player.getY();
-			RogueGame.camX = RogueGame.playerX - RogueGame.VIEWPORT_SIZE_X / 2;
-			RogueGame.camY = RogueGame.playerY - RogueGame.VIEWPORT_SIZE_Y / 2;
+			RogueGame.playerX = RogueGame.player.getX();
+			RogueGame.playerY = RogueGame.player.getY();
+			RG.camX = RG.playerX - RogueGame.VIEWPORT_SIZE_X / 2;
+			RG.camY = RG.playerY - RogueGame.VIEWPORT_SIZE_Y / 2;
 			
 			if(RG.state.secondPlayer){
 				RogueGame.player2X = RG.state.player2.getX();
@@ -251,7 +251,7 @@ public class PlayingState extends BasicGameState {
 				}
 				
 				System.out.println("Command from user: " + c.toString());
-				c.execute(RG.player);
+				c.execute(player);
 			}
 		}
 		else {

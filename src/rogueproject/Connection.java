@@ -40,8 +40,8 @@ public class Connection implements Runnable {
 			RG.player2 = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),1);
 			RogueGame.blocks.add(RG.player2);
 			player = RG.player2;
-			RG.state.player.setX(player.getX());
-			RG.state.player.setY(player.getY());
+			RG.state.player2.setX(player.getX());
+			RG.state.player2.setY(player.getY());
 			RG.state.secondPlayer= true;
 		}
 	
