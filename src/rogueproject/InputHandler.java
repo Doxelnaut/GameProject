@@ -8,7 +8,8 @@ import org.newdawn.slick.Input;
 
 public class InputHandler {
 
-	private static final int N=1, E=2, S=3, W=4, NE=5, NW=6, SW=7, SE=8, SHOOT = 9;
+	// Enumerated so rotations are multiples of direction integers
+	private static final int N = 0, NE=1, E=2, SE=3, S=4, SW=5, W=6, NW=7, CTRL=8;
 	
 	private Command key_w = new MoveCommand(N), 
 			key_a = new MoveCommand(W), 
@@ -18,8 +19,8 @@ public class InputHandler {
 			keys_wd = new MoveCommand(NE),
 			keys_sa = new MoveCommand(SW),
 			keys_sd = new MoveCommand(SE),
-			keys_c = new MoveCommand(0),
-			key_space = new MoveCommand(SHOOT) ,
+			keys_c = new MoveCommand(CTRL),
+//			key_space = new MoveCommand(SHOOT) ,
 			mouse_left/*, 
 			mouse_right = new RangeAttackCommand()*/;
 	
@@ -52,9 +53,9 @@ public class InputHandler {
 		else if(input.isKeyDown(Input.KEY_D)){
 			commands.add(key_d);
 		}
-		else if(input.isKeyDown(Input.KEY_SPACE)){
-			commands.add(key_space);
-		}
+//		else if(input.isKeyDown(Input.KEY_SPACE)){
+//			commands.add(key_space);
+//		}
 		else if(input.isKeyDown(Input.KEY_C)){
 			commands.add(keys_c);
 		}
