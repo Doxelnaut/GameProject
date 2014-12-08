@@ -78,6 +78,7 @@ public class RogueGame extends StateBasedGame{
 	public static final String groundSheetPath   = "resource/flagstonetiles.png";
 	public static final String tallBlockImgPath   = "resource/tallcaveblock.png";
 	public static final String shortBlockImgPath   = "resource/shortcaveblock.png";
+	public static final String host_background = "resource/host_background.png";
 	
 	public static final String WalkLeft = "resource/Walk_10(15,69,108).png";
 	public static final String WalkRight = "resource/Walk_2(15,62,111).png";
@@ -176,7 +177,8 @@ public class RogueGame extends StateBasedGame{
 		ResourceManager.loadImage(WalkDownLeft);
 		ResourceManager.loadImage(WalkDownRight);
 		ResourceManager.loadImage(fireballSheetPath);
-		//ResourceManager.loadImage(explosionSheetPath);
+		ResourceManager.loadImage(explosionSheetPath);
+		ResourceManager.loadImage(host_background);
 		ResourceManager.loadImage(fireLeft);
 		ResourceManager.loadImage(fireRight);
 		ResourceManager.loadImage(fireUp);

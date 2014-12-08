@@ -1,5 +1,7 @@
 package rogueproject;
 
+
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -10,40 +12,64 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import jig.ResourceManager;
 import jig.Vector;
 
 public class HostState extends BasicGameState {
 	
 	ArrayList<Connection> connections;
-
+	ServerSocket ss = null;
+	RogueGame RG;
+	int renderWait = 0;
+	Button hostButton;
+	Button client1Button;
+	Button client2Button;
+	Button hostAddressButton;
+	Button clientAddressButton;
+	Button clientAddress2Button;
+	String hostAddress;
+	Button hostAddress1Button;
+	
 	public void init(GameContainer container, StateBasedGame RG)
 			throws SlickException {
 		
 		
 	}
 	
-	public void enter(GameContainer container, StateBasedGame game){
+	public void enter(GameContainer container, StateBasedGame game) throws SlickException{
 		connections = new ArrayList<Connection>();
-		
 		RogueGame RG = (RogueGame) game;
 		
-		//Create map to transfer to client
+		hostButton = new Button("Hosting",
+				(RG.ScreenWidth * 0.5f), (RG.ScreenHeight * 0.1f), 50);
+		client1Button = new Button("Client1:",
+				(RG.ScreenWidth * 0.3f), (RG.ScreenHeight * 0.43f), 25);
+		client2Button = new Button("Client2:",
+				(RG.ScreenWidth * 0.3f), (RG.ScreenHeight * 0.54f), 25);
+		hostAddressButton = new Button("Host Adress:",
+				(RG.ScreenWidth * 0.3f), (RG.ScreenHeight * 0.28f), 30);
 		
+		
+		//Create map to transfer to client
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new FileReader("src/resource/Map.txt"));
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		}
-	        String line = null;
+	   
+		String line = null;
 	        
-	        int r = 0;
-	        int c = 0;
-		try {
+	    int r = 0;
+	    int c = 0;
+		
+	    try {
 			while ((line = reader.readLine()) != null) {
 
 			    String[] parts = line.split("\\s");
@@ -73,9 +99,7 @@ public class HostState extends BasicGameState {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		ServerSocket ss = null;
-		
+				
 		try {
 			ss = new ServerSocket(1666);
 			System.out.println("Created server socket.");
@@ -85,10 +109,62 @@ public class HostState extends BasicGameState {
 			System.out.println("Error creating server socket.");
 		}
 		
-		while(true)
-        {
-        	//loop to accept incoming connections
-            Socket s = null;
+		//****************************************************************************************
+		//Gets local IP address
+		/*try {
+			hostAddress = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		//******************************************************************************************
+		
+		hostAddress = "192.168.1.100";
+		hostAddress1Button = new Button(hostAddress,
+				(RG.ScreenWidth * 0.5f), (RG.ScreenHeight * 0.28f), 25);
+	}
+	
+	public void render(GameContainer container, StateBasedGame game, Graphics g)
+			throws SlickException {	
+		
+		//draw host screen
+		g.drawImage(ResourceManager
+				.getImage(RogueGame.host_background), 0,0);
+		
+		hostButton.render(g);
+		client1Button.render(g);
+		client2Button.render(g);
+		hostAddressButton.render(g);
+		
+		if(connections.size() == 1){
+			clientAddressButton = new Button(connections.get(0).hostName,
+					(RG.ScreenWidth * 0.5f), (RG.ScreenHeight * 0.43f), 20);
+			clientAddressButton.render(g);
+		}
+		
+		else if(connections.size()==2){
+			clientAddressButton = new Button(connections.get(0).hostName,
+					(RG.ScreenWidth * 0.5f), (RG.ScreenHeight * 0.43f), 20);
+			clientAddressButton.render(g);
+
+			clientAddress2Button = new Button(connections.get(1).hostName,
+					(RG.ScreenWidth * 0.5f), (RG.ScreenHeight * 0.54f), 20);
+			clientAddress2Button.render(g);
+
+		}
+		
+		hostAddress1Button.render(g);
+		
+	}
+
+	public void update(GameContainer container, StateBasedGame game, int delta)
+			throws SlickException {
+		
+		RG = (RogueGame) game;
+    	//loop to accept incoming connections
+        Socket s = null;
+        
+        if(renderWait != 0 && connections.size() < 2){
 			try {
 				s = ss.accept();
 				System.out.println("Connecting to client.");
@@ -97,21 +173,13 @@ public class HostState extends BasicGameState {
 				e.printStackTrace();
 			}
 			
-            Connection con = new Connection(s, RG);
-            Thread thread = new Thread(con);
-            thread.start();
-            System.out.println("Started new thread.");
-            connections.add(con);
+	        Connection con = new Connection(s, RG);
+	        Thread thread = new Thread(con);
+	        thread.start();
+	        System.out.println("Started new thread.");
+	        connections.add(con);
         }
-	}
-	
-	public void render(GameContainer arg0, StateBasedGame arg1, Graphics arg2)
-			throws SlickException {		
-	}
-
-	public void update(GameContainer arg0, StateBasedGame arg1, int arg2)
-			throws SlickException {
-		
+        renderWait = 1;
 	}
 
 	@Override

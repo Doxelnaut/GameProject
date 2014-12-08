@@ -20,8 +20,6 @@ public class Connection implements Runnable {
 	Connection(Socket s, RogueGame gs){
 		socket = s;
 		state = gs;
-		//else
-			//handle no more available player spots 
 	}
 
 	@Override
