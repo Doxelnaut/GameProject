@@ -48,7 +48,6 @@ public class PlayingState extends BasicGameState {
 	
 
 	Socket socket;
-	String servName;
 	int port = 1666;
 	ObjectOutputStream socketOut;
 	ObjectInputStream socketIn;
@@ -59,7 +58,7 @@ public class PlayingState extends BasicGameState {
 	// collective boolean for of all actors turns
 	public boolean actorsTurns = false; 
 
-	RogueGame rg;
+	RogueGame RG;
 	
 	
 	public void init(GameContainer container, StateBasedGame game)throws SlickException {
@@ -70,15 +69,16 @@ public class PlayingState extends BasicGameState {
 	public void enter(GameContainer container, StateBasedGame game) 
 			throws SlickException {
 		
-		rg = (RogueGame) game;
+		RG = (RogueGame) game;
 		
 		
 		//display prompt for server address
 		
-				servName = "127.0.0.1";
+		Graphics g = container.getGraphics();
+		g.drawString("test",10,10);
 				
 				try {
-					socket = new Socket(servName,port);
+					socket = new Socket(RG.servName,port);
 				} catch (IOException e) {
 					System.out.println("Error creating client socket.");
 					e.printStackTrace();
@@ -95,7 +95,7 @@ public class PlayingState extends BasicGameState {
 			    }
 
 	try {
-		rg.state.map = (int[]) socketIn.readObject();
+		RG.state.map = (int[]) socketIn.readObject();
 	} catch (IOException | ClassNotFoundException e) {
 		e.printStackTrace();
 		System.out.println("Error getting map from server.");
@@ -106,11 +106,11 @@ public class PlayingState extends BasicGameState {
 	try {
 		for(int j = 0; j < 100; j ++){
 			for(int i = 0; i< 100;i++){
-				if(rg.state.map[c] == 1){
+				if(RG.state.map[c] == 1){
 					RogueGame.walls.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), true) );
 					RogueGame.stop.add(new Ground(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
 				}
-				else if(rg.state.map[c] == 2){
+				else if(RG.state.map[c] == 2){
 					RogueGame.blocks.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), false) );
 					RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
 				}
@@ -144,7 +144,7 @@ public class PlayingState extends BasicGameState {
 		
 		
 		if(RogueGame.player == null){ // player died, don't render anything.
-			rg.enterState(RogueGame.STARTUPSTATE);
+			RG.enterState(RogueGame.STARTUPSTATE);
 		}
 		
 		

@@ -44,7 +44,7 @@ public class HostState extends BasicGameState {
 	
 	public void enter(GameContainer container, StateBasedGame game) throws SlickException{
 		connections = new ArrayList<Connection>();
-		RogueGame RG = (RogueGame) game;
+		RG = (RogueGame) game;
 		
 		hostButton = new Button("Hosting",
 				(RG.ScreenWidth * 0.5f), (RG.ScreenHeight * 0.1f), 50);

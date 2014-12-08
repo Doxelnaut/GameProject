@@ -91,7 +91,7 @@ public class StartUpState extends BasicGameState {
 				&& input.getAbsoluteMouseY() <= startButton.getCoarseGrainedMaxY()
 				&& input.getAbsoluteMouseY() >= startButton.getCoarseGrainedMinY()){
 
-			rg.enterState(RogueGame.PLAYINGSTATE);	
+			rg.enterState(RogueGame.ClientSetupState);	
 			//System.out.print("mouse pressed\n");
 		}
 		if (input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)

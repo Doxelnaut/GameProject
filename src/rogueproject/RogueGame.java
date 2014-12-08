@@ -43,6 +43,7 @@ public class RogueGame extends StateBasedGame{
 	public static final int PLAYINGSTATE = 1;
 	public static final int GAMEOVERSTATE = 2;
 	public static final int HOSTSTATE = 3;
+	public static final int ClientSetupState = 4;
 
 	// other possible states: CharacterSelect, Inventory, Pause, Menu, Settings
 	
@@ -79,6 +80,7 @@ public class RogueGame extends StateBasedGame{
 	public static final String tallBlockImgPath   = "resource/tallcaveblock.png";
 	public static final String shortBlockImgPath   = "resource/shortcaveblock.png";
 	public static final String host_background = "resource/host_background.png";
+	public static final String clientSetup_background = "resource/clientSetup_background.png";
 	
 	public static final String WalkLeft = "resource/Walk_10(15,69,108).png";
 	public static final String WalkRight = "resource/Walk_2(15,62,111).png";
@@ -120,6 +122,8 @@ public class RogueGame extends StateBasedGame{
 	public static final String explosionSheetPath   = "resource/explosion.png";
 	//public static final String ouchSoundPath = "resource/ouch.wav";
 	
+	public static final String servName = "127.0.0.1";
+	
 	public static final int WARRIOR = 1;
 	
 	ArrayList<IsoEntity> actors;
@@ -156,6 +160,7 @@ public class RogueGame extends StateBasedGame{
 		//addState(new GameOverState());
 		addState(new PlayingState());
 		addState(new HostState());
+		addState(new ClientSetupState());
 		
 		// preload resources here
 		// images: ResourceManager.loadImage(IMG_RSC);
@@ -179,6 +184,8 @@ public class RogueGame extends StateBasedGame{
 		ResourceManager.loadImage(fireballSheetPath);
 		ResourceManager.loadImage(explosionSheetPath);
 		ResourceManager.loadImage(host_background);
+		ResourceManager.loadImage(clientSetup_background);
+
 		ResourceManager.loadImage(fireLeft);
 		ResourceManager.loadImage(fireRight);
 		ResourceManager.loadImage(fireUp);
