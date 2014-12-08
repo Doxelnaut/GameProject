@@ -93,10 +93,8 @@ public class PlayingState extends BasicGameState {
 					e.printStackTrace();
 					System.out.println("Error opening streams");
 			    }
-			    
-		
-		
-	   try {
+
+	try {
 		rg.state.map = (int[]) socketIn.readObject();
 	} catch (IOException | ClassNotFoundException e) {
 		e.printStackTrace();
@@ -137,10 +135,9 @@ public class PlayingState extends BasicGameState {
 		for (IsoEntity ie : RogueGame.blocks) {
 			RogueGame.wallsandblocks.add(ie);
 		}
-
 	}
 	
-	@Override
+	
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
 		
@@ -186,6 +183,14 @@ public class PlayingState extends BasicGameState {
 		Input input = container.getInput();
 		float x = (60*delta/1000.0f);
 		
+		/*try {
+			rg.state = (GameState)socketIn.readObject();
+		} catch (ClassNotFoundException | IOException e1) {
+			System.out.println("Error reading game state from server.");
+			e1.printStackTrace();
+		}
+		
+		*/
 		RogueGame.playerX = RogueGame.player.getX();
 		RogueGame.playerY = RogueGame.player.getY();
 		RogueGame.camX = RogueGame.playerX - RogueGame.VIEWPORT_SIZE_X / 2;

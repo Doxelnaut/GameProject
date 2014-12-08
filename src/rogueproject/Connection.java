@@ -56,13 +56,13 @@ public class Connection implements Runnable {
 	    while(!quit){
 	    	//loop to write game state to client and get user input from client
 		    	
-			/*try {
+		/*	try {
 				socketOut.writeObject(state);
 			} catch (IOException e) {
 				e.printStackTrace();
 				System.out.println("Error Writing game state to client.");
 			}
-			
+			*/
 			try {
 				c = (Command) socketIn.readObject();
 			} catch (ClassNotFoundException | IOException e) {
@@ -70,8 +70,8 @@ public class Connection implements Runnable {
 				e.printStackTrace();
 			}
 			
-			c.execute(player,0);
-			*/
+			c.execute(player);
+			
 			
 	    }
 	    
