@@ -28,20 +28,20 @@ public class Connection implements Runnable {
 		
 		//create player
 		if(RogueGame.player == null){
-			RG.player = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),1);
-			RogueGame.blocks.add(RG.player);
-			player = RG.player;
-			RG.state.player.setX(player.getX());
-			RG.state.player.setY(player.getY());
+			RogueGame.player = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),1);
+			RogueGame.blocks.add(RogueGame.player);
+			player = RogueGame.player;
+			RG.state.player.setX(player.getPosition().getX());
+			RG.state.player.setY(player.getPosition().getY());
 			RG.state.firstPlayer = true;
 		}
 		
-		else if( RG.player2 == null){
-			RG.player2 = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),1);
-			RogueGame.blocks.add(RG.player2);
-			player = RG.player2;
-			RG.state.player2.setX(player.getX());
-			RG.state.player2.setY(player.getY());
+		else if( RogueGame.player2 == null){
+			RogueGame.player2 = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),1);
+			RogueGame.blocks.add(RogueGame.player2);
+			player = RogueGame.player2;
+			RG.state.player2.setX(player.getPosition().getX());
+			RG.state.player2.setY(player.getPosition().getY());
 			RG.state.secondPlayer= true;
 		}
 	
@@ -91,14 +91,14 @@ public class Connection implements Runnable {
 				c.execute(player);
 			}
 			
-			if(player == RG.player){
-			RG.state.player.setX(player.getX());
-			RG.state.player.setY(player.getY());
+			if(player == RogueGame.player){
+			RG.state.player.setX(player.getPosition().getX());
+			RG.state.player.setY(player.getPosition().getY());
 		//	RG.state.player.setTheta(player.getRotation());
 			}
-			else if(player == RG.player2){
-				RG.state.player2.setX(player.getX());
-				RG.state.player2.setY(player.getY());
+			else if(player == RogueGame.player2){
+				RG.state.player2.setX(player.getPosition().getX());
+				RG.state.player2.setY(player.getPosition().getY());
 			}
 			
 			
