@@ -182,7 +182,7 @@ public class RogueGame extends StateBasedGame{
 		ResourceManager.loadImage(WalkDownLeft);
 		ResourceManager.loadImage(WalkDownRight);
 		ResourceManager.loadImage(fireballSheetPath);
-		ResourceManager.loadImage(explosionSheetPath);
+		//ResourceManager.loadImage(explosionSheetPath);
 		ResourceManager.loadImage(host_background);
 		ResourceManager.loadImage(clientSetup_background);
 

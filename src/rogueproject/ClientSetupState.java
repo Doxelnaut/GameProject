@@ -32,7 +32,7 @@ public class ClientSetupState extends BasicGameState {
 		hostAddressButton = new Button("Host Address:",
 				(RG.ScreenWidth * 0.3f), (RG.ScreenHeight * 0.35f), 25);
 		connectButton = new Button("Connect",
-				(RG.ScreenWidth * 0.7f), (RG.ScreenHeight * 0.9f), 25);
+				(RG.ScreenWidth * 0.7f), (RG.ScreenHeight * 0.9f), Button.MENU_LARGE, 25);
 	}
 		
 	
