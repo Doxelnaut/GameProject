@@ -12,21 +12,22 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import jig.ResourceManager;
 import jig.Vector;
-
+/*
+ * Class that listens for incoming connections from clients. It also displays relevant server information 
+ * such as server ip address and connected clients ip addresses (eventually chosen alias).
+ */
 public class HostState extends BasicGameState {
 	
-	ArrayList<Connection> connections;
+	ArrayList<Connection> connections;  //list of currently connected clients
 	ServerSocket ss = null;
 	RogueGame RG;
-	int renderWait = 0;
+	int renderWait = 0;					//used in update to skip over first call to update since it waits for client connections (needed to render the new screen).
 	Button hostButton;
 	Button client1Button;
 	Button client2Button;
@@ -38,14 +39,13 @@ public class HostState extends BasicGameState {
 	
 	public void init(GameContainer container, StateBasedGame RG)
 			throws SlickException {
-		
-		
 	}
 	
 	public void enter(GameContainer container, StateBasedGame game) throws SlickException{
 		connections = new ArrayList<Connection>();
 		RG = (RogueGame) game;
 		
+		//create buttons (labels)
 		hostButton = new Button("Hosting",
 				(RG.ScreenWidth * 0.5f), (RG.ScreenHeight * 0.1f), 50);
 		client1Button = new Button("Client1:",
@@ -56,7 +56,8 @@ public class HostState extends BasicGameState {
 				(RG.ScreenWidth * 0.3f), (RG.ScreenHeight * 0.28f), 30);
 		
 		
-		//Create map to transfer to client
+		//Create map to transfer to client from bitmap
+		
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new FileReader("src/resource/Map.txt"));
@@ -69,6 +70,7 @@ public class HostState extends BasicGameState {
 	    int r = 0;
 	    int c = 0;
 		
+	    //read in one line at a time and builds the servers' copies of wall and block arrays, also translates the bit map into an array to be sent to the client.
 	    try {
 			while ((line = reader.readLine()) != null) {
 
@@ -78,7 +80,7 @@ public class HostState extends BasicGameState {
 			    	if(Integer.valueOf(parts[i]) == 1){
 						RogueGame.walls.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), true) );
 						RogueGame.stop.add(new Ground(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
-						RG.state.map[c] = 1;
+						RG.state.map[c] = 1;  //map to be sent to client in GameState
 			    	}
 			    	else if(Integer.valueOf(parts[i]) == 2){
 			    		RogueGame.blocks.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), false) );
@@ -100,6 +102,7 @@ public class HostState extends BasicGameState {
 			e.printStackTrace();
 		}
 				
+	    //create socket on the server to listen on.
 		try {
 			ss = new ServerSocket(1666);
 			System.out.println("Created server socket.");
@@ -109,6 +112,8 @@ public class HostState extends BasicGameState {
 			System.out.println("Error creating server socket.");
 		}
 		
+		
+		//does not work on linux thus far feel free to try on other OS and let me know
 		//****************************************************************************************
 		//Gets local IP address
 		/*try {
@@ -119,7 +124,10 @@ public class HostState extends BasicGameState {
 		}*/
 		//******************************************************************************************
 		
+		//set default host address (will need to be commented out if the above code is used).
 		hostAddress = "192.168.1.100";
+		
+		//create host label
 		hostAddress1Button = new Button(hostAddress,
 				(RG.ScreenWidth * 0.5f), (RG.ScreenHeight * 0.28f), 25);
 	}
@@ -136,6 +144,8 @@ public class HostState extends BasicGameState {
 		client2Button.render(g);
 		hostAddressButton.render(g);
 		
+		
+		//displays one or both clients names
 		if(connections.size() == 1){
 			clientAddressButton = new Button(connections.get(0).hostName,
 					(RG.ScreenWidth * 0.5f), (RG.ScreenHeight * 0.43f), 20);
@@ -161,9 +171,12 @@ public class HostState extends BasicGameState {
 			throws SlickException {
 		
 		RG = (RogueGame) game;
-    	//loop to accept incoming connections
+    	
+		//socket connecting to client
         Socket s = null;
         
+        
+        //connect to client
         if(renderWait != 0 && connections.size() < 2){
 			try {
 				s = ss.accept();
@@ -173,6 +186,7 @@ public class HostState extends BasicGameState {
 				e.printStackTrace();
 			}
 			
+			//add new connection to connection array and start a new thread for the client.
 	        Connection con = new Connection(s, RG);
 	        Thread thread = new Thread(con);
 	        thread.start();

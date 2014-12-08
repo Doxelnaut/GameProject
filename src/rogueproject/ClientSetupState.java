@@ -1,9 +1,5 @@
 package rogueproject;
-
-import java.util.ArrayList;
-
 import jig.ResourceManager;
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -11,6 +7,9 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+/*
+ * Screen that is displayed when user clicks join game. Gets the server address from the user as well as an alias.
+ */
 public class ClientSetupState extends BasicGameState {
 
 	Button	TitleButton; 
@@ -27,6 +26,7 @@ public class ClientSetupState extends BasicGameState {
 	public void enter(GameContainer container, StateBasedGame game) throws SlickException{
 		RG = (RogueGame) game;
 		
+		//create buttons
 		TitleButton = new Button("Enter Host Address",
 				(RG.ScreenWidth * 0.5f), (RG.ScreenHeight * 0.1f), 50);
 		hostAddressButton = new Button("Host Address:",
@@ -54,6 +54,7 @@ public class ClientSetupState extends BasicGameState {
 		RogueGame RG = (RogueGame) game;
 		Input input = container.getInput();
 		
+		//detect click of the connect button
 		if(input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)
 				&& input.getAbsoluteMouseX() <= connectButton.getCoarseGrainedMaxX()
 				&& input.getAbsoluteMouseX() >= connectButton.getCoarseGrainedMinX()

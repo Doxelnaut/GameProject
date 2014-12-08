@@ -1,6 +1,9 @@
 package rogueproject;
 
 
+/*
+ * Hopefully going to be used to serialize the actor information to be sent across the internet.
+ */
 public class NetVector {
 	double x;
 	double y;
