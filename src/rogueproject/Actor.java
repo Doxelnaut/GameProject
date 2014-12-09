@@ -48,6 +48,8 @@ public class Actor extends IsoEntity {
 	public int playerType = 0;
 	public int enemyType = 1;
 	
+	public Animation anim;
+	
 	/* Constructors */
 	/**
 	 * 
@@ -125,12 +127,18 @@ public class Actor extends IsoEntity {
 		unitDirection = unitDirection.rotate(theta);
 		this.setPosition(this.getPosition().add(unitDirection.scale(5)));
 		
+		this.getWalkingAnimation();
+				
 		// TODO: basic movement handled. Need to check for collision first, though.
 		// TODO: choose and create animation based on direction.
 	}
 	
 	public void shoot(Vector direction){
 		//TODO: shoot bullets
+	}
+	
+	public void getWalkingAnimation(){
+//		anim = new Animation();
 	}
 	
 	/* Update */
