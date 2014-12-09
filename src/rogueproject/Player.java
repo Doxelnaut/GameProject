@@ -13,20 +13,21 @@ public class Player extends Actor {
 	Animation[] walkingFIRE = new Animation[8];
 	Animation[] crouching = new Animation[8];
 	Animation[] crouchingFIRE = new Animation[8];
+	Animation[] anim = new Animation[8];
 	
-	static final int LEFT = 0;
-	static final int RIGHT = 1;
-	static final int UP = 2;
-	static final int DOWN = 3;
-	static final int UpLEFT = 4;
-	static final int UpRIGHT = 5;
-	static final int DownLEFT = 6;
-	static final int DownRIGHT = 7;
+//	static final int LEFT = 0;
+//	static final int RIGHT = 1;
+//	static final int UP = 2;
+//	static final int DOWN = 3;
+//	static final int UpLEFT = 4;
+//	static final int UpRIGHT = 5;
+//	static final int DownLEFT = 6;
+//	static final int DownRIGHT = 7;
 	static boolean crouch = false;
 	static boolean shooting = false;
 	
-	public static final int WAIT = -1, N = 0, E = 1, S = 2, W = 3, NW = 4, NE = 5, SE = 6, SW = 7, REST = 8;
-
+//	public static final int WAIT = -1, N = 0, E = 1, S = 2, W = 3, NW = 4, NE = 5, SE = 6, SW = 7, REST = 8;
+	private static final int Up = 0, UpRight=1, Right=2, DownRight=3, Down=4, DownLeft=5, Left=6, UpLeft=7, CTRL=8;
 
 	int current;
 	int shootingDirection;
@@ -51,43 +52,43 @@ public class Player extends Actor {
 	public void getTypeImage() {
 		switch(this.getType()){
 			case(RogueGame.WARRIOR):
-				walking[LEFT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkLeft, 99, 135), 0,0,14,0, true, 70, true);
-				walking[RIGHT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkRight,99, 135), 0,0,14,0, true, 70, true);
-				walking[UP] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkUp, 95, 135), 0,0,14,0, true, 70, true);
-				walking[DOWN] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkDown, 93, 135), 0,0,14,0, true, 70, true);
-				walking[UpLEFT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkUpLeft, 101, 127), 0,0,14,0, true, 70, true);
-				walking[UpRIGHT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkUpRight, 85, 138), 0,0,14,0, true, 70, true);
-				walking[DownLEFT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkDownLeft, 83, 139), 0,0,14,0, true, 70, true);
-				walking[DownRIGHT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkDownRight, 105, 127), 0,0,14,0, true, 70, true);
+				walking[Left] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkLeft, 99, 135), 0,0,14,0, true, 70, true);
+				walking[Right] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkRight,99, 135), 0,0,14,0, true, 70, true);
+				walking[Up] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkUp, 95, 135), 0,0,14,0, true, 70, true);
+				walking[Down] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkDown, 93, 135), 0,0,14,0, true, 70, true);
+				walking[UpLeft] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkUpLeft, 101, 127), 0,0,14,0, true, 70, true);
+				walking[UpRight] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkUpRight, 85, 138), 0,0,14,0, true, 70, true);
+				walking[DownLeft] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkDownLeft, 83, 139), 0,0,14,0, true, 70, true);
+				walking[DownRight] = new Animation(ResourceManager.getSpriteSheet(RogueGame.WalkDownRight, 105, 127), 0,0,14,0, true, 70, true);
 				
-				walkingFIRE[LEFT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireLeft, 108, 133), 0,0,3,0, true, 70, true);
-				walkingFIRE[RIGHT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireRight,103, 127), 0,0,3,0, true, 70, true);
-				walkingFIRE[UP] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireUp, 103, 126), 0,0,3,0, true, 70, true);
-				walkingFIRE[DOWN] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireDown, 103, 122), 0,0,3,0, true, 70, true);
-				walkingFIRE[UpLEFT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireUpLeft, 122, 128), 0,0,3,0, true, 70, true);
-				walkingFIRE[UpRIGHT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireUpRight, 73, 136), 0,0,3,0, true, 70, true);
-				walkingFIRE[DownLEFT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireDownLeft, 82, 131), 0,0,3,0, true, 70, true);
-				walkingFIRE[DownRIGHT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireDownRight, 118, 121), 0,0,3,0, true, 70, true);
+				walkingFIRE[Left] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireLeft, 108, 133), 0,0,3,0, true, 70, true);
+				walkingFIRE[Right] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireRight,103, 127), 0,0,3,0, true, 70, true);
+				walkingFIRE[Up] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireUp, 103, 126), 0,0,3,0, true, 70, true);
+				walkingFIRE[Down] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireDown, 103, 122), 0,0,3,0, true, 70, true);
+				walkingFIRE[UpLeft] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireUpLeft, 122, 128), 0,0,3,0, true, 70, true);
+				walkingFIRE[UpRight] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireUpRight, 73, 136), 0,0,3,0, true, 70, true);
+				walkingFIRE[DownLeft] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireDownLeft, 82, 131), 0,0,3,0, true, 70, true);
+				walkingFIRE[DownRight] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireDownRight, 118, 121), 0,0,3,0, true, 70, true);
 				
-				crouching[LEFT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.crouchLeft, 99, 100), 0,0,14,0, true, 70, true);
-				crouching[RIGHT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.crouchRight,80, 109), 0,0,14,0, true, 70, true);
-				crouching[UP] = new Animation(ResourceManager.getSpriteSheet(RogueGame.crouchUp, 92, 111), 0,0,14,0, true, 70, true);
-				crouching[DOWN] = new Animation(ResourceManager.getSpriteSheet(RogueGame.crouchDown, 89, 96), 0,0,14,0, true, 70, true);
-				crouching[UpLEFT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.crouchUpLeft, 107, 97), 0,0,14,0, true, 70, true);
-				crouching[UpRIGHT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.crouchUpRight, 71, 114), 0,0,14,0, true, 70, true);
-				crouching[DownLEFT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.crouchDownLeft, 72, 99), 0,0,14,0, true, 70, true);
-				crouching[DownRIGHT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.crouchDownRight, 92, 93), 0,0,14,0, true, 70, true);
+				crouching[Left] = new Animation(ResourceManager.getSpriteSheet(RogueGame.crouchLeft, 99, 100), 0,0,14,0, true, 70, true);
+				crouching[Right] = new Animation(ResourceManager.getSpriteSheet(RogueGame.crouchRight,80, 109), 0,0,14,0, true, 70, true);
+				crouching[Up] = new Animation(ResourceManager.getSpriteSheet(RogueGame.crouchUp, 92, 111), 0,0,14,0, true, 70, true);
+				crouching[Down] = new Animation(ResourceManager.getSpriteSheet(RogueGame.crouchDown, 89, 96), 0,0,14,0, true, 70, true);
+				crouching[UpLeft] = new Animation(ResourceManager.getSpriteSheet(RogueGame.crouchUpLeft, 107, 97), 0,0,14,0, true, 70, true);
+				crouching[UpRight] = new Animation(ResourceManager.getSpriteSheet(RogueGame.crouchUpRight, 71, 114), 0,0,14,0, true, 70, true);
+				crouching[DownLeft] = new Animation(ResourceManager.getSpriteSheet(RogueGame.crouchDownLeft, 72, 99), 0,0,14,0, true, 70, true);
+				crouching[DownRight] = new Animation(ResourceManager.getSpriteSheet(RogueGame.crouchDownRight, 92, 93), 0,0,14,0, true, 70, true);
 			
-				crouchingFIRE[LEFT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireCrouchLeft, 116, 108), 0,0,3,0, true, 70, true);
-				crouchingFIRE[RIGHT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireCrouchRight,89, 100), 0,0,3,0, true, 70, true);
-				crouchingFIRE[UP] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireCrouchUp, 99, 107), 0,0,3,0, true, 70, true);
-				crouchingFIRE[DOWN] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireCrouchDown, 92, 96), 0,0,3,0, true, 70, true);
-				crouchingFIRE[UpLEFT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireCrouchUpLeft, 131, 98), 0,0,3,0, true, 70, true);
-				crouchingFIRE[UpRIGHT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireCrouchUpRight, 59, 115), 0,0,3,0, true, 70, true);
-				crouchingFIRE[DownLEFT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireCrouchDownLeft, 72, 108), 0,0,3,0, true, 70, true);
-				crouchingFIRE[DownRIGHT] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireCrouchDownRight, 104, 90), 0,0,3,0, true, 70, true);
+				crouchingFIRE[Left] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireCrouchLeft, 116, 108), 0,0,3,0, true, 70, true);
+				crouchingFIRE[Right] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireCrouchRight,89, 100), 0,0,3,0, true, 70, true);
+				crouchingFIRE[Up] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireCrouchUp, 99, 107), 0,0,3,0, true, 70, true);
+				crouchingFIRE[Down] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireCrouchDown, 92, 96), 0,0,3,0, true, 70, true);
+				crouchingFIRE[UpLeft] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireCrouchUpLeft, 131, 98), 0,0,3,0, true, 70, true);
+				crouchingFIRE[UpRight] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireCrouchUpRight, 59, 115), 0,0,3,0, true, 70, true);
+				crouchingFIRE[DownLeft] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireCrouchDownLeft, 72, 108), 0,0,3,0, true, 70, true);
+				crouchingFIRE[DownRight] = new Animation(ResourceManager.getSpriteSheet(RogueGame.fireCrouchDownRight, 104, 90), 0,0,3,0, true, 70, true);
 				
-				current = RIGHT;
+				current = Right;
 
 				//System.out.println("Minotaur zh:" + zHeight);
 				
@@ -125,6 +126,55 @@ public class Player extends Actor {
 //			this.setArmor(this.getArmor() + 0.5f);
 //		}
 //	}
+
+	/**
+	 * Reciever method for MoveUpCommand. 
+	 */
+	@Override
+	public void move(int direction) {
+		//TODO: move character. Need to change collision detection to use tiles again, 
+		// or implement a scan line to lower the number of entities that are checked
+		// for collision. Perhaps the scan line can just use the camera view coords?
+		// I would much rather re-implement tiles to save on speed. I'm sure part of 
+		// the slow down came from checking for collisions too much.
+		
+		// Set movement in world coordinates using a unit vector that points in any one
+		// of the cardinal or diagonal directions. 
+		int theta = direction * 45; // angle of directional unit vector from North.
+		Vector unitDirection = new Vector(0, -1);
+		unitDirection = unitDirection.rotate(theta);
+		this.setPosition(this.getPosition().add(unitDirection.scale(5)));
+		this.getWalkingAnimation(direction);
+				
+		// TODO: basic movement handled. Need to check for collision first, though.
+		// TODO: choose and create animation based on direction.
+	}
+	
+	public void shoot(Vector direction){
+		//TODO: shoot bullets
+	}
+	
+	public void getWalkingAnimation(int direction){
+		if(crouch){
+			if (current != direction){
+				removeAnimation(crouching[current]);
+				current = direction;
+				addAnimation(crouching[current]);
+			}
+			if (crouching[direction].isStopped()){
+				crouching[direction].start();
+			}
+		}else{
+			if (current != direction) {
+				removeAnimation(walking[current]);
+				current = direction;
+				addAnimation(walking[current]);
+			}
+			if(walking[direction].isStopped()){
+				walking[direction].start();
+			}
+		}
+	}
 	
 	public void sayOuch() {
 		if (ouch.playing()) return;
@@ -296,112 +346,112 @@ public class Player extends Actor {
 		}
 		return true;
 	}
-
-	public void start(float x, float direction) {
-		isShooting();
-		if(direction == 9){
-			System.out.println("SHOOT");
-			
-			//System.out.println(GameState.current);
-				
-				shoot();
-			//	GameState.fireball = GameState.launchFireball();
-				
-				
-		
-			
-		}
-		
-			if(direction == 0){
-				System.out.println("crouch");
-				toggleCrouch();
-			}
-			else if(direction == 5){
-				go(UP, x,UpRIGHT); 
-				if(canMove()){
-					go(RIGHT, x,UpRIGHT); 
-					if(!canMove()){
-						halt();
-						ungo();
-					}
-
-				}
-				else{
-					halt();
-					ungo();
-				}
-			}
-			else if(direction == 6){
-				go(UP, x,UpLEFT); 
-				if(canMove()){
-					go(LEFT, x,UpLEFT); 
-					if(!canMove()){
-						halt();
-						ungo();
-					}
-				}
-				else{
-					halt();
-					ungo();
-				}
-			}
-			else if(direction == 7){
-				go(DOWN, x,DownLEFT); 
-				if(canMove()){
-					go(LEFT, x,DownLEFT); 
-					if(!canMove()){
-						halt();
-						ungo();
-					}
-				}
-				else{
-					halt();
-					ungo();
-				}
-			}
-			else if(direction == 8){
-				go(DOWN, x,DownRIGHT);
-				if(canMove()){
-					go(RIGHT, x,DownRIGHT);
-					if(!canMove()){
-						halt();
-						ungo();
-					}
-				}
-				else{
-					halt();
-					ungo();
-				}
-			}
-			else if (direction == 1){
-				go(UP, x,UP);
-				if(!canMove()){
-					halt();
-					ungo();
-				}
-			}
-			else if (direction == 4){
-				go(LEFT, x,LEFT);
-				if(!canMove()){
-					halt();
-					ungo();
-				}
-			}
-			else if (direction == 3){
-				go(DOWN, x,DOWN);
-				if(!canMove()){
-					halt();
-					ungo();
-				}
-			}
-			else if (direction == 2){
-				go(RIGHT, x,RIGHT);
-				if(!canMove()){
-					halt();
-					ungo();
-				}
-			}
-		}		
-	}
+}
+//	public void start(float x, float direction) {
+//		isShooting();
+//		if(direction == 9){
+//			System.out.println("SHOOT");
+//			
+//			//System.out.println(GameState.current);
+//				
+//				shoot();
+//			//	GameState.fireball = GameState.launchFireball();
+//				
+//				
+//		
+//			
+//		}
+//		
+//			if(direction == 0){
+//				System.out.println("crouch");
+//				toggleCrouch();
+//			}
+//			else if(direction == 5){
+//				go(UP, x,UpRIGHT); 
+//				if(canMove()){
+//					go(RIGHT, x,UpRIGHT); 
+//					if(!canMove()){
+//						halt();
+//						ungo();
+//					}
+//
+//				}
+//				else{
+//					halt();
+//					ungo();
+//				}
+//			}
+//			else if(direction == 6){
+//				go(UP, x,UpLEFT); 
+//				if(canMove()){
+//					go(LEFT, x,UpLEFT); 
+//					if(!canMove()){
+//						halt();
+//						ungo();
+//					}
+//				}
+//				else{
+//					halt();
+//					ungo();
+//				}
+//			}
+//			else if(direction == 7){
+//				go(DOWN, x,DownLEFT); 
+//				if(canMove()){
+//					go(LEFT, x,DownLEFT); 
+//					if(!canMove()){
+//						halt();
+//						ungo();
+//					}
+//				}
+//				else{
+//					halt();
+//					ungo();
+//				}
+//			}
+//			else if(direction == 8){
+//				go(DOWN, x,DownRIGHT);
+//				if(canMove()){
+//					go(RIGHT, x,DownRIGHT);
+//					if(!canMove()){
+//						halt();
+//						ungo();
+//					}
+//				}
+//				else{
+//					halt();
+//					ungo();
+//				}
+//			}
+//			else if (direction == 1){
+//				go(UP, x,UP);
+//				if(!canMove()){
+//					halt();
+//					ungo();
+//				}
+//			}
+//			else if (direction == 4){
+//				go(LEFT, x,LEFT);
+//				if(!canMove()){
+//					halt();
+//					ungo();
+//				}
+//			}
+//			else if (direction == 3){
+//				go(DOWN, x,DOWN);
+//				if(!canMove()){
+//					halt();
+//					ungo();
+//				}
+//			}
+//			else if (direction == 2){
+//				go(RIGHT, x,RIGHT);
+//				if(!canMove()){
+//					halt();
+//					ungo();
+//				}
+//			}
+//		}		
+//	}
 	
 
