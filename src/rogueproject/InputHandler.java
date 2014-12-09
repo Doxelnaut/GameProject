@@ -18,8 +18,8 @@ public class InputHandler {
 			keys_wa = new MoveCommand(NW),
 			keys_wd = new MoveCommand(NE),
 			keys_sa = new MoveCommand(SW),
-			keys_sd = new MoveCommand(SE),
-			keys_c = new MoveCommand(CTRL);
+			keys_sd = new MoveCommand(SE);
+	private CrouchCommand keys_c = new CrouchCommand();
 //			key_space = new MoveCommand(SHOOT) ,
 			//mouse_left/*, 
 			//mouse_right = new RangeAttackCommand()*/;
@@ -27,8 +27,8 @@ public class InputHandler {
 	/**
 	 * 
 	 */
-	public ArrayList<MoveCommand> handleInput(Input input){
-		ArrayList<MoveCommand> commands = new ArrayList<MoveCommand>();
+	public ArrayList<Command> handleInput(Input input){
+		ArrayList<Command> commands = new ArrayList<Command>();
 		if(input.isKeyDown(Input.KEY_W) && input.isKeyDown(Input.KEY_A)){
 			commands.add(keys_wa);
 		}
@@ -56,7 +56,7 @@ public class InputHandler {
 //		else if(input.isKeyDown(Input.KEY_SPACE)){
 //			commands.add(key_space);
 //		}
-		else if(input.isKeyDown(Input.KEY_C)){
+		if(input.isKeyPressed(Input.KEY_C)){ // consumes a single key press event, used to toggle crouching
 			commands.add(keys_c);
 		}
 		/*if(input.isButton1Pressed(Input.MOUSE_LEFT_BUTTON)){

@@ -167,5 +167,9 @@ public class Actor extends IsoEntity {
 		setPosition(getPosition().add(new Vector(-RogueGame.TILE_SIZE/2, -RogueGame.TILE_SIZE/2)));
 	}
 
+	public void crouch() {
+		//VOID
+	}
+
 	
 }
