@@ -13,7 +13,6 @@ public class Player extends Actor {
 	Animation[] walkingFIRE = new Animation[8];
 	Animation[] crouching = new Animation[8];
 	Animation[] crouchingFIRE = new Animation[8];
-	Animation[] anim = new Animation[8];
 	
 //	static final int LEFT = 0;
 //	static final int RIGHT = 1;
@@ -29,7 +28,7 @@ public class Player extends Actor {
 //	public static final int WAIT = -1, N = 0, E = 1, S = 2, W = 3, NW = 4, NE = 5, SE = 6, SW = 7, REST = 8;
 	private static final int Up = 0, UpRight=1, Right=2, DownRight=3, Down=4, DownLeft=5, Left=6, UpLeft=7, CTRL=8;
 
-	int current;
+	int current; // current direction used for animation
 	int shootingDirection;
 	Vector wWorldSz;
 	Vector lastWPosition;
@@ -149,29 +148,47 @@ public class Player extends Actor {
 		// TODO: basic movement handled. Need to check for collision first, though.
 		// TODO: choose and create animation based on direction.
 	}
+
+	@Override
+	/**
+	 * toggle crouch
+	 */
+	public void crouch(){
+		crouch = crouch == true? false : true;
+	}
 	
 	public void shoot(Vector direction){
 		//TODO: shoot bullets
 	}
 	
-	public void getWalkingAnimation(int direction){
+	/**
+	 * starts walking animation when either crouched or standing
+	 * @param direction the direction of movement in world coordinates
+	 */
+	public void getWalkingAnimation(int direction){ //TODO doesn't handle crouching, creates multiple animations
 		if(crouch){
+//			if (walking[current].isStopped()){
+				removeAnimation(walking[current]);
+//			}
 			if (current != direction){
 				removeAnimation(crouching[current]);
 				current = direction;
 				addAnimation(crouching[current]);
 			}
-			if (crouching[direction].isStopped()){
-				crouching[direction].start();
+			if (crouching[current].isStopped()){
+				crouching[current].start();
 			}
 		}else{
+//			if (crouching[current].isStopped()){
+				removeAnimation(crouching[current]);
+//			}
 			if (current != direction) {
 				removeAnimation(walking[current]);
 				current = direction;
 				addAnimation(walking[current]);
-			}
-			if(walking[direction].isStopped()){
-				walking[direction].start();
+			} 
+			if(walking[current].isStopped()){
+				walking[current].start();
 			}
 		}
 	}

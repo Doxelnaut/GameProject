@@ -268,10 +268,10 @@ public class PlayingState extends BasicGameState {
 				
 		
 		InputHandler inputHandler = new InputHandler();
-		ArrayList<MoveCommand> commands = inputHandler.handleInput(input);
+		ArrayList<Command> commands = inputHandler.handleInput(input);
 
 		if(commands.size() > 0){
-			for(MoveCommand c : commands){
+			for(Command c : commands){
 				try {
 					socketOut.writeObject(c);
 				} catch (IOException e) {
@@ -279,7 +279,7 @@ public class PlayingState extends BasicGameState {
 					e.printStackTrace();
 				}
 				
-				System.out.println("Command from user: " + c.direction);
+//				System.out.println("Command from user: " + c.direction);
 				c.execute(player);
 			}	
 		}
@@ -303,7 +303,7 @@ public class PlayingState extends BasicGameState {
 		
 		for(IsoEntity b : RogueGame.blocks) {
 			if (b != RogueGame.player && b.collides(RogueGame.player) != null) {
-				System.out.println("Ouch!");
+				//System.out.println("Ouch!");
 				//player.sayOuch();
 				RogueGame.player.halt();
 				RogueGame.player.ungo();
