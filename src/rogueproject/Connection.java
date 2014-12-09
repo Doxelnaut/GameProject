@@ -16,7 +16,7 @@ public class Connection implements Runnable {
 	ObjectOutputStream socketOut;
 	ObjectInputStream socketIn;
 	RogueGame RG;
-	Command c;
+	MoveCommand c;
 	Player player;
 	Connection(Socket s, RogueGame gs){
 		socket = s;
@@ -73,6 +73,8 @@ public class Connection implements Runnable {
 	    	//loop to write game state to client and get user input from client
 		    	
 			try {
+				System.out.println("Players new position: " + RG.state.player.getX() + ", " + RG.state.player.getY());
+				socketOut.reset();
 				socketOut.writeObject(RG.state);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -80,14 +82,14 @@ public class Connection implements Runnable {
 			}
 			
 			try {
-				c = (Command) socketIn.readObject();
+				c = (MoveCommand) socketIn.readObject();
 			} catch (ClassNotFoundException | IOException e) {
 				System.out.println("Error reading command.");
 				e.printStackTrace();
 			}
 			
 			if(c != null){
-				System.out.println("Command from server: " + c.toString());
+				System.out.println("Command from server: " + c.direction);
 				c.execute(player);
 			}
 			
