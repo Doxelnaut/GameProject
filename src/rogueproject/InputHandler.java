@@ -11,7 +11,7 @@ public class InputHandler {
 	// Enumerated so rotations are multiples of direction integers
 	private static final int N = 0, NE=1, E=2, SE=3, S=4, SW=5, W=6, NW=7, CTRL=8;
 	
-	private Command key_w = new MoveCommand(N), 
+	private MoveCommand key_w = new MoveCommand(N), 
 			key_a = new MoveCommand(W), 
 			key_s = new MoveCommand(S), 
 			key_d = new MoveCommand(E),
@@ -19,16 +19,16 @@ public class InputHandler {
 			keys_wd = new MoveCommand(NE),
 			keys_sa = new MoveCommand(SW),
 			keys_sd = new MoveCommand(SE),
-			keys_c = new MoveCommand(CTRL),
+			keys_c = new MoveCommand(CTRL);
 //			key_space = new MoveCommand(SHOOT) ,
-			mouse_left/*, 
-			mouse_right = new RangeAttackCommand()*/;
+			//mouse_left/*, 
+			//mouse_right = new RangeAttackCommand()*/;
 	
 	/**
 	 * 
 	 */
-	public ArrayList<Command> handleInput(Input input){
-		ArrayList<Command> commands = new ArrayList<Command>();
+	public ArrayList<MoveCommand> handleInput(Input input){
+		ArrayList<MoveCommand> commands = new ArrayList<MoveCommand>();
 		if(input.isKeyDown(Input.KEY_W) && input.isKeyDown(Input.KEY_A)){
 			commands.add(keys_wa);
 		}
@@ -59,7 +59,7 @@ public class InputHandler {
 		else if(input.isKeyDown(Input.KEY_C)){
 			commands.add(keys_c);
 		}
-		if(input.isButton1Pressed(Input.MOUSE_LEFT_BUTTON)){
+		/*if(input.isButton1Pressed(Input.MOUSE_LEFT_BUTTON)){
 			mouse_left = new ShootCommand(new Vector(input.getMouseX(), input.getMouseY()));
 			commands.add(mouse_left);
 		}
