@@ -48,8 +48,8 @@ public class PlayingState extends BasicGameState {
 	ObjectInputStream socketIn;		//object reader
 	Player player;
 	boolean secondPlayer = false;
-	TiledMap map;
-	boolean[][] blocked;
+//	TiledMap map;
+//	boolean[][] blocked;
 	float oldPosX;
 	float oldPosY;
 	
@@ -126,22 +126,22 @@ public class PlayingState extends BasicGameState {
 			} catch (NumberFormatException e) {
 				e.printStackTrace();}
 		
-		map = new TiledMap("src/rogueproject/resource/maps/20x20map.tmx");
-		
-		System.out.println("map pointer: " + map);
-		blocked = new boolean[map.getWidth()][map.getHeight()];
-		System.out.println(map.getWidth() + "x" + map.getHeight());
-		// Build collision detection for map tiles, and fill occupied with false values.
-		for (int i = 0; i < 10/*map.getWidth()*/; i++){
-			for (int j = 0; j < 10/*map.getHeight()*/; j++){
-//				rg.occupied[i][j] = false; // initialize occupied
-				int tileID = map.getTileId(i, j, 0);
-				String value = map.getTileProperty(tileID, "blocked", "false");
-				if ("true".equals(value)){
-					blocked[i][j] = true;
-				}
-			}
-		}
+//		map = new TiledMap("src/rogueproject/resource/maps/20x20map.tmx");
+//		
+//		System.out.println("map pointer: " + map);
+//		blocked = new boolean[map.getWidth()][map.getHeight()];
+//		System.out.println(map.getWidth() + "x" + map.getHeight());
+//		// Build collision detection for map tiles, and fill occupied with false values.
+//		for (int i = 0; i < 10/*map.getWidth()*/; i++){
+//			for (int j = 0; j < 10/*map.getHeight()*/; j++){
+////				rg.occupied[i][j] = false; // initialize occupied
+//				int tileID = map.getTileId(i, j, 0);
+//				String value = map.getTileProperty(tileID, "blocked", "false");
+//				if ("true".equals(value)){
+//					blocked[i][j] = true;
+//				}
+//			}
+//		}
 		
 		if(RG.state.secondPlayer == false){
 			//create player
@@ -183,22 +183,22 @@ public class PlayingState extends BasicGameState {
 		
 		g.translate(-RogueGame.camX, -RogueGame.camY);		
 
-		map.render((int) (- (RogueGame.camX%RogueGame.TILE_SIZE) + RogueGame.player.getPosition().getX()), 
-				(int)  (- (RogueGame.camY%RogueGame.TILE_SIZE) + RogueGame.player.getPosition().getX()), 
-				(int) RogueGame.camX / RogueGame.TILE_SIZE, 
-				(int) RogueGame.camY / RogueGame.TILE_SIZE, 
-				(int) (RG.ScreenWidth / RogueGame.TILE_SIZE), 
-				(int) (RG.ScreenHeight / RogueGame.TILE_SIZE));
-		
-		RogueGame.player.render(g);
-//		for (IsoEntity ie : RogueGame.ground) {
-//			ie.render(g);
-//		}
+//		map.render((int) (- (RogueGame.camX%RogueGame.TILE_SIZE) + RogueGame.player.getPosition().getX()), 
+//				(int)  (- (RogueGame.camY%RogueGame.TILE_SIZE) + RogueGame.player.getPosition().getX()), 
+//				(int) RogueGame.camX / RogueGame.TILE_SIZE, 
+//				(int) RogueGame.camY / RogueGame.TILE_SIZE, 
+//				(int) (RG.ScreenWidth / RogueGame.TILE_SIZE), 
+//				(int) (RG.ScreenHeight / RogueGame.TILE_SIZE));
 //		
-//		Collections.sort(RogueGame.wallsandblocks);
-//		for (IsoEntity ie : RogueGame.wallsandblocks) {
-//			ie.render(g);
-//		}
+//		RogueGame.player.render(g);
+		for (IsoEntity ie : RogueGame.ground) {
+			ie.render(g);
+		}
+		
+		Collections.sort(RogueGame.wallsandblocks);
+		for (IsoEntity ie : RogueGame.wallsandblocks) {
+			ie.render(g);
+		}
 
 		if (RogueGame.fireball != null) RogueGame.fireball.render(g);
 		g.translate(RogueGame.camX, RogueGame.camY);		
