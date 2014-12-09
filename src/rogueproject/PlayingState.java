@@ -143,7 +143,8 @@ public class PlayingState extends BasicGameState {
 			secondPlayer = true;
 			player = RogueGame.player2;
 		}
-		
+		RogueGame.camX = 48;
+		RogueGame.camY = 360;
 		
 		//create walls and blocks array for efficient collision detection.
 		for (IsoEntity ie : RogueGame.walls) {
@@ -231,8 +232,8 @@ public class PlayingState extends BasicGameState {
 			
 			RogueGame.player.setPosition(RG.state.player.getX(), RG.state.player.getY());
 			
-			RogueGame.camX = RogueGame.player.getPosition().getX() - RogueGame.VIEWPORT_SIZE_X / 2;
-			RogueGame.camY = RogueGame.player.getPosition().getY() + RogueGame.VIEWPORT_SIZE_Y / 2;
+			//RogueGame.camX = RogueGame.playerX - RogueGame.VIEWPORT_SIZE_X / 2;
+			//RogueGame.camY = RogueGame.playerY - RogueGame.VIEWPORT_SIZE_Y / 2;
 			
 			if(RG.state.secondPlayer){
 				RogueGame.player2.setPosition(RG.state.player2.getX(), RG.state.player2.getY());
