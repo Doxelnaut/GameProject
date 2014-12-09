@@ -16,6 +16,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.tiled.TiledMap;
 
 /**
  * 
@@ -47,6 +48,8 @@ public class PlayingState extends BasicGameState {
 	ObjectInputStream socketIn;		//object reader
 	Player player;
 	boolean secondPlayer = false;
+//	TiledMap map;
+//	boolean[][] blocked;
 	float oldPosX;
 	float oldPosY;
 	
@@ -123,6 +126,22 @@ public class PlayingState extends BasicGameState {
 			} catch (NumberFormatException e) {
 				e.printStackTrace();}
 		
+//		map = new TiledMap("src/rogueproject/resource/maps/20x20map.tmx");
+//		
+//		System.out.println("map pointer: " + map);
+//		blocked = new boolean[map.getWidth()][map.getHeight()];
+//		System.out.println(map.getWidth() + "x" + map.getHeight());
+//		// Build collision detection for map tiles, and fill occupied with false values.
+//		for (int i = 0; i < 10/*map.getWidth()*/; i++){
+//			for (int j = 0; j < 10/*map.getHeight()*/; j++){
+////				rg.occupied[i][j] = false; // initialize occupied
+//				int tileID = map.getTileId(i, j, 0);
+//				String value = map.getTileProperty(tileID, "blocked", "false");
+//				if ("true".equals(value)){
+//					blocked[i][j] = true;
+//				}
+//			}
+//		}
 		
 		if(RG.state.secondPlayer == false){
 			//create player
@@ -165,15 +184,23 @@ public class PlayingState extends BasicGameState {
 		
 		g.translate(-RogueGame.camX, -RogueGame.camY);		
 
+//		map.render((int) (- (RogueGame.camX%RogueGame.TILE_SIZE) + RogueGame.player.getPosition().getX()), 
+//				(int)  (- (RogueGame.camY%RogueGame.TILE_SIZE) + RogueGame.player.getPosition().getX()), 
+//				(int) RogueGame.camX / RogueGame.TILE_SIZE, 
+//				(int) RogueGame.camY / RogueGame.TILE_SIZE, 
+//				(int) (RG.ScreenWidth / RogueGame.TILE_SIZE), 
+//				(int) (RG.ScreenHeight / RogueGame.TILE_SIZE));
+//		
+//		RogueGame.player.render(g);
 		for (IsoEntity ie : RogueGame.ground) {
 			ie.render(g);
 		}
 		
-
 		Collections.sort(RogueGame.wallsandblocks);
 		for (IsoEntity ie : RogueGame.wallsandblocks) {
 			ie.render(g);
 		}
+
 		if (RogueGame.fireball != null) RogueGame.fireball.render(g);
 		g.translate(RogueGame.camX, RogueGame.camY);		
 
@@ -242,10 +269,10 @@ public class PlayingState extends BasicGameState {
 				
 		
 		InputHandler inputHandler = new InputHandler();
-		ArrayList<MoveCommand> commands = inputHandler.handleInput(input);
+		ArrayList<Command> commands = inputHandler.handleInput(input);
 
 		if(commands.size() > 0){
-			for(MoveCommand c : commands){
+			for(Command c : commands){
 				try {
 					socketOut.writeObject(c);
 				} catch (IOException e) {
@@ -253,7 +280,7 @@ public class PlayingState extends BasicGameState {
 					e.printStackTrace();
 				}
 				
-				System.out.println("Command from user: " + c.direction);
+//				System.out.println("Command from user: " + c.direction);
 				c.execute(player);
 			}	
 		}
@@ -277,79 +304,15 @@ public class PlayingState extends BasicGameState {
 		
 		for(IsoEntity b : RogueGame.blocks) {
 			if (b != RogueGame.player && b.collides(RogueGame.player) != null) {
-				System.out.println("Ouch!");
+				//System.out.println("Ouch!");
 				//player.sayOuch();
 				RogueGame.player.halt();
 				RogueGame.player.ungo();
 			}
 		}
-		
-/* 		if(rg.state.actors.size()==0){
-			rg.state.player.setDepth(rg.state.player.getDepth() + 1);
-			rg.enterState(RogueGame.PLAYINGSTATE);
-		}
-*/		
-//		Input input = container.getInput();
-/*		// The player's turn 
-		if(rg.state.player != null){
-			if(rg.state.player.getTurn()){
-				if(!rg.state.player.getGained()){
-					rg.state.player.gainEnergy();
-					rg.state.player.setGained(true);
-				}
-*///			if(!rg.state.player.isMoving()){ // handle all user input in this block
-					// Directional Keys
-					//   Q   W   E
-					//    \  |  /
-					// A - restS - D
-					//    /  |  \
-					//   Z   X   C
-/**					if 		(input.isKeyDown(Input.KEY_W)) 	{
-						//rg.state.player.setOrders(N);
-						mapy -= 8;
-						mapx += 16;
-					} 		// North
-					else if (input.isKeyDown(Input.KEY_X)) 	{
-						//rg.state.player.setOrders(S);
-						mapy += 8;
-						mapx -= 16;
+			
+//		if (input.isKeyPressed(Input.KEY_ESCAPE)) {container.exit();}
 
-						} 		// South
-					else if (input.isKeyDown(Input.KEY_A)) 	{
-						//rg.state.player.setOrders(W);
-						mapx += 16;
-						mapy += 8;
-						} 		// West
-					else if (input.isKeyDown(Input.KEY_D)) 	{
-						//rg.state.player.setOrders(E);
-						mapx -= 16;
-						mapy -= 8;
-					} 		// East
-					else if (input.isKeyDown(Input.KEY_Q)) 	{
-						//rg.state.player.setOrders(NW);
-						mapy -= 8;
-						} 		// Northwest
-					else if (input.isKeyDown(Input.KEY_E)) 	{
-						//rg.state.player.setOrders(NE);
-						mapx -= 8;
-						} 		// Northeast
-					else if (input.isKeyDown(Input.KEY_Z)) 	{
-						//rg.state.player.setOrders(SW);
-						mapx += 8;
-						} 		// Southwest
-					else if (input.isKeyDown(Input.KEY_C)) 	{
-						//rg.state.player.setOrders(SE);
-						mapy += 8;
-						} 		// Southeast
-					else if (input.isKeyDown(Input.KEY_S)) 	{rg.state.player.setOrders(REST);} 	// Rest
-					else if (input.isKeyPressed(Input.KEY_ESCAPE)) {container.exit();}
-**/					// Cheats:
-					/* hard code modulo for the number of dungeons actually playable, 
-					 * then add one, since dungeons start at level 1.
-					 */
-					
-//				}
-//			}
 			
 		if (RogueGame.fireball != null) {
 			RogueGame.fireball.update(x*1.5f);
