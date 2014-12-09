@@ -6,6 +6,8 @@ import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
+import jig.Vector;
+
 public class Connection implements Runnable {
 	
 	private Socket socket;
@@ -13,19 +15,36 @@ public class Connection implements Runnable {
 	boolean quit = false;
 	ObjectOutputStream socketOut;
 	ObjectInputStream socketIn;
-	RogueGame state;
-	Command c;
+	RogueGame RG;
+	MoveCommand c;
 	Player player;
-	
 	Connection(Socket s, RogueGame gs){
 		socket = s;
-		state = gs;
+		RG = gs;
 	}
 
 	@Override
 	public void run() {
 		
-			player = state.player;
+		//create player
+		if(RogueGame.player == null){
+			RogueGame.player = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),1);
+			RogueGame.blocks.add(RogueGame.player);
+			player = RogueGame.player;
+			RG.state.player.setX(player.getPosition().getX());
+			RG.state.player.setY(player.getPosition().getY());
+			RG.state.firstPlayer = true;
+		}
+		
+		else if( RogueGame.player2 == null){
+			RogueGame.player2 = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),1);
+			RogueGame.blocks.add(RogueGame.player2);
+			player = RogueGame.player2;
+			RG.state.player2.setX(player.getPosition().getX());
+			RG.state.player2.setY(player.getPosition().getY());
+			RG.state.secondPlayer= true;
+		}
+	
 			try {
 				estConn();
 			} catch (IOException e) {
@@ -46,29 +65,43 @@ public class Connection implements Runnable {
 	    }
 		
 	    try {
-			socketOut.writeObject(state.state.map);
+			socketOut.writeObject(RG.state);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	    while(!quit){
 	    	//loop to write game state to client and get user input from client
 		    	
-		/*	try {
-				socketOut.writeObject(state);
+			try {
+				System.out.println("Players new position: " + RG.state.player.getX() + ", " + RG.state.player.getY());
+				socketOut.reset();
+				socketOut.writeObject(RG.state);
 			} catch (IOException e) {
 				e.printStackTrace();
 				System.out.println("Error Writing game state to client.");
 			}
-			*/
+			
 			try {
-				c = (Command) socketIn.readObject();
+				c = (MoveCommand) socketIn.readObject();
 			} catch (ClassNotFoundException | IOException e) {
 				System.out.println("Error reading command.");
 				e.printStackTrace();
 			}
 			
-			c.execute(player);
+			if(c != null){
+				System.out.println("Command from server: " + c.direction);
+				c.execute(player);
+			}
+			
+			if(player == RogueGame.player){
+			RG.state.player.setX(player.getPosition().getX());
+			RG.state.player.setY(player.getPosition().getY());
+		//	RG.state.player.setTheta(player.getRotation());
+			}
+			else if(player == RogueGame.player2){
+				RG.state.player2.setX(player.getPosition().getX());
+				RG.state.player2.setY(player.getPosition().getY());
+			}
 			
 			
 	    }

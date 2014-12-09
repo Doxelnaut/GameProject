@@ -2,7 +2,7 @@ package rogueproject;
 
 public class MoveCommand extends Command {
 	
-	private int direction;
+	public int direction;
 	
 	public MoveCommand(int direction){
 		this.direction = direction;

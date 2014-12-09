@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -46,6 +45,10 @@ public class PlayingState extends BasicGameState {
 	int port = 1666;				
 	ObjectOutputStream socketOut;	//object writer
 	ObjectInputStream socketIn;		//object reader
+	Player player;
+	boolean secondPlayer = false;
+	float oldPosX;
+	float oldPosY;
 	
 	// input direction
 	public static final int WAIT = -1, N = 0, E = 1, S = 2, W = 3, NW = 4, NE = 5, SE = 6, SW = 7, REST = 8;
@@ -88,7 +91,7 @@ public class PlayingState extends BasicGameState {
 	
 		//read in vector representing bitmap from the server
 		try{
-			RG.state.map = (int[]) socketIn.readObject();
+			RG.state = (GameState) socketIn.readObject();
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 			System.out.println("Error getting map from server.");
@@ -120,9 +123,27 @@ public class PlayingState extends BasicGameState {
 			} catch (NumberFormatException e) {
 				e.printStackTrace();}
 		
-		//create player
-		RogueGame.player = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),1);
-		RogueGame.blocks.add(RogueGame.player);
+		
+		if(RG.state.secondPlayer == false){
+			//create player
+			RogueGame.player = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),1);
+			RogueGame.blocks.add(RogueGame.player);
+			player = RogueGame.player;
+		}
+		
+		else if(RG.state.secondPlayer == true){
+			
+			//create player
+			RogueGame.player = new Player(RogueGame.WORLD_SIZE, new Vector(RG.state.player.getX()/ RogueGame.TILE_SIZE, RG.state.player.getY()/RogueGame.TILE_SIZE),1);
+			RogueGame.blocks.add(RogueGame.player);
+			
+			//create 2nd player
+			RogueGame.player2 = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),1);
+			RogueGame.blocks.add(RogueGame.player2);
+			secondPlayer = true;
+			player = RogueGame.player2;
+		}
+		
 		
 		//create walls and blocks array for efficient collision detection.
 		for (IsoEntity ie : RogueGame.walls) {
@@ -137,16 +158,17 @@ public class PlayingState extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
 		
-		if(RogueGame.player == null){ // player died, don't render anything.
+		if(player == null){ // player died, don't render anything.
 			RG.enterState(RogueGame.STARTUPSTATE);
 		}
-
+		
 		g.translate(-RogueGame.camX, -RogueGame.camY);		
 
 		for (IsoEntity ie : RogueGame.ground) {
 			ie.render(g);
 		}
 		
+
 		Collections.sort(RogueGame.wallsandblocks);
 		for (IsoEntity ie : RogueGame.wallsandblocks) {
 			ie.render(g);
@@ -164,6 +186,7 @@ public class PlayingState extends BasicGameState {
 					, 100 , 10);
 			g.drawString("Dungeon Level: " , 100, 25);
 		}
+		
 		g.translate(-RogueGame.camX, -RogueGame.camY);		
 
 		
@@ -174,40 +197,77 @@ public class PlayingState extends BasicGameState {
 		
 		Input input = container.getInput();
 		float x = (60*delta/1000.0f);
-
-		//will eventually read in gamestate from the server
 		
-		/*try {
-			rg.state = (GameState)socketIn.readObject();
+		//reads in gamestate from the server
+		try {
+			RG.state = (GameState)socketIn.readObject();
 		} catch (ClassNotFoundException | IOException e1) {
 			System.out.println("Error reading game state from server.");
 			e1.printStackTrace();
 		}
-		*/
-		
-		
-		RogueGame.playerX = RogueGame.player.getX();
-		RogueGame.playerY = RogueGame.player.getY();
-		RogueGame.camX = RogueGame.playerX - RogueGame.VIEWPORT_SIZE_X / 2;
-		RogueGame.camY = RogueGame.playerY - RogueGame.VIEWPORT_SIZE_Y / 2;
+		System.out.println("Players old position: " + RG.state.player.getX() + ", " + RG.state.player.getY());
 
-		//build command object
-		InputHandler inputHandler = new InputHandler();
-		ArrayList<Command> commands = inputHandler.handleInput(input);
 		
-		//send command object to the server
+		//handle second player joining game on first players instance
+				if(secondPlayer == false && RG.state.secondPlayer == true){
+					secondPlayer = true;
+					RogueGame.player2 = new Player(RogueGame.WORLD_SIZE, new Vector(RG.state.player2.getX()/ RogueGame.TILE_SIZE, RG.state.player2.getY()/RogueGame.TILE_SIZE),1);
+					RogueGame.blocks.add(RogueGame.player2);
+					RogueGame.wallsandblocks.add(RogueGame.player2);
+				}
+	
+		//update players positions on local game
+		if(secondPlayer){
+			RogueGame.player2.setPosition(RG.state.player2.getX(),RG.state.player2.getY());
+			
+			RogueGame.camX = RogueGame.player2.getPosition().getX() - RogueGame.VIEWPORT_SIZE_X / 2;
+			RogueGame.camY = RogueGame.player2.getPosition().getX() + RogueGame.VIEWPORT_SIZE_Y / 2;
+			
+			RogueGame.player.setPosition(RG.state.player.getX(), RG.state.player.getY());
+			
+		}
+		
+		else{
+			
+			RogueGame.player.setPosition(RG.state.player.getX(), RG.state.player.getY());
+			
+			RogueGame.camX = RogueGame.player.getPosition().getX() - RogueGame.VIEWPORT_SIZE_X / 2;
+			RogueGame.camY = RogueGame.player.getPosition().getY() + RogueGame.VIEWPORT_SIZE_Y / 2;
+			
+			if(RG.state.secondPlayer){
+				RogueGame.player2.setPosition(RG.state.player2.getX(), RG.state.player2.getY());
+			}
+		}	
+				
+		
+		InputHandler inputHandler = new InputHandler();
+		ArrayList<MoveCommand> commands = inputHandler.handleInput(input);
+
 		if(commands.size() > 0){
-			for(Command c : commands){
+			for(MoveCommand c : commands){
 				try {
 					socketOut.writeObject(c);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				c.execute(RogueGame.player);
-			}
+				
+				System.out.println("Command from user: " + c.direction);
+				c.execute(player);
+			}	
 		}
-		else RogueGame.player.halt();
+		
+		else {
+			RogueGame.player.halt();
+			MoveCommand c = null;
+			try {
+				socketOut.writeObject(c);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 				
 		if (input.isKeyPressed(Input.KEY_LCONTROL)) {
 			RogueGame.player.debugThis = !RogueGame.player.debugThis;

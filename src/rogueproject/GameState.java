@@ -11,13 +11,22 @@ public class GameState implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	int[] map;
-	ArrayList<NetVector> bullets;
+	NetVector player;
+	NetVector player2;
+	boolean secondPlayer = false;
+	boolean firstPlayer = false;
+
 	
-	GameState(){
+	public GameState(){
 		
 		map = new int[10000];
-		bullets = new ArrayList<NetVector>();
+		player = new NetVector();
+		player2 = new NetVector();
 		return;
 	}
+	
+	/*public String toString(){
+		return "GameState: [ bullets =" + player + "]"; 
+	}*/
 	
 }
