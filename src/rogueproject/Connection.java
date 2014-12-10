@@ -87,25 +87,30 @@ public class Connection implements Runnable {
 				System.out.println("Error reading command.");
 				e.printStackTrace();
 			}
-			
-			if(c != null){
-//				System.out.println("Command from server: " + c.direction);
-				c.execute(player);
-			}
-			
-			if(player == RogueGame.player){
-			RG.state.player.setX(player.getPosition().getX());
-			RG.state.player.setY(player.getPosition().getY());
-		//	RG.state.player.setTheta(player.getRotation());
-			}
-			else if(player == RogueGame.player2){
-				RG.state.player2.setX(player.getPosition().getX());
-				RG.state.player2.setY(player.getPosition().getY());
-			}
-			
+				
+			update();
 			
 	    }
 	    
+	}
+	
+	//update the servers game via executing players command
+	void update(){
+		
+		if(c != null){
+			c.execute(player);
+		}
+		//update player1 position
+		if(player == RogueGame.player){
+		RG.state.player.setX(player.getPosition().getX());
+		RG.state.player.setY(player.getPosition().getY());
+		}
+		
+		//update player 2 position
+		else if(player == RogueGame.player2){
+			RG.state.player2.setX(player.getPosition().getX());
+			RG.state.player2.setY(player.getPosition().getY());
+		}
 	}
 	
 	private void estConn()throws IOException{
