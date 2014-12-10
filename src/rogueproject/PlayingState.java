@@ -95,16 +95,8 @@ public class PlayingState extends BasicGameState {
 			System.out.println("Error opening streams");
 		}
 	
-		//read in vector representing bitmap from the server
-//		try{
-//			RG.state = (GameState) socketIn.readObject();
-//		} catch (IOException | ClassNotFoundException e) {
-//			e.printStackTrace();
-//			System.out.println("Error getting map from server.");
-//		}
-
-		//Create map to transfer to client from bitmap
-
+		//Create map
+		//First, read from file
 		BufferedReader reader = null;
 		try {
 			reader = new BufferedReader(new FileReader("src/resource/Map.txt"));
@@ -115,16 +107,18 @@ public class PlayingState extends BasicGameState {
 		String line = null;
 
 		int row = 0;
-
-		//read in one line at a time and builds the servers' copies of wall and block arrays, also translates the bit map into an array to be sent to the client.
+		//read in one line at a time and builds the wall and block arrays
 		try {
 			while ((line = reader.readLine()) != null) {
 
 				String[] parts = line.split("\\s");
-				System.out.println(parts.length);
+				//System.out.println(parts.length);
 				for(int col = 0; col < parts.length; col++){
-					RogueGame.map[row][col] = Integer.valueOf(parts[i]);
+					RogueGame.map[row][col] = Integer.valueOf(parts[col]); // fill 2D map array
+					//System.out.print(RogueGame.map[row][col] + " ");
+					createMapEntities(row, col); // fill the entity arrays
 				}
+				System.out.print("\n");
 				row++;
 			}
 		} catch (NumberFormatException e) {
@@ -132,32 +126,6 @@ public class PlayingState extends BasicGameState {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-//		//builds local arrays storing map information from vector recieved from server.
-//		int r = 0;
-//		int c = 0;
-//		try {
-//			for(int j = 0; j < 100; j ++){
-//				for(int i = 0; i< 100;i++){
-//					if(RG.state.map[c] == 1){
-//						RogueGame.walls.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), true) );
-//						RogueGame.stop.add(new Ground(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
-//					}
-//					else if(RG.state.map[c] == 2){
-//						RogueGame.blocks.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), false) );
-//						RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
-//					}
-//					else{
-//					    RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
-//					}
-//					c++;
-//				 }
-//				
-//			    r++;
-//			    }
-//				
-//			} catch (NumberFormatException e) {
-//				e.printStackTrace();}
 		
 		if(RG.state.secondPlayer == false){
 			//create player
@@ -308,8 +276,29 @@ public class PlayingState extends BasicGameState {
 		return RogueGame.PLAYINGSTATE;
 	}
 	
-	public void setLevel(RogueGame rg) throws SlickException{
-
+	/**
+	 * Fills the entity arrays using the integer IDs stored in the map file.
+	 * @param row x tile position of map
+	 * @param col y tile position of map
+	 */
+	public void createMapEntities(int row, int col){
+		switch(RogueGame.map[row][col]){
+		case 0: // ground tiles
+			RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE)));
+			break;
+		case 1: // wall tiles
+			RogueGame.walls.add(new Block(RogueGame.WORLD_SIZE,new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE), true) );
+			RogueGame.stop.add(new Ground(RogueGame.WORLD_SIZE,new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE)) );
+			break;
+		case 2: // rock tiles
+			RogueGame.blocks.add(new Block(RogueGame.WORLD_SIZE,new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE), false) );
+			RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE)) );
+			break;
+		case 3: // potions
+			break;
+		default:
+			break;
+		}
 	}
 	
 	void checkForPlayerJoin(){
