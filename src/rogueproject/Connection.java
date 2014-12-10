@@ -64,11 +64,11 @@ public class Connection implements Runnable {
 			System.out.println("Error opening streams");
 	    }
 		
-	    try {
-			socketOut.writeObject(RG.state);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
+//	    try {
+//			socketOut.writeObject(RG.state);
+//		} catch (IOException e1) {
+//			e1.printStackTrace();
+//		}
 	    while(!quit){
 	    	//loop to write game state to client and get user input from client
 		    	
