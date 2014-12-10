@@ -52,6 +52,7 @@ public class PlayingState extends BasicGameState {
 //	boolean[][] blocked;
 	float oldPosX;
 	float oldPosY;
+	boolean joined = false;
 	
 	// input direction
 	public static final int WAIT = -1, N = 0, E = 1, S = 2, W = 3, NW = 4, NE = 5, SE = 6, SW = 7, REST = 8;
@@ -162,6 +163,7 @@ public class PlayingState extends BasicGameState {
 			secondPlayer = true;
 			player = RogueGame.player2;
 		}
+		
 		RogueGame.camX = 48;
 		RogueGame.camY = 360;
 		
@@ -233,8 +235,6 @@ public class PlayingState extends BasicGameState {
 			System.out.println("Error reading game state from server.");
 			e1.printStackTrace();
 		}
-		System.out.println("Players old position: " + RG.state.player.getX() + ", " + RG.state.player.getY());
-
 		
 		checkForPlayerJoin();
 		updatePlayersPosition();
@@ -303,12 +303,12 @@ public class PlayingState extends BasicGameState {
 	public void setLevel(RogueGame rg) throws SlickException{
 
 	}
-	
+//------------------------------------------------------------------------------------------------------------------	
 	void checkForPlayerJoin(){
 		
 		//handle second player joining game on first players instance
-		if(secondPlayer == false && RG.state.secondPlayer == true){
-			secondPlayer = true;
+		if(joined == false && RG.state.secondPlayer == true && secondPlayer == false){
+			joined = true;
 			RogueGame.player2 = new Player(RogueGame.WORLD_SIZE, new Vector(RG.state.player2.getX()/ RogueGame.TILE_SIZE, RG.state.player2.getY()/RogueGame.TILE_SIZE),1);
 			RogueGame.blocks.add(RogueGame.player2);
 			RogueGame.wallsandblocks.add(RogueGame.player2);
@@ -323,8 +323,10 @@ public class PlayingState extends BasicGameState {
 			RogueGame.player2.setPosition(RG.state.player2.getX(),RG.state.player2.getY());
 			RogueGame.camX = RogueGame.player2.getPosition().getX() - RogueGame.VIEWPORT_SIZE_X / 2;
 			RogueGame.camY = RogueGame.player2.getPosition().getX() + RogueGame.VIEWPORT_SIZE_Y / 2;
+			//update first players model
 			RogueGame.player.setPosition(RG.state.player.getX(), RG.state.player.getY());
-			
+			RogueGame.player.crouch = RG.state.playerCrouch;
+			RogueGame.player.getWalkingAnimation(RG.state.playerDirection);	
 		}
 		
 		//you are first player
@@ -334,8 +336,10 @@ public class PlayingState extends BasicGameState {
 			//RogueGame.camY = RogueGame.playerY - RogueGame.VIEWPORT_SIZE_Y / 2;
 			
 			//if You are first Player, and second player exists update player 2 location
-			if(RG.state.secondPlayer){
+			if(joined){
 				RogueGame.player2.setPosition(RG.state.player2.getX(), RG.state.player2.getY());
+				RogueGame.player2.crouch = RG.state.player2Crouch;
+				RogueGame.player2.getWalkingAnimation(RG.state.player2Direction);
 			}
 		}	
 	}

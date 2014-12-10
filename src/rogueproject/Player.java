@@ -14,15 +14,7 @@ public class Player extends Actor {
 	Animation[] crouching = new Animation[8];
 	Animation[] crouchingFIRE = new Animation[8];
 	
-//	static final int LEFT = 0;
-//	static final int RIGHT = 1;
-//	static final int UP = 2;
-//	static final int DOWN = 3;
-//	static final int UpLEFT = 4;
-//	static final int UpRIGHT = 5;
-//	static final int DownLEFT = 6;
-//	static final int DownRIGHT = 7;
-	static boolean crouch = false;
+	boolean crouch = false;
 	static boolean shooting = false;
 	
 //	public static final int WAIT = -1, N = 0, E = 1, S = 2, W = 3, NW = 4, NE = 5, SE = 6, SW = 7, REST = 8;
