@@ -10,7 +10,7 @@ public class GameState implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	int[] map;
+	//int[][] map;
 	NetVector player;
 	NetVector player2;
 	boolean secondPlayer = false;
@@ -23,7 +23,7 @@ public class GameState implements Serializable{
 	
 	public GameState(){
 		
-		map = new int[10000];
+		//map = new int[100][100];
 		player = new NetVector();
 		player2 = new NetVector();
 		return;

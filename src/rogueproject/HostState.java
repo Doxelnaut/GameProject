@@ -56,51 +56,51 @@ public class HostState extends BasicGameState {
 				(RG.ScreenWidth * 0.3f), (RG.ScreenHeight * 0.28f), 30);
 		
 		
-		//Create map to transfer to client from bitmap
-		
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new FileReader("src/resource/Map.txt"));
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		}
-	   
-		String line = null;
-	        
-	    int r = 0;
-	    int c = 0;
-		
-	    //read in one line at a time and builds the servers' copies of wall and block arrays, also translates the bit map into an array to be sent to the client.
-	    try {
-			while ((line = reader.readLine()) != null) {
-
-			    String[] parts = line.split("\\s");
-			    System.out.println(parts.length);
-			    for(int i = 0; i < parts.length;i++){
-			    	if(Integer.valueOf(parts[i]) == 1){
-						RogueGame.walls.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), true) );
-						RogueGame.stop.add(new Ground(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
-						RG.state.map[c] = 1;  //map to be sent to client in GameState
-			    	}
-			    	else if(Integer.valueOf(parts[i]) == 2){
-			    		RogueGame.blocks.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), false) );
-			    		RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
-			    		RG.state.map[c] =2;
-			    	}
-			    	else{
-			    		RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
-			    		RG.state.map[c] = 0;
-			    	}
-
-			    	c++;
-			    }
-			    	r++;
-			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		//Create map to transfer to client from bitmap
+//		
+//		BufferedReader reader = null;
+//		try {
+//			reader = new BufferedReader(new FileReader("src/resource/Map.txt"));
+//		} catch (FileNotFoundException e1) {
+//			e1.printStackTrace();
+//		}
+//	   
+//		String line = null;
+//	        
+//	    int r = 0;
+//	    int c = 0;
+//		
+//	    //read in one line at a time and builds the servers' copies of wall and block arrays, also translates the bit map into an array to be sent to the client.
+//	    try {
+//			while ((line = reader.readLine()) != null) {
+//
+//			    String[] parts = line.split("\\s");
+//			    System.out.println(parts.length);
+//			    for(int i = 0; i < parts.length;i++){
+//			    	if(Integer.valueOf(parts[i]) == 1){
+//						RogueGame.walls.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), true) );
+//						RogueGame.stop.add(new Ground(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+//						RG.state.map[c] = 1;  //map to be sent to client in GameState
+//			    	}
+//			    	else if(Integer.valueOf(parts[i]) == 2){
+//			    		RogueGame.blocks.add(new Block(RogueGame.WORLD_SIZE,new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE), false) );
+//			    		RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+//			    		RG.state.map[c] =2;
+//			    	}
+//			    	else{
+//			    		RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(r*RogueGame.TILE_SIZE, i*RogueGame.TILE_SIZE)) );
+//			    		RG.state.map[c] = 0;
+//			    	}
+//
+//			    	c++;
+//			    }
+//			    	r++;
+//			}
+//		} catch (NumberFormatException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 				
 	    //create socket on the server to listen on.
 		try {
