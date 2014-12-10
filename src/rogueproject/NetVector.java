@@ -2,6 +2,8 @@ package rogueproject;
 
 import java.io.Serializable;
 
+import jig.Vector;
+
 
 /*
  * Hopefully going to be used to serialize the actor information to be sent across the internet.
@@ -12,46 +14,41 @@ public class NetVector implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	float x;
-	float y;
-	double theta;
+	Vector currentPos;
+	int direction;
+	boolean crouched = false;
+	boolean attacking = false;
+	
 	
 	public NetVector(){
-		x = 0;
-		y = 0;
 	}
 	
-	public NetVector(float X, float Y, float t){
-		x = X;
-		y = Y;
-		theta = t;
+	public NetVector(float X, float Y, int d){
+		currentPos = new Vector(X,Y);
+		direction = d;
 	}
 	
-	public void setX(float posX){
-		x = posX;
+	public void setPos(Vector v){
+		currentPos = v;
 	}
 	
-	public void setY(float posY){
-		y = posY;
-	}
-	 public void setTheta(Double t){
-		 theta = t;
-	 }
-	 
-	 public double getTheta(){
-		 return theta;
-	 }
-	 
-	public float getX(){
-		return x;
+	public Vector getPos(){
+		return currentPos;
 	}
 	
-	public float getY(){
-		return y;
+	public void setDirection(int d){
+		direction = d;
 	}
 	
-	public String toString(){
-		return "NetVector: [x = " + x + ", y = " + y + ", theta = " + theta + "]";
+	public int getDirection(){
+		return direction;
 	}
-
+	
+	public void setCrouched(boolean c){
+		crouched = c;
+	}
+	
+	public boolean getCrouched(){
+		return crouched;
+	}
 }

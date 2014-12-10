@@ -15,10 +15,6 @@ public class GameState implements Serializable{
 	NetVector player2;
 	boolean secondPlayer = false;
 	boolean firstPlayer = false;
-	int playerDirection = 0;
-	int player2Direction = 0;
-	boolean playerCrouch = false;
-	boolean player2Crouch = false;
 
 	
 	public GameState(){

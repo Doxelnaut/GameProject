@@ -57,6 +57,9 @@ public class PlayingState extends BasicGameState {
 	float oldPosY;
 	boolean joined = false;
 	
+	//clientState used to send player's desired state to server
+	clientState newState;
+	
 	// input direction
 	public static final int WAIT = -1, N = 0, E = 1, S = 2, W = 3, NW = 4, NE = 5, SE = 6, SW = 7, REST = 8;
 	
@@ -128,17 +131,29 @@ public class PlayingState extends BasicGameState {
 			e.printStackTrace();
 		}
 		
+		
+		//read game state from server. Needed in order to set player ones position in the second players instance
+		
+		try {
+			RG.state = (GameState) socketIn.readObject();
+		} catch (ClassNotFoundException | IOException e) {
+			System.out.println("Error reading GameState.");
+			e.printStackTrace();
+		}
+		
+		
 		if(RG.state.secondPlayer == false){
 			//create player
 			RogueGame.player = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),1);
 			RogueGame.blocks.add(RogueGame.player);
 			player = RogueGame.player;
+			newState = new clientState(1);
 		}
 		
-		else if(RG.state.secondPlayer == true){
+		else{
 			
-			//create player
-			RogueGame.player = new Player(RogueGame.WORLD_SIZE, new Vector(RG.state.player.getX()/ RogueGame.TILE_SIZE, RG.state.player.getY()/RogueGame.TILE_SIZE),1);
+			//create 1st player for rendering purposes
+			RogueGame.player = new Player(RogueGame.WORLD_SIZE, RG.state.player.getPos(),1);
 			RogueGame.blocks.add(RogueGame.player);
 			
 			//create 2nd player
@@ -146,6 +161,8 @@ public class PlayingState extends BasicGameState {
 			RogueGame.blocks.add(RogueGame.player2);
 			secondPlayer = true;
 			player = RogueGame.player2;
+			newState = new clientState(2);
+
 		}
 		
 		RogueGame.camX = 48;
@@ -217,6 +234,9 @@ public class PlayingState extends BasicGameState {
 		
 		//build and execute command from user
 		getCommand(input);
+		
+		//build clientState and send to server
+		buildClientState();
 		
 				
 		if (input.isKeyPressed(Input.KEY_LCONTROL)) {
@@ -306,7 +326,7 @@ public class PlayingState extends BasicGameState {
 		//handle second player joining game on first players instance
 		if(joined == false && RG.state.secondPlayer == true && secondPlayer == false){
 			joined = true;
-			RogueGame.player2 = new Player(RogueGame.WORLD_SIZE, new Vector(RG.state.player2.getX()/ RogueGame.TILE_SIZE, RG.state.player2.getY()/RogueGame.TILE_SIZE),1);
+			RogueGame.player2 = new Player(RogueGame.WORLD_SIZE, RG.state.player2.getPos(),1);
 			RogueGame.blocks.add(RogueGame.player2);
 			RogueGame.wallsandblocks.add(RogueGame.player2);
 		}
@@ -317,29 +337,29 @@ public class PlayingState extends BasicGameState {
 
 		//you are second player
 		if(secondPlayer){
-			RogueGame.player2.setPosition(RG.state.player2.getX(),RG.state.player2.getY());
+			RogueGame.player2.setPosition(RG.state.player2.getPos());
 			RogueGame.camX = RogueGame.player2.getPosition().getX() - RogueGame.VIEWPORT_SIZE_X / 2;
 			RogueGame.camY = RogueGame.player2.getPosition().getX() + RogueGame.VIEWPORT_SIZE_Y / 2;
 			RogueGame.player2.halt();
 			//update first players model
-			RogueGame.player.setPosition(RG.state.player.getX(), RG.state.player.getY());
-			RogueGame.player.crouch = RG.state.playerCrouch;
-			RogueGame.player.getWalkingAnimation(RG.state.playerDirection);	
+			RogueGame.player.setPosition(RG.state.player.getPos());
+			RogueGame.player.crouch = RG.state.player.getCrouched();
+			RogueGame.player.getWalkingAnimation(RG.state.player.getDirection());	
 			RogueGame.player.halt();
 		}
 		
 		//you are first player
 		else{
-			RogueGame.player.setPosition(RG.state.player.getX(), RG.state.player.getY());
+			RogueGame.player.setPosition(RG.state.player.getPos());
 			//RogueGame.camX = RogueGame.playerX - RogueGame.VIEWPORT_SIZE_X / 2;
 			//RogueGame.camY = RogueGame.playerY - RogueGame.VIEWPORT_SIZE_Y / 2;
 			RogueGame.player.halt();
 			
 			//if You are first Player, and second player exists update player 2 location
 			if(joined){
-				RogueGame.player2.setPosition(RG.state.player2.getX(), RG.state.player2.getY());
-				RogueGame.player2.crouch = RG.state.player2Crouch;
-				RogueGame.player2.getWalkingAnimation(RG.state.player2Direction);
+				RogueGame.player2.setPosition(RG.state.player2.getPos());
+				RogueGame.player2.crouch = RG.state.player2.getCrouched();
+				RogueGame.player2.getWalkingAnimation(RG.state.player2.getDirection());
 				RogueGame.player2.halt();
 			}
 		}	
@@ -347,35 +367,42 @@ public class PlayingState extends BasicGameState {
 	
 //----------------------------------------------------------------------------------------------------------------------------
 	
-	//gets user input, builds command, sends command to server, and performs dead reckoning
+	//gets user input, and executes command.
 	void getCommand(Input input){
 		InputHandler inputHandler = new InputHandler();
 		ArrayList<Command> commands = inputHandler.handleInput(input);
 
 		if(commands.size() > 0){
 			for(Command c : commands){
-				try {
-					socketOut.writeObject(c);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-//				System.out.println("Command from user: " + c.direction);
 				c.execute(player);
 			}	
 		}
+	}
+//-----------------------------------------------------------------------------------------------------------------------------
+	
+	void buildClientState(){
 		
-		else {
-			RogueGame.player.halt();
-			MoveCommand c = null;
-			try {
-				socketOut.writeObject(c);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
+		//build state representing first player
+		if(!secondPlayer){
+			newState.playerNewState.setPos(RogueGame.player.getPosition());
+			newState.playerNewState.setCrouched(RogueGame.player.crouch);
+			newState.playerNewState.setDirection(RogueGame.player.current);
+		}
+		//build state representing second player
+		else{
+			newState.playerNewState.setPos(RogueGame.player2.getPosition());
+			newState.playerNewState.setCrouched(RogueGame.player2.crouch);
+			newState.playerNewState.setDirection(RogueGame.player2.current);
+		}
+		
+		
+		//send clientState to server
+		try {
+			socketOut.reset();
+			socketOut.writeObject(newState);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Error Writing game state to client.");
 		}
 	}
 	
