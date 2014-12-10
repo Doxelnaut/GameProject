@@ -16,8 +16,9 @@ public class Connection implements Runnable {
 	ObjectOutputStream socketOut;
 	ObjectInputStream socketIn;
 	RogueGame RG;
-	Command c;
-	Player player;
+	clientState playerState;
+	
+	
 	Connection(Socket s, RogueGame gs){
 		socket = s;
 		RG = gs;
@@ -27,22 +28,22 @@ public class Connection implements Runnable {
 	public void run() {
 		
 		//create player
-		if(RogueGame.player == null){
-			RogueGame.player = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),1);
-			RogueGame.blocks.add(RogueGame.player);
-			player = RogueGame.player;
-			RG.state.player.setX(player.getPosition().getX());
-			RG.state.player.setY(player.getPosition().getY());
+		if(!RG.player1Connected){
+			RG.player1Connected = true;
+			RG.state.player.setPos(new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE));
+			RG.state.player.setDirection(2);
 			RG.state.firstPlayer = true;
 		}
 		
-		else if( RogueGame.player2 == null){
-			RogueGame.player2 = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),1);
-			RogueGame.blocks.add(RogueGame.player2);
-			player = RogueGame.player2;
-			RG.state.player2.setX(player.getPosition().getX());
-			RG.state.player2.setY(player.getPosition().getY());
+		else if(!RG.player2Connected){
+			RG.player2Connected = true;
+			RG.state.player2.setPos(new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE));
+			RG.state.player2.setDirection(2);
 			RG.state.secondPlayer= true;
+		}
+		
+		else{
+			//handle too many connections
 		}
 	
 			try {
@@ -63,12 +64,13 @@ public class Connection implements Runnable {
 			e.printStackTrace();
 			System.out.println("Error opening streams");
 	    }
-		
-//	    try {
-//			socketOut.writeObject(RG.state);
-//		} catch (IOException e1) {
-//			e1.printStackTrace();
-//		}
+	    
+	    try {
+			socketOut.writeObject(RG.state);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	    
 	    while(!quit){
 	    	//loop to write game state to client and get user input from client
 		    	
@@ -81,39 +83,15 @@ public class Connection implements Runnable {
 			}
 			
 			try {
-				c = (Command) socketIn.readObject();
+				playerState = (clientState) socketIn.readObject();
 			} catch (ClassNotFoundException | IOException e) {
-				System.out.println("Error reading command.");
+				System.out.println("Error reading clientState.");
 				e.printStackTrace();
 			}
 				
-			update();
-			
+			RG.update(playerState);
 	    }
 	    
-	}
-	
-	//update the servers game via executing players command
-	void update(){
-		
-		if(c != null){
-			c.execute(player);
-		}
-		//update player1 position
-		if(player == RogueGame.player){
-		RG.state.player.setX(player.getPosition().getX());
-		RG.state.player.setY(player.getPosition().getY());
-		RG.state.playerDirection = player.current;
-		RG.state.playerCrouch = player.crouch;
-		}
-		
-		//update player 2 position
-		else if(player == RogueGame.player2){
-			RG.state.player2.setX(player.getPosition().getX());
-			RG.state.player2.setY(player.getPosition().getY());
-			RG.state.player2Direction = player.current;
-			RG.state.player2Crouch = player.crouch;
-		}
 	}
 	
 	private void estConn()throws IOException{
