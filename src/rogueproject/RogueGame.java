@@ -85,6 +85,7 @@ public class RogueGame extends StateBasedGame{
 	public static final String shortBlockImgPath   = "resource/shortcaveblock.png";
 	public static final String host_background = "resource/host_background.png";
 	public static final String clientSetup_background = "resource/clientSetup_background.png";
+	public static final String potions = "resource/Potions.png";
 	
 	public static final String WalkLeft = "resource/Walk_10(15,69,108).png";
 	public static final String WalkRight = "resource/Walk_2(15,62,111).png";
@@ -179,6 +180,7 @@ public class RogueGame extends StateBasedGame{
 		ResourceManager.loadImage(groundSheetPath);
 		ResourceManager.loadImage(tallBlockImgPath);
 		ResourceManager.loadImage(shortBlockImgPath);
+		ResourceManager.loadImage(potions);
 		ResourceManager.loadImage(WalkLeft);
 		ResourceManager.loadImage(WalkRight);
 		ResourceManager.loadImage(WalkUp);
