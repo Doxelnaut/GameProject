@@ -162,7 +162,8 @@ public class PlayingState extends BasicGameState {
 			secondPlayer = true;
 			player = RogueGame.player2;
 		}
-		
+		RogueGame.camX = 48;
+		RogueGame.camY = 360;
 		
 		//create walls and blocks array for efficient collision detection.
 		for (IsoEntity ie : RogueGame.walls) {
@@ -235,66 +236,12 @@ public class PlayingState extends BasicGameState {
 		System.out.println("Players old position: " + RG.state.player.getX() + ", " + RG.state.player.getY());
 
 		
-		//handle second player joining game on first players instance
-				if(secondPlayer == false && RG.state.secondPlayer == true){
-					secondPlayer = true;
-					RogueGame.player2 = new Player(RogueGame.WORLD_SIZE, new Vector(RG.state.player2.getX()/ RogueGame.TILE_SIZE, RG.state.player2.getY()/RogueGame.TILE_SIZE),1);
-					RogueGame.blocks.add(RogueGame.player2);
-					RogueGame.wallsandblocks.add(RogueGame.player2);
-				}
-	
-		//update players positions on local game
-		if(secondPlayer){
-			RogueGame.player2.setPosition(RG.state.player2.getX(),RG.state.player2.getY());
-			
-			RogueGame.camX = RogueGame.player2.getPosition().getX() - RogueGame.VIEWPORT_SIZE_X / 2;
-			RogueGame.camY = RogueGame.player2.getPosition().getX() + RogueGame.VIEWPORT_SIZE_Y / 2;
-			
-			RogueGame.player.setPosition(RG.state.player.getX(), RG.state.player.getY());
-			
-		}
+		checkForPlayerJoin();
+		updatePlayersPosition();
 		
-		else{
-			
-			RogueGame.player.setPosition(RG.state.player.getX(), RG.state.player.getY());
-			
-			RogueGame.camX = RogueGame.player.getPosition().getX() - RogueGame.VIEWPORT_SIZE_X / 2;
-			RogueGame.camY = RogueGame.player.getPosition().getY() + RogueGame.VIEWPORT_SIZE_Y / 2;
-			
-			if(RG.state.secondPlayer){
-				RogueGame.player2.setPosition(RG.state.player2.getX(), RG.state.player2.getY());
-			}
-		}	
-				
+		//build and execute command from user
+		getCommand(input);
 		
-		InputHandler inputHandler = new InputHandler();
-		ArrayList<Command> commands = inputHandler.handleInput(input);
-
-		if(commands.size() > 0){
-			for(Command c : commands){
-				try {
-					socketOut.writeObject(c);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-//				System.out.println("Command from user: " + c.direction);
-				c.execute(player);
-			}	
-		}
-		
-		else {
-			RogueGame.player.halt();
-			MoveCommand c = null;
-			try {
-				socketOut.writeObject(c);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}
 				
 		if (input.isKeyPressed(Input.KEY_LCONTROL)) {
 			RogueGame.player.debugThis = !RogueGame.player.debugThis;
@@ -356,5 +303,76 @@ public class PlayingState extends BasicGameState {
 	public void setLevel(RogueGame rg) throws SlickException{
 
 	}
+	
+	void checkForPlayerJoin(){
+		
+		//handle second player joining game on first players instance
+		if(secondPlayer == false && RG.state.secondPlayer == true){
+			secondPlayer = true;
+			RogueGame.player2 = new Player(RogueGame.WORLD_SIZE, new Vector(RG.state.player2.getX()/ RogueGame.TILE_SIZE, RG.state.player2.getY()/RogueGame.TILE_SIZE),1);
+			RogueGame.blocks.add(RogueGame.player2);
+			RogueGame.wallsandblocks.add(RogueGame.player2);
+		}
+	}
+//-----------------------------------------------------------------------------------------------------------------------
+	
+	void updatePlayersPosition(){
 
+		//you are second player
+		if(secondPlayer){
+			RogueGame.player2.setPosition(RG.state.player2.getX(),RG.state.player2.getY());
+			RogueGame.camX = RogueGame.player2.getPosition().getX() - RogueGame.VIEWPORT_SIZE_X / 2;
+			RogueGame.camY = RogueGame.player2.getPosition().getX() + RogueGame.VIEWPORT_SIZE_Y / 2;
+			RogueGame.player.setPosition(RG.state.player.getX(), RG.state.player.getY());
+			
+		}
+		
+		//you are first player
+		else{
+			RogueGame.player.setPosition(RG.state.player.getX(), RG.state.player.getY());
+			//RogueGame.camX = RogueGame.playerX - RogueGame.VIEWPORT_SIZE_X / 2;
+			//RogueGame.camY = RogueGame.playerY - RogueGame.VIEWPORT_SIZE_Y / 2;
+			
+			//if You are first Player, and second player exists update player 2 location
+			if(RG.state.secondPlayer){
+				RogueGame.player2.setPosition(RG.state.player2.getX(), RG.state.player2.getY());
+			}
+		}	
+	}
+	
+//----------------------------------------------------------------------------------------------------------------------------
+	
+	//gets user input, builds command, sends command to server, and performs dead reckoning
+	void getCommand(Input input){
+		InputHandler inputHandler = new InputHandler();
+		ArrayList<Command> commands = inputHandler.handleInput(input);
+
+		if(commands.size() > 0){
+			for(Command c : commands){
+				try {
+					socketOut.writeObject(c);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+//				System.out.println("Command from user: " + c.direction);
+				c.execute(player);
+			}	
+		}
+		
+		else {
+			RogueGame.player.halt();
+			MoveCommand c = null;
+			try {
+				socketOut.writeObject(c);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+	}
+	
+	
 }
