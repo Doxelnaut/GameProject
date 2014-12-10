@@ -13,7 +13,7 @@ public class Player extends Actor {
 	Animation[] walkingFIRE = new Animation[8];
 	Animation[] crouching = new Animation[8];
 	Animation[] crouchingFIRE = new Animation[8];
-	
+	Animation currentAnimation;
 	boolean crouch = false;
 	static boolean shooting = false;
 	
@@ -35,6 +35,7 @@ public class Player extends Actor {
 		wWorldSz = wWorldSize;
 		removeAnimation(walking[current]);
 		addAnimation(walking[current]);
+		currentAnimation = walking[current];
 		setZHeightFromIsoImage(walking[current].getCurrentFrame(), 32);
 		setPosition(wPosition);
 		lastWPosition = wPosition;
@@ -146,7 +147,20 @@ public class Player extends Actor {
 	 * toggle crouch
 	 */
 	public void crouch(){
-		crouch = crouch == true? false : true;
+		if(crouch){
+			crouch = false;
+			removeAnimation(crouching[current]);
+			addAnimation(walking[current]);
+			currentAnimation = walking[current];
+			
+			
+		}
+		else{
+			crouch = true;
+			removeAnimation(walking[current]);
+			addAnimation(crouching[current]);
+			currentAnimation = crouching[current];
+		}
 	}
 	
 	public void shoot(Vector direction){
@@ -158,26 +172,43 @@ public class Player extends Actor {
 	 * @param direction the direction of movement in world coordinates
 	 */
 	public void getWalkingAnimation(int direction){ //TODO doesn't handle crouching, creates multiple animations
+		
+		removeAnimation(currentAnimation);
+
 		if(crouch){
+			
+			
 //			if (walking[current].isStopped()){
-				removeAnimation(walking[current]);
+//				removeAnimation(walking[current]);
 //			}
+			addAnimation(crouching[current]);
+			currentAnimation = crouching[current];
+
+
 			if (current != direction){
 				removeAnimation(crouching[current]);
 				current = direction;
 				addAnimation(crouching[current]);
+				currentAnimation = crouching[current];
 			}
 			if (crouching[current].isStopped()){
 				crouching[current].start();
 			}
 		}else{
+			
+			addAnimation(walking[current]);
+			currentAnimation = walking[current];
+
+
 //			if (crouching[current].isStopped()){
-				removeAnimation(crouching[current]);
+//			removeAnimation(crouching[current]);
 //			}
 			if (current != direction) {
 				removeAnimation(walking[current]);
 				current = direction;
 				addAnimation(walking[current]);
+				currentAnimation = walking[current];
+
 			} 
 			if(walking[current].isStopped()){
 				walking[current].start();
@@ -199,6 +230,7 @@ public class Player extends Actor {
 					removeAnimation(crouching[current]);
 					current = image;
 					addAnimation(crouching[current]);
+					currentAnimation = crouching[current];
 				}
 				if (crouching[current].isStopped()) crouching[current].start();
 				
@@ -210,6 +242,7 @@ public class Player extends Actor {
 					removeAnimation(walking[current]);
 					current = image;
 					addAnimation(walking[current]);
+					currentAnimation = walking[current];
 				}
 				if (walking[current].isStopped()) walking[current].start();
 			

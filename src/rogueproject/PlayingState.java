@@ -323,10 +323,12 @@ public class PlayingState extends BasicGameState {
 			RogueGame.player2.setPosition(RG.state.player2.getX(),RG.state.player2.getY());
 			RogueGame.camX = RogueGame.player2.getPosition().getX() - RogueGame.VIEWPORT_SIZE_X / 2;
 			RogueGame.camY = RogueGame.player2.getPosition().getX() + RogueGame.VIEWPORT_SIZE_Y / 2;
+			RogueGame.player2.halt();
 			//update first players model
 			RogueGame.player.setPosition(RG.state.player.getX(), RG.state.player.getY());
 			RogueGame.player.crouch = RG.state.playerCrouch;
 			RogueGame.player.getWalkingAnimation(RG.state.playerDirection);	
+			RogueGame.player.halt();
 		}
 		
 		//you are first player
@@ -334,12 +336,14 @@ public class PlayingState extends BasicGameState {
 			RogueGame.player.setPosition(RG.state.player.getX(), RG.state.player.getY());
 			//RogueGame.camX = RogueGame.playerX - RogueGame.VIEWPORT_SIZE_X / 2;
 			//RogueGame.camY = RogueGame.playerY - RogueGame.VIEWPORT_SIZE_Y / 2;
+			RogueGame.player.halt();
 			
 			//if You are first Player, and second player exists update player 2 location
 			if(joined){
 				RogueGame.player2.setPosition(RG.state.player2.getX(), RG.state.player2.getY());
 				RogueGame.player2.crouch = RG.state.player2Crouch;
 				RogueGame.player2.getWalkingAnimation(RG.state.player2Direction);
+				RogueGame.player2.halt();
 			}
 		}	
 	}
