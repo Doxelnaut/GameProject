@@ -73,7 +73,6 @@ public class Connection implements Runnable {
 	    	//loop to write game state to client and get user input from client
 		    	
 			try {
-				System.out.println("Players new position: " + RG.state.player.getX() + ", " + RG.state.player.getY());
 				socketOut.reset();
 				socketOut.writeObject(RG.state);
 			} catch (IOException e) {
@@ -104,12 +103,16 @@ public class Connection implements Runnable {
 		if(player == RogueGame.player){
 		RG.state.player.setX(player.getPosition().getX());
 		RG.state.player.setY(player.getPosition().getY());
+		RG.state.playerDirection = player.current;
+		RG.state.playerCrouch = player.crouch;
 		}
 		
 		//update player 2 position
 		else if(player == RogueGame.player2){
 			RG.state.player2.setX(player.getPosition().getX());
 			RG.state.player2.setY(player.getPosition().getY());
+			RG.state.player2Direction = player.current;
+			RG.state.player2Crouch = player.crouch;
 		}
 	}
 	
