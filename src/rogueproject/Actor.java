@@ -9,6 +9,7 @@ import org.newdawn.slick.util.pathfinding.Mover;
 import org.newdawn.slick.util.pathfinding.Path;
 
 import jig.Entity;
+import jig.ResourceManager;
 import jig.Vector;
 
 /**
@@ -34,14 +35,18 @@ import jig.Vector;
  *
  */
 public class Actor extends IsoEntity {
-	
+	private static final int Up = 0, UpRight=1, Right=2, DownRight=3, Down=4, DownLeft=5, Left=6, UpLeft=7, CTRL=8;
+
+	Animation[] walking = new Animation[8];
+	Animation[] Attack = new Animation[8];
+	Animation currentAnimation;
 	
 	private float maxHitPoints;
 	private float hitPoints;
 	private float armor;
 	private int experience; // for leveling up. Player accrues the experience enemies hold.
 	// Graphics attributes
-	private int type; // Player, creature, etc.
+	public int type; // Player, creature, etc.
 	private int level;
 	private float attack;
 	
@@ -49,6 +54,10 @@ public class Actor extends IsoEntity {
 	public int enemyType = 1;
 	
 	public Animation anim;
+	int current = Right; // current direction used for animation
+	int shootingDirection;
+	Vector wWorldSz;
+	Vector lastWPosition;
 	
 	/* Constructors */
 	/**
@@ -59,10 +68,14 @@ public class Actor extends IsoEntity {
 	 */	
 	public Actor(Vector wWorldSize, int type){
 		super(wWorldSize, RogueGame.TILE_SIZE);
-		this.getTypeImage();
+		this.getTypeImage(type);
 		this.type = type;
-		this.setTypeAttributes();
-	
+		this.setTypeAttributes(type);
+		//wWorldSz = wWorldSize;
+		//removeAnimation(walking[current]);
+		
+		//setPosition(wPosition);
+		//lastWPosition = wPosition;
 	}
 
 	/**
@@ -86,7 +99,47 @@ public class Actor extends IsoEntity {
 	public int getTileY()			{return (int) (getY()/ RogueGame.TILE_SIZE);}
 	public Vector getTilePosition()	{return new Vector(getTileX(), getTileY());}
 
-	public void getTypeImage(){
+	public void getTypeImage(int type2){
+		switch(type2){
+		case 1: break;
+		case 2: 
+			walking[Left] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy1WalkLeft, 178, 111), 0,0,13,0,true, 70, true);
+			walking[Right] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy1WalkRight,178, 111), 0,0,13,0, true, 70, true);
+			walking[Up] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy1WalkUp, 178, 111), 0,0,13,0, true, 70, true);
+			walking[Down] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy1WalkDown, 178, 111), 0,0,13,0, true, 70, true);
+			walking[UpLeft] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy1WalkUpLeft, 178, 111), 0,0,13,0, true, 70, true);
+			walking[UpRight] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy1WalkUpRight, 178, 111), 0,0,13,0, true, 70, true);
+			walking[DownLeft] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy1WalkDownLeft, 178, 111), 0,0,13,0, true, 70, true);
+			walking[DownRight] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy1WalkDownRight, 178, 111), 0,0,13,0, true, 70, true);
+			
+			Attack[Left] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy1AttackLeft, 162, 95), 0,0,16,0, true, 70, true);
+			Attack[Right] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy1AttackRight,162, 95), 0,0,16,0, true, 70, true);
+			Attack[Up] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy1AttackUp, 162, 95), 0,0,16,0, true, 70, true);
+			Attack[Down] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy1AttackDown, 162, 95), 0,0,16,0, true, 70, true);
+			Attack[UpLeft] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy1AttackUpLeft, 162, 95), 0,0,16,0, true, 70, true);
+			Attack[UpRight] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy1AttackUpRight, 162, 95), 0,0,16,0, true, 70, true);
+			Attack[DownLeft] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy1AttackDownLeft, 162, 95), 0,0,16,0, true, 70, true);
+			Attack[DownRight] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy1AttackDownRight, 162, 95), 0,0,16,0, true, 70, true);
+			break;
+		case 3:
+			walking[Left] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy2WalkLeft, 117, 75), 0,0,7,0, true, 70, true);
+			walking[Right] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy2WalkRight,117, 75), 0,0,7,0, true, 70, true);
+			walking[Up] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy2WalkUp, 117, 75), 0,0,7,0, true, 70, true);
+			walking[Down] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy2WalkDown, 117, 75), 0,0,7,0, true, 70, true);
+			walking[UpLeft] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy2WalkUpLeft, 117, 75), 0,0,7,0, true, 70, true);
+			walking[UpRight] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy2WalkUpRight, 117, 75), 0,0,7,0, true, 70, true);
+			walking[DownLeft] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy2WalkDownLeft, 117, 75), 0,0,7,0, true, 70, true);
+			walking[DownRight] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy2WalkDownRight, 117, 75), 0,0,7,0, true, 70, true);
+			
+			Attack[Left] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy2AttackLeft, 186, 112), 0,0,15,0, true, 70, true);
+			Attack[Right] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy2AttackRight,186, 112), 0,0,15,0, true, 70, true);
+			Attack[Up] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy2AttackUp, 186, 112), 0,0,15,0, true, 70, true);
+			Attack[Down] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy2AttackDown, 186, 112), 0,0,15,0, true, 70, true);
+			Attack[UpLeft] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy2AttackUpLeft, 186, 112), 0,0,15,0, true, 70, true);
+			Attack[UpRight] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy2AttackUpRight, 186, 112), 0,0,15,0, true, 70, true);
+			Attack[DownLeft] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy2AttackDownLeft, 186, 112), 0,0,15,0, true, 70, true);
+			Attack[DownRight] = new Animation(ResourceManager.getSpriteSheet(RogueGame.Enemy2AttackDownRight, 186, 112), 0,0,15,0, true, 70, true);
+		}
 	}
 	
 	/* Setters */
@@ -104,8 +157,18 @@ public class Actor extends IsoEntity {
 		this.setPosition(setx * RogueGame.TILE_SIZE, sety * RogueGame.TILE_SIZE);
 	}
 	
-	public void setTypeAttributes(){
-		//TODO
+	public void setTypeAttributes(int type2){
+		addAnimation(walking[current]);
+		currentAnimation = walking[current];
+		setZHeightFromIsoImage(walking[current].getCurrentFrame(), 32);
+		switch(type2){
+		case 2:
+			this.setPosition(new Vector(15*RogueGame.TILE_SIZE,15*RogueGame.TILE_SIZE));
+			break;
+		case 3: 
+			this.setPosition(new Vector(15*RogueGame.TILE_SIZE,10*RogueGame.TILE_SIZE));
+			break;
+		}
 	}
 	
 	/* Actions */
