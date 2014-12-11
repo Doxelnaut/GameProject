@@ -166,6 +166,12 @@ public class PlayingState extends BasicGameState {
 
 		}
 		
+		RogueGame.enemy1 = new Actor(RogueGame.WORLD_SIZE,2);
+		RogueGame.blocks.add(RogueGame.enemy1);
+		RogueGame.enemy2 = new Actor(RogueGame.WORLD_SIZE,3);
+		RogueGame.blocks.add(RogueGame.enemy2);
+		
+		
 		//create walls and blocks array for efficient collision detection.
 		for (IsoEntity ie : RogueGame.walls) {
 			RogueGame.wallsandblocks.add(ie);
@@ -330,6 +336,8 @@ if(secondPlayer){
 				}
 			}
 			if (RogueGame.fireball.done()) RogueGame.fireball = null;
+				RogueGame.wallsandblocks.add(RogueGame.enemy1);
+			
 		}
 				
 	}

@@ -123,6 +123,43 @@ public class RogueGame extends StateBasedGame{
 	public static final String fireCrouchDownLeft = "resource/Crouch_Fire_12(4,55,73).png";
 	public static final String fireCrouchDownRight = "resource/Crouch_Fire_0(4,44,72).png";
 	
+	public static final String Enemy1WalkLeft = "resource/Enemy1_walk.png";
+	public static final String Enemy1WalkRight = "resource/Enemy1_walk.png";
+	public static final String Enemy1WalkUp = "resource/Enemy1_walk.png";
+	public static final String Enemy1WalkDown = "resource/Enemy1_walk.png";
+	public static final String Enemy1WalkUpLeft = "resource/Enemy1_walk.png";
+	public static final String Enemy1WalkUpRight = "resource/Enemy1_walk.png";
+	public static final String Enemy1WalkDownLeft = "resource/Enemy1_walk.png";
+	public static final String Enemy1WalkDownRight = "resource/Enemy1_walk.png";
+	
+	public static final String Enemy1AttackLeft = "resource/Enemy1_Attack.png";
+	public static final String Enemy1AttackRight = "resource/Enemy1_Attack.png";
+	public static final String Enemy1AttackUp = "resource/Enemy1_Attack.png";
+	public static final String Enemy1AttackDown = "resource/Enemy1_Attack.png";
+	public static final String Enemy1AttackUpLeft = "resource/Enemy1_Attack.png";
+	public static final String Enemy1AttackUpRight = "resource/Enemy1_Attack.png";
+	public static final String Enemy1AttackDownLeft = "resource/Enemy1_Attack.png";
+	public static final String Enemy1AttackDownRight = "resource/Enemy1_Attack.png";
+	
+	public static final String Enemy2WalkLeft = "resource/Enemy2_walk.png";
+	public static final String Enemy2WalkRight = "resource/Enemy2_walk.png";
+	public static final String Enemy2WalkUp = "resource/Enemy2_walk.png";
+	public static final String Enemy2WalkDown = "resource/Enemy2_walk.png";
+	public static final String Enemy2WalkUpLeft = "resource/Enemy2_walk.png";
+	public static final String Enemy2WalkUpRight = "resource/Enemy2_walk.png";
+	public static final String Enemy2WalkDownLeft = "resource/Enemy2_walk.png";
+	public static final String Enemy2WalkDownRight = "resource/Enemy2_walk.png";
+	
+	public static final String Enemy2AttackLeft = "resource/Enemy2_Attack.png";
+	public static final String Enemy2AttackRight = "resource/Enemy2_Attack.png";
+	public static final String Enemy2AttackUp = "resource/Enemy2_Attack.png";
+	public static final String Enemy2AttackDown = "resource/Enemy2_Attack.png";
+	public static final String Enemy2AttackUpLeft = "resource/Enemy2_Attack.png";
+	public static final String Enemy2AttackUpRight = "resource/Enemy2_Attack.png";
+	public static final String Enemy2AttackDownLeft = "resource/Enemy2_Attack.png";
+	public static final String Enemy2AttackDownRight = "resource/Enemy2_Attack.png";
+	
+	
 	public static final String fireballSheetPath = "resource/fireball.png";
 	public static final String explosionSheetPath   = "resource/explosion.png";
 	//public static final String ouchSoundPath = "resource/ouch.wav";
@@ -148,6 +185,8 @@ public class RogueGame extends StateBasedGame{
 	
 	public static Player player = null;
 	public static Player player2 = null;
+	public static Actor enemy1 = null;
+	public static Actor enemy2 = null;
 	
 	public RogueGame(String title, float width, float height) {
 		super(title);
@@ -161,7 +200,6 @@ public class RogueGame extends StateBasedGame{
 		walls = new ArrayList<IsoEntity>(100);
 		wallsandblocks = new ArrayList<IsoEntity>(200);
 		stop = new ArrayList<IsoEntity>(100);
-		visible = new ArrayList<IsoEntity>(100);		
 	}
 	
 	@Override
@@ -192,6 +230,38 @@ public class RogueGame extends StateBasedGame{
 		ResourceManager.loadImage(WalkUpRight);
 		ResourceManager.loadImage(WalkDownLeft);
 		ResourceManager.loadImage(WalkDownRight);
+		ResourceManager.loadImage(Enemy1WalkLeft);
+		ResourceManager.loadImage(Enemy1WalkRight);
+		ResourceManager.loadImage(Enemy1WalkUp);
+		ResourceManager.loadImage(Enemy1WalkDown);
+		ResourceManager.loadImage(Enemy1WalkUpLeft);
+		ResourceManager.loadImage(Enemy1WalkUpRight);
+		ResourceManager.loadImage(Enemy1WalkDownLeft);
+		ResourceManager.loadImage(Enemy1WalkDownRight);
+		ResourceManager.loadImage(Enemy2WalkLeft);
+		ResourceManager.loadImage(Enemy2WalkRight);
+		ResourceManager.loadImage(Enemy2WalkUp);
+		ResourceManager.loadImage(Enemy2WalkDown);
+		ResourceManager.loadImage(Enemy2WalkUpLeft);
+		ResourceManager.loadImage(Enemy2WalkUpRight);
+		ResourceManager.loadImage(Enemy2WalkDownLeft);
+		ResourceManager.loadImage(Enemy2WalkDownRight);
+		ResourceManager.loadImage(Enemy1AttackLeft);
+		ResourceManager.loadImage(Enemy1AttackRight);
+		ResourceManager.loadImage(Enemy1AttackUp);
+		ResourceManager.loadImage(Enemy1AttackDown);
+		ResourceManager.loadImage(Enemy1AttackUpLeft);
+		ResourceManager.loadImage(Enemy1AttackUpRight);
+		ResourceManager.loadImage(Enemy1AttackDownLeft);
+		ResourceManager.loadImage(Enemy1AttackDownRight);
+		ResourceManager.loadImage(Enemy2AttackLeft);
+		ResourceManager.loadImage(Enemy2AttackRight);
+		ResourceManager.loadImage(Enemy2AttackUp);
+		ResourceManager.loadImage(Enemy2AttackDown);
+		ResourceManager.loadImage(Enemy2AttackUpLeft);
+		ResourceManager.loadImage(Enemy2AttackUpRight);
+		ResourceManager.loadImage(Enemy2AttackDownLeft);
+		ResourceManager.loadImage(Enemy2AttackDownRight);
 		ResourceManager.loadImage(fireballSheetPath);
 		//ResourceManager.loadImage(explosionSheetPath);
 		ResourceManager.loadImage(host_background);
