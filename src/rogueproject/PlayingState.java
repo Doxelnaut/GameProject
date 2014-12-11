@@ -312,7 +312,7 @@ public class PlayingState extends BasicGameState {
 			RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE)) );
 			break;
 		case 3: // potions
-			RogueGame.blocks.add(new Items(RogueGame.WORLD_SIZE,new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE), 1) );
+			RogueGame.blocks.add(new Items(RogueGame.WORLD_SIZE,new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE), 2) );
 			RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE)) );
 			break;
 		default:
