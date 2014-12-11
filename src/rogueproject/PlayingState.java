@@ -165,9 +165,6 @@ public class PlayingState extends BasicGameState {
 
 		}
 		
-		RogueGame.camX = 48;
-		RogueGame.camY = 360;
-		
 		//create walls and blocks array for efficient collision detection.
 		for (IsoEntity ie : RogueGame.walls) {
 			RogueGame.wallsandblocks.add(ie);
@@ -338,8 +335,8 @@ public class PlayingState extends BasicGameState {
 		//you are second player
 		if(secondPlayer){
 			RogueGame.player2.setPosition(RG.state.player2.getPos());
-			RogueGame.camX = RogueGame.player2.getPosition().getX() - RogueGame.VIEWPORT_SIZE_X / 2;
-			RogueGame.camY = RogueGame.player2.getPosition().getX() + RogueGame.VIEWPORT_SIZE_Y / 2;
+			RogueGame.camX = RogueGame.player2.getX() - RogueGame.VIEWPORT_SIZE_X / 2;
+			RogueGame.camY = RogueGame.player2.getY() - RogueGame.VIEWPORT_SIZE_Y / 2;
 			RogueGame.player2.halt();
 			//update first players model
 			RogueGame.player.setPosition(RG.state.player.getPos());
@@ -351,8 +348,8 @@ public class PlayingState extends BasicGameState {
 		//you are first player
 		else{
 			RogueGame.player.setPosition(RG.state.player.getPos());
-			//RogueGame.camX = RogueGame.playerX - RogueGame.VIEWPORT_SIZE_X / 2;
-			//RogueGame.camY = RogueGame.playerY - RogueGame.VIEWPORT_SIZE_Y / 2;
+			RogueGame.camX = RogueGame.player.getX() - RogueGame.VIEWPORT_SIZE_X / 2;
+			RogueGame.camY = RogueGame.player.getY() - RogueGame.VIEWPORT_SIZE_Y / 2;
 			RogueGame.player.halt();
 			
 			//if You are first Player, and second player exists update player 2 location
