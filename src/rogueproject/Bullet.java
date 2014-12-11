@@ -1,29 +1,41 @@
 package rogueproject;
 
+import jig.Entity;
+import jig.ResourceManager;
 import jig.Vector;
 
 public class Bullet extends IsoEntity{
 
+	Vector velocity;
 	Vector domain;
-	Vector direction;
+	boolean active = true;
 	int speed = 1; // scale movement
 	
-	public Bullet(Vector wWorldSize, Vector wPosition, Vector wDirection) {
-		super(wWorldSize, RogueGame.TILE_SIZE);
+	public Bullet(Vector wWorldSize, Vector wPosition) {
+		super(wWorldSize,RogueGame.TILE_SIZE);
+		setPosition(wPosition.getX(),wPosition.getY());
+		velocity = new Vector(0f,.01f);
 		domain = wWorldSize;
-		setPosition(wPosition);
-		direction = wDirection;
+		addImageWithBoundingBox(ResourceManager
+				.getImage(RogueGame.bulletResource));
 	}
 	
-	public void update(float n) {
-		setPosition(getPosition().add(direction).scale(speed));
+	public void update(float delta) {
+		//setPosition(getPosition().add(direction).scale(speed));
+		translate(velocity.scale(delta));
 	}
 	
-	public boolean done() {
-		
-		if (wPosition.getX() < 0 || wPosition.getX() > domain.getX() ||
-				wPosition.getY() < 0 || wPosition.getY() > domain.getY()) return true;
-		return false;
+	public boolean isActive() {
+	/*	
+		if (this.getX() < 0 || this.getX() > domain.getX() ||
+				this.getY() < 0 || this.getY() > domain.getY()) active = false;
+		*/
+		return active;
 	}
+	
+	public void setActiveVar(boolean a){
+		active = a;
+	}
+	
 	
 }

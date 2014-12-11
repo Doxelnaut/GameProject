@@ -1,5 +1,6 @@
 package rogueproject;
 
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -210,6 +211,9 @@ public class PlayingState extends BasicGameState {
 		g.translate(-RogueGame.camX, -RogueGame.camY);		
 
 		
+		for(Bullet b : RG.bullets)
+			b.render(g);
+		
 	}
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta)
@@ -228,14 +232,15 @@ public class PlayingState extends BasicGameState {
 		
 		checkForPlayerJoin();
 		updatePlayersPosition();
+		updateBullets();
 		
 		//build and execute command from user
 		getCommand(input);
 		
 		//build clientState and send to server
-		buildClientState();
+		buildClientState(delta);
 		
-				
+/*				
 		if (input.isKeyPressed(Input.KEY_LCONTROL)) {
 			RogueGame.player.debugThis = !RogueGame.player.debugThis;
 			if (RogueGame.fireball != null) RogueGame.fireball.debugThis = RogueGame.player.debugThis;
@@ -286,7 +291,7 @@ public class PlayingState extends BasicGameState {
 			}
 			if (RogueGame.fireball.done()) RogueGame.fireball = null;
 		}
-				
+*/				
 	}
 
 	public int getID() {
@@ -367,7 +372,7 @@ public class PlayingState extends BasicGameState {
 	//gets user input, and executes command.
 	void getCommand(Input input){
 		InputHandler inputHandler = new InputHandler();
-		ArrayList<Command> commands = inputHandler.handleInput(input);
+		ArrayList<Command> commands = inputHandler.handleInput(input,RG);
 
 		if(commands.size() > 0){
 			for(Command c : commands){
@@ -377,7 +382,7 @@ public class PlayingState extends BasicGameState {
 	}
 //-----------------------------------------------------------------------------------------------------------------------------
 	
-	void buildClientState(){
+	void buildClientState(int delta){
 		
 		//build state representing first player
 		if(!secondPlayer){
@@ -392,6 +397,16 @@ public class PlayingState extends BasicGameState {
 			newState.playerNewState.setDirection(RogueGame.player2.current);
 		}
 		
+		newState.delta = delta;
+		
+		newState.bullets.clear();
+		NetVector temp;
+		for(Bullet b : RG.bullets){
+			temp = new NetVector();
+			temp.setPos(new Vector(b.getX(),b.getY()));
+			newState.bullets.add(temp);
+		}
+		
 		
 		//send clientState to server
 		try {
@@ -402,6 +417,14 @@ public class PlayingState extends BasicGameState {
 			System.out.println("Error Writing game state to client.");
 		}
 	}
+//--------------------------------------------------------------------------------------------------------------------------------
 	
+	void updateBullets(){
+		RG.bullets.clear();
+		//add bullets updated from server
+		for(NetVector b : RG.state.bullets)
+			RG.bullets.add(new Bullet(RogueGame.WORLD_SIZE, b.getPos()));
+		
+	}
 	
 }
