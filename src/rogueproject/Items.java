@@ -22,11 +22,59 @@ public class Items  extends IsoEntity{
 	int attack_increase;
 	int speed_increase;
 	float duration;
+	SpriteSheet x = ResourceManager.getSpriteSheet(RogueGame.potions, 29, 29);
 	
 	public Items(Vector wWorldSize, Vector wPosition,int type) {
 		super(wWorldSize, RogueGame.TILE_SIZE);
-		setType(type);
-		
+		this.type = type;
+		if(type == 0){
+			potion = x.getSubImage(1, 0);
+			addImage(potion);
+			setZHeightFromIsoImage(potion);
+			setPosition(wPosition);
+			
+			name = "healing";
+			healing_amount = 10;
+			shield_amount = 0;
+			speed_increase = 0;
+			duration = 0;
+			used = false;
+			picked_up = false;
+		}
+		else if(type == 1){
+			potion = x.getSubImage(5, 1);
+
+			addImage(potion);
+			setZHeightFromIsoImage(potion);
+			setPosition(wPosition);
+			
+			name = "strength";
+			healing_amount = 0;
+			shield_amount = 10;
+			attack_increase = 10;
+			speed_increase = 0;
+			duration = 15;
+			used = false;
+			picked_up = false;
+		}
+		else{
+
+			potion = x.getSubImage(2, 2);
+
+			addImage(potion);
+			setZHeightFromIsoImage(potion);
+			setPosition(wPosition);
+			
+			name = "energy";
+			healing_amount = 0;
+			shield_amount = 0;
+			attack_increase = 0;
+			speed_increase = 2;
+			duration = 15;
+			used = false;
+			picked_up = false;
+		}
+		//setTypeAttributes();
 	}
 	
 	protected boolean isPicked_up() {return picked_up;}
@@ -43,9 +91,8 @@ public class Items  extends IsoEntity{
 		
 		return true;
 	}
-	public void setTypeAttributes(){
-		SpriteSheet x = ResourceManager.getSpriteSheet(RogueGame.potions, 29, 29);
-		switch(this.getType()){
+	public void setTypeAttributes(int type){
+		switch(type){
 		case 0:
 			
 			potion = x.getSubImage(1, 0);
@@ -78,6 +125,7 @@ public class Items  extends IsoEntity{
 			duration = 15;
 			used = false;
 			picked_up = false;
+			break;
 			
 		case 3:
 			
@@ -95,6 +143,7 @@ public class Items  extends IsoEntity{
 			duration = 15;
 			used = false;
 			picked_up = false;
+			break;
 			
 		default:
 			break;
