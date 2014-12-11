@@ -130,6 +130,8 @@ public class RogueGame extends StateBasedGame{
 	public static final String servName = "127.0.0.1";
 	
 	public static final int WARRIOR = 1;
+	public static final int Enemy1 = 2;
+	public static final int Enemy2 = 3;
 	
 	ArrayList<IsoEntity> actors;
 	public static ArrayList<IsoEntity> ground;
@@ -137,6 +139,7 @@ public class RogueGame extends StateBasedGame{
 	public static ArrayList<IsoEntity> walls;
 	public static ArrayList<IsoEntity> wallsandblocks;
 	public static ArrayList<IsoEntity> stop;
+	public static ArrayList<IsoEntity> visible;
 	public static Fireball fireball;
 
 	GameState state = new GameState();
@@ -158,7 +161,7 @@ public class RogueGame extends StateBasedGame{
 		walls = new ArrayList<IsoEntity>(100);
 		wallsandblocks = new ArrayList<IsoEntity>(200);
 		stop = new ArrayList<IsoEntity>(100);
-				
+		visible = new ArrayList<IsoEntity>(100);		
 	}
 	
 	@Override
