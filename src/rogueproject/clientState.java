@@ -1,6 +1,7 @@
 package rogueproject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import jig.Vector;
 
@@ -17,6 +18,8 @@ public class clientState implements Serializable{
 	NetVector playerNewState;
 	
 	int playerNum = 0;
+	int delta;
+	ArrayList<NetVector> bullets = new ArrayList<NetVector>();
 	
 	clientState(){
 		playerNewState = new NetVector();

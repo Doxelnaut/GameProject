@@ -91,6 +91,7 @@ public class IsoEntity extends Entity implements Comparable<IsoEntity> {
 		super.setPosition(p);
 
 	}
+	
 	/**
 	 * @return the position in the world coordinate system
 	 */

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.pathfinding.AStarPathFinder;
 import org.newdawn.slick.util.pathfinding.Mover;
 import org.newdawn.slick.util.pathfinding.Path;
@@ -196,8 +197,10 @@ public class Actor extends IsoEntity {
 		// TODO: choose and create animation based on direction.
 	}
 	
-	public void shoot(Vector direction){
+	public void shoot(Vector direction, StateBasedGame game){
 		//TODO: shoot bullets
+		RogueGame RG = (RogueGame)game;
+		RG.bullets.add(new Bullet(RogueGame.WORLD_SIZE, direction));
 	}
 	
 	public void getWalkingAnimation(){
