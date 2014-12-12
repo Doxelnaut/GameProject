@@ -182,7 +182,8 @@ public class RogueGame extends StateBasedGame{
 	GameState state = new GameState();
 	
 	public static int[][]map = new int[(int)WORLD_SIZE_X][(int)WORLD_SIZE_Y];
-	
+	public static int[][]walkable = new int[(int)WORLD_SIZE_X][(int)WORLD_SIZE_Y];
+
 	public static Player player = null;
 	public static Player player2 = null;
 	public static Actor enemy1 = null;
