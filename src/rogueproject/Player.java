@@ -16,6 +16,7 @@ public class Player extends Actor {
 	Animation currentAnimation;
 	boolean crouch = false;
 	static boolean shooting = false;
+	static boolean secondPlayer = false;
 	double theta;
 	
 //	public static final int WAIT = -1, N = 0, E = 1, S = 2, W = 3, NW = 4, NE = 5, SE = 6, SW = 7, REST = 8;
@@ -133,11 +134,17 @@ public class Player extends Actor {
 		
 		// Set movement in world coordinates using a unit vector that points in any one
 		// of the cardinal or diagonal directions. 
+		int theta = direction * 45; // angle of directional unit vector from North.
+		this.lastWPosition = this.getPosition();
 		theta = direction * 45; // angle of directional unit vector from North.
 		Vector unitDirection = new Vector(0, -1);
 		unitDirection = unitDirection.rotate(theta);
 		this.setPosition(this.getPosition().add(unitDirection.scale(3)));
 		this.getWalkingAnimation(direction);
+		
+		if(!canMove()){
+			ungo();
+		}
 				
 		// TODO: basic movement handled. Need to check for collision first, though.
 		// TODO: choose and create animation based on direction.
@@ -287,9 +294,13 @@ public class Player extends Actor {
 		IsoEntity other;
 		for (Iterator<IsoEntity> iie = RogueGame.stop.iterator(); iie.hasNext(); ) {
 			other = iie.next();
-			
-			if (RogueGame.player.collides(other) != null) {
-				return false;
+			if(secondPlayer){
+				
+				if (RogueGame.player2.collides(other) != null) return false;
+			}
+			else{
+				
+				if (RogueGame.player.collides(other) != null) return false;
 			}
 			
 		}

@@ -144,7 +144,7 @@ public class PlayingState extends BasicGameState {
 
 		if(RG.state.secondPlayer == false){
 			//create player
-			RogueGame.player = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),1);
+			RogueGame.player = new Player(RogueGame.WORLD_SIZE, new Vector(3*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),1);
 			RogueGame.blocks.add(RogueGame.player);
 			player = RogueGame.player;
 			newState = new clientState(1);
@@ -159,6 +159,7 @@ public class PlayingState extends BasicGameState {
 			//create 2nd player
 			RogueGame.player2 = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),1);
 			RogueGame.blocks.add(RogueGame.player2);
+			RogueGame.player2.secondPlayer = true;
 			secondPlayer = true;
 			player = RogueGame.player2;
 			newState = new clientState(2);
@@ -351,6 +352,13 @@ public class PlayingState extends BasicGameState {
 
 		}
 		 */				
+		 PathFinder maze = new PathFinder(RogueGame.map, RogueGame.enemy2,RogueGame.player);
+		 
+		 
+    //   boolean solved = maze.solve(RogueGame.player,RogueGame.enemy1);
+     //  System.out.println("Solved: " + solved);
+      // System.out.println(maze.toString());
+//				
 	}
 
 	public int getID() {
@@ -365,23 +373,25 @@ public class PlayingState extends BasicGameState {
 	public void createMapEntities(int row, int col){
 		switch(RogueGame.map[row][col]){
 		case 0: // ground tiles
-			RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE)));
+			RogueGame.walkable[row][col] = 1;
 			break;
 		case 1: // wall tiles
 			RogueGame.walls.add(new Block(RogueGame.WORLD_SIZE,new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE), true) );
 			RogueGame.stop.add(new Ground(RogueGame.WORLD_SIZE,new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE)) );
+			RogueGame.walkable[row][col] = 0;
 			break;
 		case 2: // rock tiles
 			RogueGame.blocks.add(new Block(RogueGame.WORLD_SIZE,new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE), false) );
-			RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE)) );
+			RogueGame.walkable[row][col] = 0;
 			break;
 		case 3: // potions
 			RogueGame.blocks.add(new Items(RogueGame.WORLD_SIZE,new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE), 2) );
-			RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE)) );
+			RogueGame.walkable[row][col] = 0;
 			break;
 		default:
 			break;
 		}
+		RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE)) );
 	}
 	//------------------------------------------------------------------------------------------------------------------	
 	void checkForPlayerJoin(){
@@ -443,40 +453,10 @@ public class PlayingState extends BasicGameState {
 		}
 		System.out.println("tx: " + tx + " ty: " + ty);
 		System.out.println("row " + row + " col: " + col);
-		//		switch(RogueGame.map[row][col]){
-		//		case 0: // ground tiles
-		//			RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE)));
-		//			break;
-		//		case 1: // wall tiles
-		//			RogueGame.walls.add(new Block(RogueGame.WORLD_SIZE,new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE), true) );
-		//			RogueGame.stop.add(new Ground(RogueGame.WORLD_SIZE,new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE)) );
-		//			break;
-		//		case 2: // rock tiles
-		//			RogueGame.blocks.add(new Block(RogueGame.WORLD_SIZE,new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE), false) );
-		//			RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE)) );
-		//			break;
-		//		case 3: // potions
-		//			RogueGame.blocks.add(new Items(RogueGame.WORLD_SIZE,new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE), 2) );
-		//			RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE)) );
-		//			break;
-		//		default:
-		//			break;
-		//		}
 	}
-	//		for (IsoEntity ie : RogueGame.ground) {
-	//			System.out.println(ie.wPosition.getX());
-	//			//ie.render(g);
-	//		}
-	//		
-	//		Collections.sort(RogueGame.wallsandblocks);
-	//		for (IsoEntity ie : RogueGame.wallsandblocks) {
-	//			ie.render(g);
-	//		}
-	//
-	//		if (RogueGame.fireball != null) RogueGame.fireball.render(g);
-	//		
 
 	//----------------------------------------------------------------------------------------------------------------------------
+
 
 	//gets user input, and executes command.
 	void getCommand(Input input){
