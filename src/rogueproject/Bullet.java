@@ -8,12 +8,14 @@ public class Bullet extends IsoEntity{
 
 	Vector velocity;
 	Vector domain;
+	Vector originalPos; //used to prevent bullets from being 
 	boolean active = true;
 	int speed = 1; // scale movement
 	
 	public Bullet(Vector wWorldSize, Vector wPosition) {
 		super(wWorldSize,RogueGame.TILE_SIZE);
-		setPosition(wPosition.getX(),wPosition.getY());
+		//super(wPosition.getX(),wPosition.getY());
+		setPosition(wPosition);
 		velocity = new Vector(0f,.01f);
 		domain = wWorldSize;
 		addImageWithBoundingBox(ResourceManager

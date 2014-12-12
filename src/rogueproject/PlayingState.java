@@ -403,7 +403,7 @@ public class PlayingState extends BasicGameState {
 		NetVector temp;
 		for(Bullet b : RG.bullets){
 			temp = new NetVector();
-			temp.setPos(new Vector(b.getX(),b.getY()));
+			temp.setPos(b.getPosition());
 			newState.bullets.add(temp);
 		}
 		
