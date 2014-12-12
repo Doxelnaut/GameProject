@@ -121,6 +121,7 @@ public class PlayingState extends BasicGameState {
 					RogueGame.map[row][col] = Integer.valueOf(parts[col]); // fill 2D map array
 					//System.out.print(RogueGame.map[row][col] + " ");
 					createMapEntities(row, col); // fill the entity arrays
+					//updateVisibleBlockList(row,col);
 				}
 				System.out.print("\n");
 				row++;
@@ -165,8 +166,11 @@ public class PlayingState extends BasicGameState {
 
 		}
 		
-		RogueGame.camX = 48;
-		RogueGame.camY = 360;
+		RogueGame.enemy1 = new Actor(RogueGame.WORLD_SIZE,2);
+		RogueGame.blocks.add(RogueGame.enemy1);
+		RogueGame.enemy2 = new Actor(RogueGame.WORLD_SIZE,3);
+		RogueGame.blocks.add(RogueGame.enemy2);
+		
 		
 		//create walls and blocks array for efficient collision detection.
 		for (IsoEntity ie : RogueGame.walls) {
@@ -186,31 +190,75 @@ public class PlayingState extends BasicGameState {
 		}
 		
 		g.translate(-RogueGame.camX, -RogueGame.camY);		
-
-		for (IsoEntity ie : RogueGame.ground) {
-			ie.render(g);
+if(secondPlayer){
+	for (IsoEntity ie : RogueGame.ground) {
+		if(ie.getX() >= ((RogueGame.player2.getX() - RogueGame.VIEWPORT_SIZE_X/2)-16) && ie.getX() <= ((RogueGame.player2.getX() + RogueGame.VIEWPORT_SIZE_X/2) +16 )){
+			if(ie.getY() >= ((RogueGame.player2.getY() - RogueGame.VIEWPORT_SIZE_Y/2)-16) && ie.getY() <= ((RogueGame.player2.getY() + RogueGame.VIEWPORT_SIZE_Y/2)+16)){
+				ie.render(g);
+			}
 		}
-		
-		Collections.sort(RogueGame.wallsandblocks);
-		for (IsoEntity ie : RogueGame.wallsandblocks) {
-			ie.render(g);
+	}
+	
+	Collections.sort(RogueGame.wallsandblocks);
+	for (IsoEntity ie : RogueGame.wallsandblocks) {
+		if(ie.getX() >= ((RogueGame.player2.getX() - RogueGame.VIEWPORT_SIZE_X/2)-16) && ie.getX() <= ((RogueGame.player2.getX() + RogueGame.VIEWPORT_SIZE_X/2) +16 )){
+			if(ie.getY() >= ((RogueGame.player2.getY() - RogueGame.VIEWPORT_SIZE_Y/2)-16) && ie.getY() <= ((RogueGame.player2.getY() + RogueGame.VIEWPORT_SIZE_Y/2)+16)){
+				ie.render(g);						
+			}
 		}
-
-		if (RogueGame.fireball != null) RogueGame.fireball.render(g);
-		g.translate(RogueGame.camX, RogueGame.camY);		
-
-		if(RogueGame.player != null){
-			g.drawString("Level: " + (int)RogueGame.player.getLevel() + 
-					" Health: " + (int)RogueGame.player.getHitPoints() + 
-					"/" + (int)RogueGame.player.getMaxHitPoints() +  
-					" Attack: " + (int)RogueGame.player.getAttack() + 
-					" Armor: " + (int)RogueGame.player.getArmor() + 
-					" Experience: " + (int)RogueGame.player.getExp()
-					, 100 , 10);
-			g.drawString("Dungeon Level: " , 100, 25);
+	}
+	
+	if (RogueGame.fireball != null) RogueGame.fireball.render(g);
+	g.translate(RogueGame.camX, RogueGame.camY);		
+	
+	if(RogueGame.player2 != null){
+		g.drawString("Level: " + (int)RogueGame.player2.getLevel() + 
+				" Health: " + (int)RogueGame.player2.getHitPoints() + 
+				"/" + (int)RogueGame.player2.getMaxHitPoints() +  
+				" Attack: " + (int)RogueGame.player2.getAttack() + 
+				" Armor: " + (int)RogueGame.player2.getArmor() + 
+				" Experience: " + (int)RogueGame.player2.getExp()
+				, 100 , 10);
+		g.drawString("Dungeon Level: " , 100, 25);
+	}
+	
+	g.translate(-RogueGame.camX, -RogueGame.camY);		
+	
+}else{
+	for (IsoEntity ie : RogueGame.ground) {
+		if(ie.getX() >= ((RogueGame.player.getX() - RogueGame.VIEWPORT_SIZE_X/2)-16) && ie.getX() <= ((RogueGame.player.getX() + RogueGame.VIEWPORT_SIZE_X/2) +16 )){
+			if(ie.getY() >= ((RogueGame.player.getY() - RogueGame.VIEWPORT_SIZE_Y/2)-16) && ie.getY() <= ((RogueGame.player.getY() + RogueGame.VIEWPORT_SIZE_Y/2)+16)){
+				ie.render(g);
+			}
 		}
-		
-		g.translate(-RogueGame.camX, -RogueGame.camY);		
+	}
+	
+	Collections.sort(RogueGame.wallsandblocks);
+	for (IsoEntity ie : RogueGame.wallsandblocks) {
+		if(ie.getX() >= ((RogueGame.player.getX() - RogueGame.VIEWPORT_SIZE_X/2)-16) && ie.getX() <= ((RogueGame.player.getX() + RogueGame.VIEWPORT_SIZE_X/2) +16 )){
+			if(ie.getY() >= ((RogueGame.player.getY() - RogueGame.VIEWPORT_SIZE_Y/2)-16) && ie.getY() <= ((RogueGame.player.getY() + RogueGame.VIEWPORT_SIZE_Y/2)+16)){
+				ie.render(g);						
+			}
+		}
+	}
+	
+	if (RogueGame.fireball != null) RogueGame.fireball.render(g);
+	g.translate(RogueGame.camX, RogueGame.camY);		
+	
+	if(RogueGame.player != null){
+		g.drawString("Level: " + (int)RogueGame.player.getLevel() + 
+				" Health: " + (int)RogueGame.player.getHitPoints() + 
+				"/" + (int)RogueGame.player.getMaxHitPoints() +  
+				" Attack: " + (int)RogueGame.player.getAttack() + 
+				" Armor: " + (int)RogueGame.player.getArmor() + 
+				" Experience: " + (int)RogueGame.player.getExp()
+				, 100 , 10);
+		g.drawString("Dungeon Level: " , 100, 25);
+	}
+	
+	g.translate(-RogueGame.camX, -RogueGame.camY);		
+	
+}
 
 		
 	}
@@ -231,7 +279,7 @@ public class PlayingState extends BasicGameState {
 		
 		checkForPlayerJoin();
 		updatePlayersPosition();
-		
+	//	updateVisibleBlockList();
 		//build and execute command from user
 		getCommand(input);
 		
@@ -288,6 +336,8 @@ public class PlayingState extends BasicGameState {
 				}
 			}
 			if (RogueGame.fireball.done()) RogueGame.fireball = null;
+				RogueGame.wallsandblocks.add(RogueGame.enemy1);
+			
 		}
 				
 	}
@@ -315,6 +365,8 @@ public class PlayingState extends BasicGameState {
 			RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE)) );
 			break;
 		case 3: // potions
+			RogueGame.blocks.add(new Items(RogueGame.WORLD_SIZE,new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE), 2) );
+			RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE)) );
 			break;
 		default:
 			break;
@@ -338,8 +390,8 @@ public class PlayingState extends BasicGameState {
 		//you are second player
 		if(secondPlayer){
 			RogueGame.player2.setPosition(RG.state.player2.getPos());
-			RogueGame.camX = RogueGame.player2.getPosition().getX() - RogueGame.VIEWPORT_SIZE_X / 2;
-			RogueGame.camY = RogueGame.player2.getPosition().getX() + RogueGame.VIEWPORT_SIZE_Y / 2;
+			RogueGame.camX = RogueGame.player2.getX() - RogueGame.VIEWPORT_SIZE_X / 2;
+			RogueGame.camY = RogueGame.player2.getY() - RogueGame.VIEWPORT_SIZE_Y / 2;
 			RogueGame.player2.halt();
 			//update first players model
 			RogueGame.player.setPosition(RG.state.player.getPos());
@@ -351,8 +403,8 @@ public class PlayingState extends BasicGameState {
 		//you are first player
 		else{
 			RogueGame.player.setPosition(RG.state.player.getPos());
-			//RogueGame.camX = RogueGame.playerX - RogueGame.VIEWPORT_SIZE_X / 2;
-			//RogueGame.camY = RogueGame.playerY - RogueGame.VIEWPORT_SIZE_Y / 2;
+			RogueGame.camX = RogueGame.player.getX() - RogueGame.VIEWPORT_SIZE_X / 2;
+			RogueGame.camY = RogueGame.player.getY() - RogueGame.VIEWPORT_SIZE_Y / 2;
 			RogueGame.player.halt();
 			
 			//if You are first Player, and second player exists update player 2 location
@@ -366,7 +418,55 @@ public class PlayingState extends BasicGameState {
 	}
 	
 //----------------------------------------------------------------------------------------------------------------------------
+	public void updateVisibleBlockList(int row, int col){
+		float tx;
+		float ty;
+		if(secondPlayer){
+			tx = RogueGame.player2.getX()/RogueGame.TILE_SIZE;
+			ty = RogueGame.player2.getY()/RogueGame.TILE_SIZE;
+		}
+		else{
+			tx = RogueGame.player.getX()/RogueGame.TILE_SIZE;
+			ty = RogueGame.player.getY()/RogueGame.TILE_SIZE;
+		
+		}
+			System.out.println("tx: " + tx + " ty: " + ty);
+			System.out.println("row " + row + " col: " + col);
+//		switch(RogueGame.map[row][col]){
+//		case 0: // ground tiles
+//			RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE)));
+//			break;
+//		case 1: // wall tiles
+//			RogueGame.walls.add(new Block(RogueGame.WORLD_SIZE,new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE), true) );
+//			RogueGame.stop.add(new Ground(RogueGame.WORLD_SIZE,new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE)) );
+//			break;
+//		case 2: // rock tiles
+//			RogueGame.blocks.add(new Block(RogueGame.WORLD_SIZE,new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE), false) );
+//			RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE)) );
+//			break;
+//		case 3: // potions
+//			RogueGame.blocks.add(new Items(RogueGame.WORLD_SIZE,new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE), 2) );
+//			RogueGame.ground.add(new Ground(RogueGame.WORLD_SIZE, new Vector(row*RogueGame.TILE_SIZE, col*RogueGame.TILE_SIZE)) );
+//			break;
+//		default:
+//			break;
+//		}
+	}
+//		for (IsoEntity ie : RogueGame.ground) {
+//			System.out.println(ie.wPosition.getX());
+//			//ie.render(g);
+//		}
+//		
+//		Collections.sort(RogueGame.wallsandblocks);
+//		for (IsoEntity ie : RogueGame.wallsandblocks) {
+//			ie.render(g);
+//		}
+//
+//		if (RogueGame.fireball != null) RogueGame.fireball.render(g);
+//		
 	
+//----------------------------------------------------------------------------------------------------------------------------
+
 	//gets user input, and executes command.
 	void getCommand(Input input){
 		InputHandler inputHandler = new InputHandler();
