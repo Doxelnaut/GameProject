@@ -2,7 +2,9 @@
 package rogueproject;
 
 
+
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import jig.Entity;
 import jig.ResourceManager;
@@ -162,6 +164,7 @@ public class RogueGame extends StateBasedGame{
 	
 	public static final String fireballSheetPath = "resource/fireball.png";
 	public static final String explosionSheetPath   = "resource/explosion.png";
+	public static final String bulletResource = "resource/bullet.png";
 	//public static final String ouchSoundPath = "resource/ouch.wav";
 	
 	public static final String servName = "127.0.0.1";
@@ -177,6 +180,8 @@ public class RogueGame extends StateBasedGame{
 	public static ArrayList<IsoEntity> wallsandblocks;
 	public static ArrayList<IsoEntity> stop;
 	public static ArrayList<IsoEntity> visible;
+	public ArrayList<Bullet> bullets;
+
 	public static Fireball fireball;
 
 	GameState state = new GameState();
@@ -201,6 +206,8 @@ public class RogueGame extends StateBasedGame{
 		walls = new ArrayList<IsoEntity>(100);
 		wallsandblocks = new ArrayList<IsoEntity>(200);
 		stop = new ArrayList<IsoEntity>(100);
+
+		bullets = new ArrayList<Bullet>(10);
 	}
 	
 	@Override
@@ -292,6 +299,7 @@ public class RogueGame extends StateBasedGame{
 		ResourceManager.loadImage(fireCrouchUpRight);
 		ResourceManager.loadImage(fireCrouchDownLeft);
 		ResourceManager.loadImage(fireCrouchDownRight);
+		ResourceManager.loadImage(bulletResource);
 		//ResourceManager.loadImage(ouchSoundPath);
 
 		
@@ -330,6 +338,34 @@ public class RogueGame extends StateBasedGame{
 			this.state.player2.setDirection(playerState.playerNewState.getDirection());
 			this.state.player2.setCrouched(playerState.playerNewState.getCrouched());
 		}
+		
+		NetVector temp;
+		this.bullets.clear();
+		
+		for(NetVector b : playerState.bullets){
+			this.bullets.add(new Bullet(RogueGame.WORLD_SIZE, b.getPos()));
+		}
+		
+		//update bullet positions
+		for(Bullet b : this.bullets){
+			b.update(playerState.delta);
+		}
+		
+		for (Iterator<Bullet> i = this.bullets.iterator(); i.hasNext();) {
+			if (!i.next().isActive()) {
+				i.remove();
+			}
+		}
+		
+		state.bullets.clear();
+		for(Bullet b : this.bullets){
+			temp = new NetVector();
+			temp.setPos(new Vector(b.getX(),b.getY()));
+			//add bullet to state array to send to client
+			state.bullets.add(temp);
+		}
+		
+		
 	}
 	
 }
