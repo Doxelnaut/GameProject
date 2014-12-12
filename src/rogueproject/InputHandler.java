@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import jig.Vector;
 
 import org.newdawn.slick.Input;
+import org.newdawn.slick.state.StateBasedGame;
 
 public class InputHandler {
 
 	// Enumerated so rotations are multiples of direction integers
 	private static final int N = 0, NE=1, E=2, SE=3, S=4, SW=5, W=6, NW=7, CTRL=8;
+	
+	RogueGame RG;
 	
 	private MoveCommand key_w = new MoveCommand(N), 
 			key_a = new MoveCommand(W), 
@@ -21,13 +24,15 @@ public class InputHandler {
 			keys_sd = new MoveCommand(SE);
 	private CrouchCommand keys_c = new CrouchCommand();
 //			key_space = new MoveCommand(SHOOT) ,
-			//mouse_left/*, 
+	private ShootCommand mouse_left; 
 			//mouse_right = new RangeAttackCommand()*/;
 	
 	/**
 	 * 
 	 */
-	public ArrayList<Command> handleInput(Input input){
+	@SuppressWarnings("static-access")
+	public ArrayList<Command> handleInput(Input input,StateBasedGame game){
+		RG = (RogueGame)game;
 		ArrayList<Command> commands = new ArrayList<Command>();
 		if(input.isKeyDown(Input.KEY_W) && input.isKeyDown(Input.KEY_A)){
 			commands.add(keys_wa);
@@ -59,8 +64,8 @@ public class InputHandler {
 		if(input.isKeyPressed(Input.KEY_C)){ // consumes a single key press event, used to toggle crouching
 			commands.add(keys_c);
 		}
-		/*if(input.isButton1Pressed(Input.MOUSE_LEFT_BUTTON)){
-			mouse_left = new ShootCommand(new Vector(input.getMouseX(), input.getMouseY()));
+		if(input.isKeyDown(Input.KEY_F)){
+			mouse_left = new ShootCommand(RG.player.getPosition(),game);
 			commands.add(mouse_left);
 		}
 		/*else if(input.isButton3Pressed(Input.MOUSE_RIGHT_BUTTON)){
