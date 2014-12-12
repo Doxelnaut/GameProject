@@ -506,7 +506,8 @@ if(secondPlayer){
 		NetVector temp;
 		for(Bullet b : RG.bullets){
 			temp = new NetVector();
-			temp.setPos(b.getPosition());
+			temp.setPos(b.getEPosition());
+			temp.setDirection(b.direction);
 			newState.bullets.add(temp);
 		}
 		
@@ -526,7 +527,7 @@ if(secondPlayer){
 		RG.bullets.clear();
 		//add bullets updated from server
 		for(NetVector b : RG.state.bullets)
-			RG.bullets.add(new Bullet(RogueGame.WORLD_SIZE, b.getPos()));
+			RG.bullets.add(new Bullet(RogueGame.WORLD_SIZE, b.getPos(),b.getDirection(),0));
 		
 	}
 	

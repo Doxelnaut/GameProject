@@ -21,7 +21,7 @@ public class Player extends Actor {
 //	public static final int WAIT = -1, N = 0, E = 1, S = 2, W = 3, NW = 4, NE = 5, SE = 6, SW = 7, REST = 8;
 	private static final int Up = 0, UpRight=1, Right=2, DownRight=3, Down=4, DownLeft=5, Left=6, UpLeft=7, CTRL=8;
 
-	int current; // current direction used for animation
+	int current = Right; // current direction used for animation
 	int shootingDirection;
 	Vector wWorldSz;
 	Vector lastWPosition;
@@ -40,6 +40,7 @@ public class Player extends Actor {
 		setZHeightFromIsoImage(walking[current].getCurrentFrame(), 32);
 		setPosition(wPosition);
 		lastWPosition = wPosition;
+		theta = current * 45; // angle of directional unit vector from North.
 		}
 	
 	public void getTypeImage() {

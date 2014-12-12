@@ -342,7 +342,7 @@ public class RogueGame extends StateBasedGame{
 		this.bullets.clear();
 		
 		for(NetVector b : playerState.bullets){
-			this.bullets.add(new Bullet(RogueGame.WORLD_SIZE, b.getPos()));
+			this.bullets.add(new Bullet(RogueGame.WORLD_SIZE, b.getPos(),b.getDirection(),0));
 		}
 		
 		//update bullet positions
@@ -359,7 +359,8 @@ public class RogueGame extends StateBasedGame{
 		state.bullets.clear();
 		for(Bullet b : this.bullets){
 			temp = new NetVector();
-			temp.setPos(new Vector(b.getX(),b.getY()));
+			temp.setPos(b.getEPosition());
+			temp.setDirection(b.direction);
 			//add bullet to state array to send to client
 			state.bullets.add(temp);
 		}
