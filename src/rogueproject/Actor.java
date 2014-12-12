@@ -164,7 +164,7 @@ public class Actor extends IsoEntity {
 		setZHeightFromIsoImage(walking[current].getCurrentFrame(), 32);
 		switch(type2){
 		case 2:
-			this.setPosition(new Vector(15*RogueGame.TILE_SIZE,15*RogueGame.TILE_SIZE));
+			this.setPosition(new Vector(3*RogueGame.TILE_SIZE,2*RogueGame.TILE_SIZE));
 			break;
 		case 3: 
 			this.setPosition(new Vector(15*RogueGame.TILE_SIZE,10*RogueGame.TILE_SIZE));
@@ -190,7 +190,7 @@ public class Actor extends IsoEntity {
 		Vector unitDirection = new Vector(0, -1);
 		unitDirection = unitDirection.rotate(theta);
 		this.setPosition(this.getPosition().add(unitDirection.scale(5)));
-		
+	
 		this.getWalkingAnimation();
 				
 		// TODO: basic movement handled. Need to check for collision first, though.
