@@ -40,6 +40,7 @@ import org.newdawn.slick.state.StateBasedGame;
  */
 public class RogueGame extends StateBasedGame{
 
+	double theta;
 	public static final int STARTUPSTATE = 0;
 	public static final int PLAYINGSTATE = 1;
 	public static final int GAMEOVERSTATE = 2;
@@ -343,7 +344,7 @@ public class RogueGame extends StateBasedGame{
 		this.bullets.clear();
 		
 		for(NetVector b : playerState.bullets){
-			this.bullets.add(new Bullet(RogueGame.WORLD_SIZE, b.getPos(),b.getDirection(),0));
+			this.bullets.add(new Bullet(RogueGame.WORLD_SIZE, b.getPos(),b.theta,0));
 		}
 		
 		//update bullet positions
@@ -361,7 +362,7 @@ public class RogueGame extends StateBasedGame{
 		for(Bullet b : this.bullets){
 			temp = new NetVector();
 			temp.setPos(b.getEPosition());
-			temp.setDirection(b.direction);
+			temp.theta = b.theta;
 			//add bullet to state array to send to client
 			state.bullets.add(temp);
 		}

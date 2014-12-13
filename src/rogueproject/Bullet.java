@@ -12,16 +12,19 @@ public class Bullet extends IsoEntity{
 	Vector domain;
 	boolean active = true;
 	int speed = 1; // scale movement
-	int direction;
+	double theta;
 	
-	public Bullet(Vector wWorldSize, Vector wPosition, int d, int translate) {
+	public Bullet(Vector wWorldSize, Vector wPosition, double t, int translate) {
 		super(wWorldSize,RogueGame.TILE_SIZE);
-		if(translate == 1)
+		if(translate == 1){
+			wPosition = wPosition.setX(wPosition.getX() + 29); //moves the bullet over on top of player
+			wPosition = wPosition.setY(wPosition.getY() - 8);  //moves the bullet up to match player height
 			setPosition(wPosition);
+		}
 		else
 			setPositionNoTranslate(wPosition);
-		direction = d;
-		velocity = new Vector(0f,-.1f).rotate(direction * 45);
+		theta = t;
+		velocity = new Vector(0f,-.5f).setRotation(theta);
 		domain = wWorldSize;
 		addImageWithBoundingBox(ResourceManager
 				.getImage(RogueGame.bulletResource));

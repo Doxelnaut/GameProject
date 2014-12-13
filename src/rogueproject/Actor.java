@@ -200,7 +200,7 @@ public class Actor extends IsoEntity {
 	public void shoot(Vector direction, StateBasedGame game){
 		//TODO: shoot bullets
 		RogueGame RG = (RogueGame) game;
-		RG.bullets.add(new Bullet(RogueGame.WORLD_SIZE, direction, RG.player.current,1));
+		RG.bullets.add(new Bullet(RogueGame.WORLD_SIZE, direction, RG.theta,1));
 	}
 	
 	public void getWalkingAnimation(){

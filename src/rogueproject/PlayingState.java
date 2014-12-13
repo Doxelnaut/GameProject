@@ -1,6 +1,7 @@
 package rogueproject;
 
 
+import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -57,6 +58,8 @@ public class PlayingState extends BasicGameState {
 	float oldPosX;
 	float oldPosY;
 	boolean joined = false;
+	int mouseX;
+	int mouseY;
 	
 	//clientState used to send player's desired state to server
 	clientState newState;
@@ -210,7 +213,6 @@ if(secondPlayer){
 		}
 	}
 	
-	if (RogueGame.fireball != null) RogueGame.fireball.render(g);
 	g.translate(RogueGame.camX, RogueGame.camY);		
 	
 	if(RogueGame.player2 != null){
@@ -244,7 +246,6 @@ if(secondPlayer){
 		}
 	}
 	
-	if (RogueGame.fireball != null) RogueGame.fireball.render(g);
 	g.translate(RogueGame.camX, RogueGame.camY);		
 	
 	if(RogueGame.player != null){
@@ -444,6 +445,17 @@ if(secondPlayer){
 				c.execute(player);
 			}	
 		}
+		
+		mouseX = input.getMouseX();
+		mouseY = input.getMouseY();
+		
+		//created new vector with end point on top of player model
+		Vector p = new Vector(550,340);
+		//gets angle to mouse
+		RG.theta = p.angleTo(new Vector(mouseX,mouseY));
+				
+		
+		
 	}
 //-----------------------------------------------------------------------------------------------------------------------------
 	
@@ -469,7 +481,7 @@ if(secondPlayer){
 		for(Bullet b : RG.bullets){
 			temp = new NetVector();
 			temp.setPos(b.getEPosition());
-			temp.setDirection(b.direction);
+			temp.theta = b.theta;
 			newState.bullets.add(temp);
 		}
 		
@@ -489,7 +501,7 @@ if(secondPlayer){
 		RG.bullets.clear();
 		//add bullets updated from server
 		for(NetVector b : RG.state.bullets)
-			RG.bullets.add(new Bullet(RogueGame.WORLD_SIZE, b.getPos(),b.getDirection(),0));
+			RG.bullets.add(new Bullet(RogueGame.WORLD_SIZE, b.getPos(),b.theta,0));
 		
 	}
 	
