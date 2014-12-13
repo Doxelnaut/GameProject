@@ -11,7 +11,7 @@ public class PathFinder
 	static int startcol;
     static int endrow ;
     static int endcol;
-	
+	static boolean foundPath;
 	static 	int[][] myMaze;
 
 	/*these two variables keep track of the shortest path found so far*/
@@ -21,6 +21,7 @@ public class PathFinder
 
 	public PathFinder(int[][] map,Actor enemy, Player player) {
 		this.myMaze = map;
+		foundPath = false;
 		startrow=(int) (player.wPosition.getY()/RogueGame.TILE_SIZE);
 		startcol=(int) (player.wPosition.getX()/RogueGame.TILE_SIZE);
 	    endrow= (int) (enemy.wPosition.getY() /RogueGame.TILE_SIZE);
@@ -34,7 +35,7 @@ public class PathFinder
 		}
 
 		/*initial lengths*/
-		this.shortestlength=this.numrows*this.numcols+1;
+		this.shortestlength=this.numrows*this.numcols;
 		lengthsofar=0;
 
 		System.out.println("Here's the maze:");
@@ -44,9 +45,9 @@ public class PathFinder
 					System.out.print("S");			/* maze state*/
 				else if (r==endrow && c==endcol)
 					System.out.print("x");
-				else if (this.myMaze[r][c]==0)
-					System.out.print(" ");
-				else System.out.print("|");
+				else if (this.myMaze[r][c]!=0)
+					System.out.print("|");
+				else System.out.print(" ");
 			}
 			System.out.println("");
 		}
@@ -61,6 +62,17 @@ public class PathFinder
 		this.showmypath(this.shortestpath, this.shortestlength);
 
 	}
+
+//	private int[][] getSmallerMap(int[][] map, Player player) {
+//		int k = (int)(player.getX()/RogueGame.TILE_SIZE) - 15;
+//		int[][] a = new int[25][25];
+//		for(int i = 0 ; i < 25;i++){
+//			for(int j = 0; j < 25; j++){
+//				a[0][0]
+//			}
+//		}
+//		return null;
+//	}
 
 	/*******************************************************************/
 	
@@ -110,6 +122,7 @@ public class PathFinder
 
 		/*These 3 statements are the termination conditions:
 			out of bounds,  wall, and previously visited, respectively*/
+		if(foundPath == true)return;
 		if (row<0 || col<0 || row>=numrows || col>=numcols)
 			return;
 		if (myMaze[row][col]==1) return ;
@@ -126,7 +139,7 @@ public class PathFinder
 
 		if (row==endrow && col==endcol){		
 			/*Reached the end, thus finding a valid path*/
-
+			foundPath = true;
 			System.out.println("Found path of length "+lengthsofar+"!:");
 			showmypath(mypath, lengthsofar);
 
@@ -140,10 +153,13 @@ public class PathFinder
 		}
 
 		/*Below, recursively call to go to other squares*/
-		findpath(row-1, col, mypath, lengthsofar);
-		findpath(row, col-1, mypath, lengthsofar);
-		findpath(row, col+1, mypath, lengthsofar);
-		findpath(row+1, col, mypath, lengthsofar);
+		if(lengthsofar < 15){
+			
+			findpath(row-1, col, mypath, lengthsofar);
+			findpath(row, col-1, mypath, lengthsofar);
+			findpath(row, col+1, mypath, lengthsofar);
+			findpath(row+1, col, mypath, lengthsofar);
+		}
 	}
 			
 	/*******************************************************************/

@@ -173,7 +173,8 @@ public class PlayingState extends BasicGameState {
 		RogueGame.blocks.add(RogueGame.enemy1);
 		RogueGame.enemy2 = new Actor(RogueGame.WORLD_SIZE,3);
 		RogueGame.blocks.add(RogueGame.enemy2);
-
+		
+		
 
 		//create walls and blocks array for efficient collision detection.
 		for (IsoEntity ie : RogueGame.walls) {
@@ -182,6 +183,7 @@ public class PlayingState extends BasicGameState {
 		for (IsoEntity ie : RogueGame.blocks) {
 			RogueGame.wallsandblocks.add(ie);
 		}
+		
 	}
 
 
@@ -355,8 +357,14 @@ public class PlayingState extends BasicGameState {
 				RogueGame.wallsandblocks.add(RogueGame.enemy1);
 
 		}
-		 */				
-		 PathFinder maze = new PathFinder(RogueGame.map, RogueGame.enemy2,RogueGame.player);
+		 */	
+		if(secondPlayer){
+			pathFinder(RogueGame.player2);
+		}
+		else{
+			pathFinder(RogueGame.player);
+		}
+			
 		 
 		 
     //   boolean solved = maze.solve(RogueGame.player,RogueGame.enemy1);
@@ -364,6 +372,40 @@ public class PlayingState extends BasicGameState {
       // System.out.println(maze.toString());
 //				
 	}
+
+	private void pathFinder(Player user) {
+		int startrow,startcol,endrow,endcol;
+		//enemy1
+		startrow=(int) (user.wPosition.getY()/RogueGame.TILE_SIZE);
+		startcol=(int) (user.wPosition.getX()/RogueGame.TILE_SIZE);
+	    endrow= (int) (user.wPosition.getY() /RogueGame.TILE_SIZE);
+	    endcol=(int)(user.wPosition.getX()/RogueGame.TILE_SIZE);
+	    if((endrow - startrow) + (endcol-startcol) > 5) return;
+		RogueGame.enemy1Path = new PathFinder(RogueGame.map, RogueGame.enemy2, user);
+		System.out.println("done finding path");
+	}
+
+//	private void PathFinding() {
+//		if(secondPlayer){
+//			for (IsoEntity ie : RogueGame.enemies) {
+//				if(ie.getX() >= ((RogueGame.player2.getX() - RogueGame.VIEWPORT_SIZE_X/2) - (RogueGame.TILE_SIZE*2)) - 5
+//						&& ie.wPosition.getX() <= ((RogueGame.player2.getX() + RogueGame.VIEWPORT_SIZE_X/2) + (RogueGame.TILE_SIZE*2)) + 5){
+//					if(ie.getY() >= ((RogueGame.player2.getY() - RogueGame.VIEWPORT_SIZE_Y/2) - (RogueGame.TILE_SIZE*2)) - 5
+//							&& ie.getY() <= ((RogueGame.player2.getY() + RogueGame.VIEWPORT_SIZE_Y/2) + (RogueGame.TILE_SIZE*2)) + 5){
+//					//	 PathFinder maze = new PathFinder(RogueGame.map, (Actor) ie,RogueGame.player);
+//
+//					}
+//				}
+//			}
+//		}else{
+//			
+//		}
+////		startrow=(int) (player.wPosition.getY()/RogueGame.TILE_SIZE);
+////		startcol=(int) (player.wPosition.getX()/RogueGame.TILE_SIZE);
+////	    endrow= (int) (enemy.wPosition.getY() /RogueGame.TILE_SIZE);
+////	    endcol=(int)(enemy.wPosition.getX()/RogueGame.TILE_SIZE);
+//				
+//	}
 
 	public int getID() {
 		return RogueGame.PLAYINGSTATE;
