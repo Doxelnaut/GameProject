@@ -325,6 +325,9 @@ public class RogueGame extends StateBasedGame{
 		if(playerState.playerNum == 1){
 			
 			//check for collisions here then if ok update player position
+			
+			
+			//update player position
 			this.state.player.setPos(playerState.playerNewState.getPos());
 			this.state.player.setDirection(playerState.playerNewState.getDirection());
 			this.state.player.setCrouched(playerState.playerNewState.getCrouched());
@@ -334,6 +337,9 @@ public class RogueGame extends StateBasedGame{
 		else if(playerState.playerNum == 2){
 			
 			//check for collisions here then if ok update player position
+			
+			
+			//update player position
 			this.state.player2.setPos(playerState.playerNewState.getPos());
 			this.state.player2.setDirection(playerState.playerNewState.getDirection());
 			this.state.player2.setCrouched(playerState.playerNewState.getCrouched());

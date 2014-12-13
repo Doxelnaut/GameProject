@@ -139,7 +139,7 @@ public class Player extends Actor {
 		theta = direction * 45; // angle of directional unit vector from North.
 		Vector unitDirection = new Vector(0, -1);
 		unitDirection = unitDirection.rotate(theta);
-		this.setPosition(this.getPosition().add(unitDirection.scale(5)));
+		this.setPosition(this.getPosition().add(unitDirection.scale(3)));
 		this.getWalkingAnimation(direction);
 		
 		if(!canMove()){
