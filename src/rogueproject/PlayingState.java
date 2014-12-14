@@ -51,7 +51,6 @@ public class PlayingState extends BasicGameState {
 	int port = 1666;				
 	ObjectOutputStream socketOut;	//object writer
 	ObjectInputStream socketIn;		//object reader
-	Player player;
 	boolean secondPlayer = false;
 	float oldPosX;
 	float oldPosY;
@@ -149,7 +148,7 @@ public class PlayingState extends BasicGameState {
 			//create player
 			RogueGame.player = new Player(RogueGame.WORLD_SIZE, new Vector(3*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),1);
 			RogueGame.blocks.add(RogueGame.player);
-			player = RogueGame.player;
+			RG.currentPlayer = RogueGame.player;
 			newState = new clientState(1);
 		}
 
@@ -164,7 +163,7 @@ public class PlayingState extends BasicGameState {
 			RogueGame.blocks.add(RogueGame.player2);
 			RogueGame.player2.secondPlayer = true;
 			secondPlayer = true;
-			player = RogueGame.player2;
+			RG.currentPlayer = RogueGame.player2;
 			newState = new clientState(2);
 
 		}
@@ -188,7 +187,7 @@ public class PlayingState extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
 
-		if(player == null){ // player died, don't render anything.
+		if(RG.currentPlayer == null){ // player died, don't render anything.
 			RG.enterState(RogueGame.STARTUPSTATE);
 		}
 
@@ -469,10 +468,11 @@ public class PlayingState extends BasicGameState {
 
 		if(commands.size() > 0){
 			for(Command c : commands){
-				c.execute(player);
+				c.execute(RG.currentPlayer);
 			}	
 		}
 		
+		//get mouse coordinates
 		mouseX = input.getMouseX();
 		mouseY = input.getMouseY();
 		
@@ -480,9 +480,8 @@ public class PlayingState extends BasicGameState {
 		Vector p = new Vector(550,340);
 		//gets angle to mouse
 		RG.theta = p.angleTo(new Vector(mouseX,mouseY));
+		
 				
-		
-		
 	}
 	//-----------------------------------------------------------------------------------------------------------------------------
 

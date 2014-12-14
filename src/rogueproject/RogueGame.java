@@ -194,6 +194,7 @@ public class RogueGame extends StateBasedGame{
 	public static Player player2 = null;
 	public static Actor enemy1 = null;
 	public static Actor enemy2 = null;
+	public Player currentPlayer;
 	
 	public RogueGame(String title, float width, float height) {
 		super(title);
