@@ -53,7 +53,7 @@ public class Actor extends IsoEntity {
 	
 	public int playerType = 0;
 	public int enemyType = 1;
-	
+	public PathFinder path;
 	public Animation anim;
 	int current = Right; // current direction used for animation
 	int shootingDirection;
@@ -63,15 +63,16 @@ public class Actor extends IsoEntity {
 	/* Constructors */
 	/**
 	 * 
+	 * @param vector 
 	 * @param settype actor type
 	 * @param setx tile x coordinate
 	 * @param sety tile y coordinate
 	 */	
-	public Actor(Vector wWorldSize, int type){
+	public Actor(Vector wWorldSize, Vector vector, int type){
 		super(wWorldSize, RogueGame.TILE_SIZE);
 		this.getTypeImage(type);
 		this.type = type;
-		this.setTypeAttributes(type);
+		this.setTypeAttributes(type,vector);
 		//wWorldSz = wWorldSize;
 		//removeAnimation(walking[current]);
 		
@@ -144,7 +145,6 @@ public class Actor extends IsoEntity {
 	}
 	
 	/* Setters */
-	
 	public void setLevel(int set)			{this.level = set;}
 	public void setMaxHitPoints(float set)	{this.maxHitPoints = set;}
 	public void setHitPoints(float set)	 	{this.hitPoints = Math.min(set, this.maxHitPoints);}
@@ -158,18 +158,26 @@ public class Actor extends IsoEntity {
 		this.setPosition(setx * RogueGame.TILE_SIZE, sety * RogueGame.TILE_SIZE);
 	}
 	
-	public void setTypeAttributes(int type2){
+	public void setTypeAttributes(int type2, Vector vector){
 		addAnimation(walking[current]);
 		currentAnimation = walking[current];
 		setZHeightFromIsoImage(walking[current].getCurrentFrame(), 32);
 		switch(type2){
 		case 2:
-			this.setPosition(new Vector(3*RogueGame.TILE_SIZE,2*RogueGame.TILE_SIZE));
+			this.setPosition(vector);
 			break;
 		case 3: 
-			this.setPosition(new Vector(15*RogueGame.TILE_SIZE,10*RogueGame.TILE_SIZE));
+			this.setPosition(vector);
 			break;
 		}
+	}
+	public void pathFinder(Player user) {
+			PathFinder pf = new PathFinder(this,user);
+			this.path = pf;
+			//pf.showmypath();
+			
+		
+
 	}
 	
 	/* Actions */
@@ -233,6 +241,8 @@ public class Actor extends IsoEntity {
 	public void crouch() {
 		//VOID
 	}
+	public PathFinder getPath()				{return this.path;}
+
 
 	
 }
