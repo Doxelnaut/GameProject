@@ -149,6 +149,7 @@ public class PlayingState extends BasicGameState {
 			//create player
 			RogueGame.player = new Player(RogueGame.WORLD_SIZE, new Vector(3*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),1);
 			RogueGame.blocks.add(RogueGame.player);
+			addEnemies();
 			player = RogueGame.player;
 			newState = new clientState(1);
 		}
@@ -158,6 +159,7 @@ public class PlayingState extends BasicGameState {
 			//create 1st player for rendering purposes
 			RogueGame.player = new Player(RogueGame.WORLD_SIZE, RG.state.player.getPos(),1);
 			RogueGame.blocks.add(RogueGame.player);
+			addEnemies();
 
 			//create 2nd player
 			RogueGame.player2 = new Player(RogueGame.WORLD_SIZE, new Vector(2*RogueGame.TILE_SIZE, 2*RogueGame.TILE_SIZE),1);
@@ -169,11 +171,6 @@ public class PlayingState extends BasicGameState {
 
 		}
 
-		RogueGame.enemy1 = new Actor(RogueGame.WORLD_SIZE,2);
-		RogueGame.blocks.add(RogueGame.enemy1);
-		RogueGame.enemy2 = new Actor(RogueGame.WORLD_SIZE,3);
-		RogueGame.blocks.add(RogueGame.enemy2);
-
 
 		//create walls and blocks array for efficient collision detection.
 		for (IsoEntity ie : RogueGame.walls) {
@@ -182,8 +179,31 @@ public class PlayingState extends BasicGameState {
 		for (IsoEntity ie : RogueGame.blocks) {
 			RogueGame.wallsandblocks.add(ie);
 		}
+		for (IsoEntity ie : RogueGame.enemies) {
+			RogueGame.wallsandblocks.add(ie);
+		}
+	
+
+		
 	}
 
+
+	private void addEnemies() {
+		RogueGame.enemy1 = new Actor(RogueGame.WORLD_SIZE,new Vector(8*RogueGame.TILE_SIZE,11*RogueGame.TILE_SIZE),2);
+		RogueGame.enemies.add(RogueGame.enemy1);
+		RogueGame.enemy2 = new Actor(RogueGame.WORLD_SIZE,new Vector(15*RogueGame.TILE_SIZE,10*RogueGame.TILE_SIZE),3);
+		RogueGame.enemies.add(RogueGame.enemy2);	
+		for(IsoEntity ie : RogueGame.enemies){
+			if(secondPlayer){
+				((Actor) ie).pathFinder(RogueGame.player2);
+
+			}else{
+				((Actor) ie).pathFinder(RogueGame.player);
+				
+			}
+		}
+
+	}
 
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
@@ -302,69 +322,48 @@ public class PlayingState extends BasicGameState {
 		//build clientState and send to server
 		buildClientState(delta);
 
-		/*				
-		if (input.isKeyPressed(Input.KEY_LCONTROL)) {
-			RogueGame.player.debugThis = !RogueGame.player.debugThis;
-			if (RogueGame.fireball != null) RogueGame.fireball.debugThis = RogueGame.player.debugThis;
-		}
 
-		for(IsoEntity b : RogueGame.blocks) {
-			if (b != RogueGame.player && b.collides(RogueGame.player) != null) {
-				//System.out.println("Ouch!");
-				//player.sayOuch();
-				RogueGame.player.halt();
-				RogueGame.player.ungo();
-			}
-		}
-
-//		if (input.isKeyPressed(Input.KEY_ESCAPE)) {container.exit();}
-
-
-		if (RogueGame.fireball != null) {
-			RogueGame.fireball.update(x*1.5f);
-			IsoEntity other;
-			for (Iterator<IsoEntity> iie = RogueGame.blocks.iterator(); iie.hasNext(); ) {
-				other = iie.next();
-				if (other == RogueGame.player) continue;
-				if (RogueGame.fireball.collides(other) != null) {
-					System.out.println("true");
-					RogueGame.fireball.kaboom();
-					iie.remove();
-					RogueGame.wallsandblocks.clear();
-
-					for (IsoEntity ie : RogueGame.walls) {
-						RogueGame.wallsandblocks.add(ie);
-					}
-					for (IsoEntity ie : RogueGame.blocks) {
-						RogueGame.wallsandblocks.add(ie);
-					}
-
-					break;
-				}
-			}
-			for (Iterator<IsoEntity> iie = RogueGame.walls.iterator(); iie.hasNext(); ) {
-				other = iie.next();
-				if (other == RogueGame.player) continue;
-				if (RogueGame.fireball.collides(other) != null) {
-					System.out.println("true");
-					RogueGame.fireball.kaboom();
-					break;
-				}
-			}
-			if (RogueGame.fireball.done()) RogueGame.fireball = null;
-				RogueGame.wallsandblocks.add(RogueGame.enemy1);
-
-		}
-		 */				
-		 PathFinder maze = new PathFinder(RogueGame.map, RogueGame.enemy2,RogueGame.player);
-		 
-		 
-    //   boolean solved = maze.solve(RogueGame.player,RogueGame.enemy1);
-     //  System.out.println("Solved: " + solved);
-      // System.out.println(maze.toString());
-//				
+		updateEnemyPaths();
+			
+					
 	}
-
+//
+	private void updateEnemyPaths() {
+		int endrow,endcol,startrow,startcol;
+	
+		if(secondPlayer){
+			for(IsoEntity ie : RogueGame.enemies){
+				startrow= (int) (RogueGame.player2.wPosition.getY() /RogueGame.TILE_SIZE);
+				startcol=(int)(RogueGame.player2.wPosition.getX()/RogueGame.TILE_SIZE);
+				endrow=(int)(RogueGame.player2.wPosition.getY()/RogueGame.TILE_SIZE);
+				endcol=(int)(RogueGame.player2.wPosition.getX()/RogueGame.TILE_SIZE);
+				if(startrow != ie.getPath().startrow && startcol != ie.getPath().startcol){
+					((Actor) ie).pathFinder(RogueGame.player2);
+				}
+			}
+		
+		}else{
+			for(IsoEntity ie : RogueGame.enemies){
+				startrow= (int) (RogueGame.player.wPosition.getY() /RogueGame.TILE_SIZE);
+				startcol=(int)(RogueGame.player.wPosition.getX()/RogueGame.TILE_SIZE);
+				endrow=(int)(RogueGame.player.wPosition.getY()/RogueGame.TILE_SIZE);
+				endcol=(int)(RogueGame.player.wPosition.getX()/RogueGame.TILE_SIZE);
+				double xx = (endrow - startrow) * (endrow - startrow);
+				double y = (endcol-startcol) * (endcol-startcol);
+				double z = Math.sqrt(xx+y); //distance formula
+				    
+				    //Enemy is too far away
+				if( (int)z > 10) {
+				   	return;
+				}
+				//Player is in a different 
+				if(startrow != ie.getPath().startrow && startcol != ie.getPath().startcol){
+					((Actor) ie).pathFinder(RogueGame.player);
+				}
+			}
+			
+		}
+	}
 	public int getID() {
 		return RogueGame.PLAYINGSTATE;
 	}
