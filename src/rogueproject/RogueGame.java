@@ -196,6 +196,7 @@ public class RogueGame extends StateBasedGame{
 	public static Actor enemy1 = null;
 	static PathFinder enemy1Path;
 	public static Actor enemy2 = null;
+	public Player currentPlayer;
 	static PathFinder enemy2Path = null;
 	
 	public RogueGame(String title, float width, float height) {

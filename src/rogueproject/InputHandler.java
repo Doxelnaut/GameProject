@@ -65,7 +65,7 @@ public class InputHandler {
 			commands.add(keys_c);
 		}
 		if(input.isKeyDown(Input.KEY_F)){
-			mouse_left = new ShootCommand(RG.player.getPosition(),game);
+			mouse_left = new ShootCommand(RG.currentPlayer.getPosition(),game);
 			commands.add(mouse_left);
 			
 		}
