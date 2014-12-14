@@ -463,6 +463,10 @@ public class PlayingState extends BasicGameState {
 
 	//gets user input, and executes command.
 	void getCommand(Input input){
+		
+		//rotate player model towards mouse
+		RG.currentPlayer.updateDirection(RG.theta);
+		
 		InputHandler inputHandler = new InputHandler();
 		ArrayList<Command> commands = inputHandler.handleInput(input,RG);
 
@@ -480,7 +484,9 @@ public class PlayingState extends BasicGameState {
 		Vector p = new Vector(550,340);
 		//gets angle to mouse
 		RG.theta = p.angleTo(new Vector(mouseX,mouseY));
+		System.out.println("Theta = " + RG.theta);
 		
+
 				
 	}
 	//-----------------------------------------------------------------------------------------------------------------------------
