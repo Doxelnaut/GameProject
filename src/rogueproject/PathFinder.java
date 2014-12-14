@@ -13,20 +13,29 @@ public class PathFinder
     static int endcol;
 	static boolean foundPath;
 	static 	int[][] myMaze;
-
+	Actor enemy;
+	Player player;
 	/*these two variables keep track of the shortest path found so far*/
 	static 	int shortestpath[]=new int[numrows*numcols];
-	static 	int shortestlength;
-	int pathsofar[]=new int[this.numrows*this.numcols];  /*for max size*/
+	int shortestlength;
+	static int pathsofar[]=new int[numrows*numcols];  /*for max size*/
 
-	public PathFinder(int[][] map,Actor enemy, Player player) {
-		this.myMaze = map;
+	public PathFinder(Actor enemy, Player player) {
+		this.enemy = enemy;
+		this.myMaze = RogueGame.map;
+		this.player = player;
 		foundPath = false;
 		startrow=(int) (player.wPosition.getY()/RogueGame.TILE_SIZE);
 		startcol=(int) (player.wPosition.getX()/RogueGame.TILE_SIZE);
 	    endrow= (int) (enemy.wPosition.getY() /RogueGame.TILE_SIZE);
 	    endcol=(int)(enemy.wPosition.getX()/RogueGame.TILE_SIZE);
-	    if((endrow - startrow) + (endcol-startcol) > 5) return;
+	    
+	    double xx = (endrow - startrow) * (endrow - startrow);
+	    double y = (endcol-startcol) * (endcol-startcol);
+	    double z = Math.sqrt(xx+y); //distance formula
+	    
+	    if( (int)z > 5) return;
+	    foundPath = true;
 		int r,c,x;				/*various counters*/
 		int lengthsofar;		/*length to get started with*/
 		for (x=0;x<this.numrows*this.numcols;x++){
@@ -38,45 +47,54 @@ public class PathFinder
 		this.shortestlength=this.numrows*this.numcols;
 		lengthsofar=0;
 
-		System.out.println("Here's the maze:");
-		for (r=0;r<this.numrows;r++){
-			for (c=0;c<this.numcols;c++){
-				if (r==startrow && c==startcol)		/*outputing the initial*/
-					System.out.print("S");			/* maze state*/
-				else if (r==endrow && c==endcol)
-					System.out.print("x");
-				else if (this.myMaze[r][c]!=0)
-					System.out.print("|");
-				else System.out.print(" ");
-			}
-			System.out.println("");
-		}
-
-		System.out.println("");
+//		System.out.println("Here's the maze:");
+//		for (r=0;r<this.numrows;r++){
+//			for (c=0;c<this.numcols;c++){
+//				if (r==startrow && c==startcol)		/*outputing the initial*/
+//					System.out.print("S");			/* maze state*/
+//				else if (r==endrow && c==endcol)
+//					System.out.print("x");
+//				else if (this.myMaze[r][c]!=0)
+//					System.out.print("|");
+//				else System.out.print(" ");
+//			}
+//			System.out.println("");
+//		}
+//
+//		System.out.println("");
 		System.out.println("Finding Paths...");
 
 		this.findpath(startrow, startcol, pathsofar, lengthsofar);
 
-		System.out.println("");
+//		System.out.println("");
 		System.out.println("The shortest path found was the following of length "+ this.shortestlength);
-		this.showmypath(this.shortestpath, this.shortestlength);
+//		this.showmypath(this.shortestpath, this.shortestlength);
 
 	}
 
-//	private int[][] getSmallerMap(int[][] map, Player player) {
-//		int k = (int)(player.getX()/RogueGame.TILE_SIZE) - 15;
-//		int[][] a = new int[25][25];
-//		for(int i = 0 ; i < 25;i++){
-//			for(int j = 0; j < 25; j++){
-//				a[0][0]
-//			}
-//		}
-//		return null;
-//	}
+	public void updatePath(Actor enemy, Player player){
+		if((int)player.getX()/RogueGame.TILE_SIZE == endcol && (int)player.getY()/RogueGame.TILE_SIZE == endrow) return;
+		endcol = (int)player.getX()/RogueGame.TILE_SIZE;
+		endrow = (int)player.getY()/RogueGame.TILE_SIZE;
+		int r,c,x;				/*various counters*/
+		int lengthsofar;		/*length to get started with*/
+		for (x=0;x<this.numrows*this.numcols;x++){
+			this.shortestpath[x]=-1;  /* initializing the path arrays*/
+			this.pathsofar[x]=-1;
+		}
+
+		/*initial lengths*/
+		this.shortestlength=this.numrows*this.numcols;
+		lengthsofar=0;
+
+		this.findpath(startrow, startcol, pathsofar, lengthsofar);
+	//	this.showmypath(this.shortestpath, this.shortestlength);
+		
+	}
 
 	/*******************************************************************/
 	
-	boolean beenhere(int row, int col, int pathsofar[], int lengthsofar){
+	private boolean beenhere(int row, int col, int pathsofar[], int lengthsofar){
 		/*this private boolean function tells if this spot (row,col) has
 		  been visited before*/
 		 
@@ -140,13 +158,13 @@ public class PathFinder
 		if (row==endrow && col==endcol){		
 			/*Reached the end, thus finding a valid path*/
 			foundPath = true;
-			System.out.println("Found path of length "+lengthsofar+"!:");
-			showmypath(mypath, lengthsofar);
+//			System.out.println("Found path of length "+lengthsofar+"!:");
+//			showmypath(mypath, lengthsofar);
 
 			if (lengthsofar<=shortestlength){ /*New shortest path?*/
 				shortestlength=lengthsofar;
 				System.arraycopy(mypath, 0, shortestpath, 0, lengthsofar);
-				System.out.println(" (New shortest path of length " + lengthsofar + ")");
+				System.out.println(" (shortest path of length " + lengthsofar + ")");
 			}
 			System.out.println("");
 			return;
@@ -163,6 +181,29 @@ public class PathFinder
 	}
 			
 	/*******************************************************************/
+	
+	public void showmypath(){
+		/*this function prints out the maze and the path traveled so
+		  far.*/
+
+		int r,c;
+
+		for (r=0;r<numrows;r++){
+			for(c=0;c<numcols;c++){
+				if (myMaze[r][c]==1)
+					System.out.print("|");			     /*  | for walls   */
+				else if (r==startrow && c==startcol)
+					System.out.print("S");			     /*  S for start   */
+				else if (r==endrow && c==endcol)
+					System.out.print("X");			     /*  X for exit   */
+				else if (beenhere(r,c,this.shortestpath,this.shortestlength))
+					System.out.print("o");			     /*  o for traveled   */
+				else
+					System.out.print(" ");			     /*    empty space  */
+			}
+			System.out.println("");
+		}
+	}
 //	public static void main(String[] args) 
 //	{
 //		/* The main function initializes appropriate variables,

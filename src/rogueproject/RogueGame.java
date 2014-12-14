@@ -180,8 +180,8 @@ public class RogueGame extends StateBasedGame{
 	public static ArrayList<IsoEntity> walls;
 	public static ArrayList<IsoEntity> wallsandblocks;
 	public static ArrayList<IsoEntity> stop;
-	public static ArrayList<IsoEntity> visible;
-	//public static ArrayList<Actor> enemies;
+	public static ArrayList<IsoEntity> enemies;
+	public static ArrayList<PathFinder> enemiePaths;
 	public ArrayList<Bullet> bullets;
 
 	public static Fireball fireball;
@@ -196,7 +196,7 @@ public class RogueGame extends StateBasedGame{
 	public static Actor enemy1 = null;
 	static PathFinder enemy1Path;
 	public static Actor enemy2 = null;
-	static PathFinder enemy2Path;
+	static PathFinder enemy2Path = null;
 	
 	public RogueGame(String title, float width, float height) {
 		super(title);
@@ -211,6 +211,8 @@ public class RogueGame extends StateBasedGame{
 		wallsandblocks = new ArrayList<IsoEntity>(200);
 		stop = new ArrayList<IsoEntity>(100);
 		bullets = new ArrayList<Bullet>(10);
+		enemies = new ArrayList<IsoEntity>(100);
+		enemiePaths = new ArrayList<PathFinder>(100);
 	}
 	
 	@Override
