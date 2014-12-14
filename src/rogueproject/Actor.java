@@ -53,7 +53,7 @@ public class Actor extends IsoEntity {
 	
 	public int playerType = 0;
 	public int enemyType = 1;
-	public static PathFinder path;
+	public PathFinder path;
 	public Animation anim;
 	int current = Right; // current direction used for animation
 	int shootingDirection;
@@ -145,7 +145,6 @@ public class Actor extends IsoEntity {
 	}
 	
 	/* Setters */
-	
 	public void setLevel(int set)			{this.level = set;}
 	public void setMaxHitPoints(float set)	{this.maxHitPoints = set;}
 	public void setHitPoints(float set)	 	{this.hitPoints = Math.min(set, this.maxHitPoints);}
@@ -172,10 +171,10 @@ public class Actor extends IsoEntity {
 			break;
 		}
 	}
-	void pathFinder(Player user) {
+	public void pathFinder(Player user) {
 			PathFinder pf = new PathFinder(this,user);
-			path = pf;
-			pf.showmypath();
+			this.path = pf;
+			//pf.showmypath();
 			
 		
 
@@ -245,6 +244,8 @@ public class Actor extends IsoEntity {
 	public void crouch() {
 		//VOID
 	}
+	public PathFinder getPath()				{return this.path;}
+
 
 	
 }

@@ -323,55 +323,47 @@ public class PlayingState extends BasicGameState {
 		buildClientState(delta);
 
 
-		//updateEnemyPaths();
+		updateEnemyPaths();
 			
-		 
-		 
-    //   boolean solved = maze.solve(RogueGame.player,RogueGame.enemy1);
-     //  System.out.println("Solved: " + solved);
-      // System.out.println(maze.toString());
-//				
+					
 	}
 //
-//	private void updateEnemyPaths() {
-//		int startrow,startcol,endrow,endcol = 0;
-//	
-//		startrow= (int) (RogueGame.enemy1.wPosition.getY() /RogueGame.TILE_SIZE);
-//		startcol=(int)(RogueGame.enemy1.wPosition.getX()/RogueGame.TILE_SIZE);
-//		if(secondPlayer){
-//		
-//		}else{
-//			for(PathFinder pf : RogueGame.enemiePaths){
-//				if(endrow != 
-//			}
-//			
-//		}
-//	}
-
-
-
-//	private void PathFinding() {
-//		if(secondPlayer){
-//			for (IsoEntity ie : RogueGame.enemies) {
-//				if(ie.getX() >= ((RogueGame.player2.getX() - RogueGame.VIEWPORT_SIZE_X/2) - (RogueGame.TILE_SIZE*2)) - 5
-//						&& ie.wPosition.getX() <= ((RogueGame.player2.getX() + RogueGame.VIEWPORT_SIZE_X/2) + (RogueGame.TILE_SIZE*2)) + 5){
-//					if(ie.getY() >= ((RogueGame.player2.getY() - RogueGame.VIEWPORT_SIZE_Y/2) - (RogueGame.TILE_SIZE*2)) - 5
-//							&& ie.getY() <= ((RogueGame.player2.getY() + RogueGame.VIEWPORT_SIZE_Y/2) + (RogueGame.TILE_SIZE*2)) + 5){
-//					//	 PathFinder maze = new PathFinder(RogueGame.map, (Actor) ie,RogueGame.player);
-//
-//					}
-//				}
-//			}
-//		}else{
-//			
-//		}
-////		startrow=(int) (player.wPosition.getY()/RogueGame.TILE_SIZE);
-////		startcol=(int) (player.wPosition.getX()/RogueGame.TILE_SIZE);
-////	    endrow= (int) (enemy.wPosition.getY() /RogueGame.TILE_SIZE);
-////	    endcol=(int)(enemy.wPosition.getX()/RogueGame.TILE_SIZE);
-//				
-//	}
-
+	private void updateEnemyPaths() {
+		int endrow,endcol,startrow,startcol;
+	
+		if(secondPlayer){
+			for(IsoEntity ie : RogueGame.enemies){
+				startrow= (int) (RogueGame.player2.wPosition.getY() /RogueGame.TILE_SIZE);
+				startcol=(int)(RogueGame.player2.wPosition.getX()/RogueGame.TILE_SIZE);
+				endrow=(int)(RogueGame.player2.wPosition.getY()/RogueGame.TILE_SIZE);
+				endcol=(int)(RogueGame.player2.wPosition.getX()/RogueGame.TILE_SIZE);
+				if(startrow != ie.getPath().startrow && startcol != ie.getPath().startcol){
+					((Actor) ie).pathFinder(RogueGame.player2);
+				}
+			}
+		
+		}else{
+			for(IsoEntity ie : RogueGame.enemies){
+				startrow= (int) (RogueGame.player.wPosition.getY() /RogueGame.TILE_SIZE);
+				startcol=(int)(RogueGame.player.wPosition.getX()/RogueGame.TILE_SIZE);
+				endrow=(int)(RogueGame.player.wPosition.getY()/RogueGame.TILE_SIZE);
+				endcol=(int)(RogueGame.player.wPosition.getX()/RogueGame.TILE_SIZE);
+				double xx = (endrow - startrow) * (endrow - startrow);
+				double y = (endcol-startcol) * (endcol-startcol);
+				double z = Math.sqrt(xx+y); //distance formula
+				    
+				    //Enemy is too far away
+				if( (int)z > 10) {
+				   	return;
+				}
+				//Player is in a different 
+				if(startrow != ie.getPath().startrow && startcol != ie.getPath().startcol){
+					((Actor) ie).pathFinder(RogueGame.player);
+				}
+			}
+			
+		}
+	}
 	public int getID() {
 		return RogueGame.PLAYINGSTATE;
 	}
