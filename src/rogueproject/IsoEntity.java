@@ -92,13 +92,23 @@ public class IsoEntity extends Entity implements Comparable<IsoEntity> {
 
 	}
 	
-	/**
+	public void setPositionNoTranslate(Vector w){
+		wPosition = w;
+		super.setPosition(w);
+	}
+	
+	/** 
 	 * @return the position in the world coordinate system
 	 */
 	public Vector getPosition() {
 		// gets wPosition
 		return wPosition;
 	}
+	
+	public Vector getEPosition(){
+		return super.getPosition();
+	}
+	
 
 	@Override
 	public int compareTo(IsoEntity other) {
@@ -114,6 +124,7 @@ public class IsoEntity extends Entity implements Comparable<IsoEntity> {
 
 		return 0;
 	}
+	public PathFinder getPath(){return null;}
 }
 
 

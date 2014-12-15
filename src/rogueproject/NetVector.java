@@ -18,6 +18,7 @@ public class NetVector implements Serializable{
 	int direction;
 	boolean crouched = false;
 	boolean attacking = false;
+	double theta;
 	
 	
 	public NetVector(){

@@ -7,6 +7,7 @@ import jig.Vector;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Sound;
+import org.newdawn.slick.state.StateBasedGame;
 
 public class Player extends Actor {
 	Animation[] walking = new Animation[8];
@@ -15,14 +16,14 @@ public class Player extends Actor {
 	Animation[] crouchingFIRE = new Animation[8];
 	Animation currentAnimation;
 	boolean crouch = false;
-	static boolean shooting = false;
+	boolean shooting = false;
 	static boolean secondPlayer = false;
 	double theta;
 	
 //	public static final int WAIT = -1, N = 0, E = 1, S = 2, W = 3, NW = 4, NE = 5, SE = 6, SW = 7, REST = 8;
 	private static final int Up = 0, UpRight=1, Right=2, DownRight=3, Down=4, DownLeft=5, Left=6, UpLeft=7, CTRL=8;
 
-	int current; // current direction used for animation
+	int current = Right; // current direction used for animation
 	int shootingDirection;
 	Vector wWorldSz;
 	Vector lastWPosition;
@@ -41,6 +42,7 @@ public class Player extends Actor {
 		setZHeightFromIsoImage(walking[current].getCurrentFrame(), 32);
 		setPosition(wPosition);
 		lastWPosition = wPosition;
+		theta = current * 45; // angle of directional unit vector from North.
 		}
 	
 	public void getTypeImage() {
@@ -134,7 +136,7 @@ public class Player extends Actor {
 		
 		// Set movement in world coordinates using a unit vector that points in any one
 		// of the cardinal or diagonal directions. 
-		int theta = direction * 45; // angle of directional unit vector from North.
+		this.shooting = false;
 		this.lastWPosition = this.getPosition();
 		theta = direction * 45; // angle of directional unit vector from North.
 		Vector unitDirection = new Vector(0, -1);
@@ -171,8 +173,12 @@ public class Player extends Actor {
 		}
 	}
 	
-	public void shoot(Vector direction){
+	public void shoot(Vector direction, StateBasedGame game){
 		//TODO: shoot bullets
+		this.shooting = true;
+		this.shoot();
+		RogueGame RG = (RogueGame) game;
+		RG.bullets.add(new Bullet(RogueGame.WORLD_SIZE, direction, RG.theta,1));
 	}
 	
 	/**
@@ -311,33 +317,30 @@ public class Player extends Actor {
 	public void shoot() {
 		if(crouch == true){
 			
-				if(shooting == false){
-					removeAnimation(crouching[current]);
+				if(shooting){
+					removeAnimation(currentAnimation);
 					addAnimation(crouchingFIRE[current]);
+					currentAnimation = crouchingFIRE[current];
 					crouchingFIRE[current].setCurrentFrame(0);
 					crouchingFIRE[current].stopAt(3);
 					crouchingFIRE[current].start();
 					shooting = true;
 					shootingDirection = current;
 				}
-				
-				
-				//addAnimation(crouching[current]);
 
 		}
 		else{
-				if(shooting == false) {
-					removeAnimation(walking[current]);
+				if(shooting) {
+					removeAnimation(currentAnimation);
 					addAnimation(walkingFIRE[current]);
+					currentAnimation = walkingFIRE[current];
 					walkingFIRE[current].setCurrentFrame(0);
 					walkingFIRE[current].stopAt(3);
 					walkingFIRE[current].start();
 					shooting = true;
 					shootingDirection = current;
 
-				}
-				
-
+				}	
 		}
 	}
 /*
@@ -362,6 +365,61 @@ public class Player extends Actor {
 		return crouch;
 	}
 	
+	public void updateDirection(double theta){
+		
+		//get player direction based on mouse angle to player
+		if(-70 < theta && theta < -5){
+			this.current = Right;
+		}
+		else if(-6 < theta && theta < 20){
+			this.current = DownRight;
+		}
+		else if(19 < theta && theta <50){
+			this.current = Down;
+		}
+		else if(49 < theta && theta < 115){
+			this.current = DownLeft;
+		}
+		else if(-69 > theta && theta > -107){
+			this.current = UpRight;
+		}
+		else if(-106 > theta && theta > -150){
+			this.current = Up;
+		}
+		else if(-149 > theta && theta > -176){
+			this.current = UpLeft;
+		}
+		else{
+			this.current = Left;
+		}
+		
+		removeAnimation(currentAnimation);
+
+		if(shooting){
+			if(crouch){
+				addAnimation(crouchingFIRE[current]);
+				currentAnimation = crouchingFIRE[current];
+			}
+			else{
+				addAnimation(walkingFIRE[current]);
+				currentAnimation = walkingFIRE[current];
+
+			}
+		}
+		else{
+			if(crouch){
+				addAnimation(crouching[current]);
+				currentAnimation = crouching[current];
+
+			}
+			else{
+				addAnimation(walking[current]);
+				currentAnimation = walking[current];
+
+			}
+		}
+	}
+	
 	public void toggleCrouch(){
 		
 		if(crouch == true){
@@ -376,7 +434,7 @@ public class Player extends Actor {
 		}
 	}
 
-	public boolean isShooting() {
+/*	public boolean isShooting() {
 		if(crouch){
 			if(shooting){
 				if(crouchingFIRE[shootingDirection].isStopped()) {
@@ -400,7 +458,11 @@ public class Player extends Actor {
 		}
 		return true;
 	}
+	
+	*/
 }
+
+	
 //	public void start(float x, float direction) {
 //		isShooting();
 //		if(direction == 9){

@@ -2,6 +2,10 @@ package rogueproject;
 
 import java.io.Serializable;
 
+import jig.Vector;
+
+import org.newdawn.slick.state.StateBasedGame;
+
 public class Command implements Serializable {
 
 	/**
@@ -19,7 +23,6 @@ public class Command implements Serializable {
 	 * @param actor
 	 */
 	public void execute(Actor actor){}
-
 	
 	
 }

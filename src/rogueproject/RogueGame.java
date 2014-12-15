@@ -40,6 +40,7 @@ import org.newdawn.slick.state.StateBasedGame;
  */
 public class RogueGame extends StateBasedGame{
 
+	double theta;
 	public static final int STARTUPSTATE = 0;
 	public static final int PLAYINGSTATE = 1;
 	public static final int GAMEOVERSTATE = 2;
@@ -179,20 +180,24 @@ public class RogueGame extends StateBasedGame{
 	public static ArrayList<IsoEntity> walls;
 	public static ArrayList<IsoEntity> wallsandblocks;
 	public static ArrayList<IsoEntity> stop;
-	public static ArrayList<IsoEntity> visible;
+	public static ArrayList<IsoEntity> enemies;
+	public static ArrayList<PathFinder> enemiePaths;
 	public ArrayList<Bullet> bullets;
 
 	public static Fireball fireball;
 
 	GameState state = new GameState();
-	
+	static PathFinder x;
 	public static int[][]map = new int[(int)WORLD_SIZE_X][(int)WORLD_SIZE_Y];
 	public static int[][]walkable = new int[(int)WORLD_SIZE_X][(int)WORLD_SIZE_Y];
 
 	public static Player player = null;
 	public static Player player2 = null;
 	public static Actor enemy1 = null;
+	static PathFinder enemy1Path;
 	public static Actor enemy2 = null;
+	public Player currentPlayer;
+	static PathFinder enemy2Path = null;
 	
 	public RogueGame(String title, float width, float height) {
 		super(title);
@@ -206,8 +211,9 @@ public class RogueGame extends StateBasedGame{
 		walls = new ArrayList<IsoEntity>(100);
 		wallsandblocks = new ArrayList<IsoEntity>(200);
 		stop = new ArrayList<IsoEntity>(100);
-
 		bullets = new ArrayList<Bullet>(10);
+		enemies = new ArrayList<IsoEntity>(100);
+		enemiePaths = new ArrayList<PathFinder>(100);
 	}
 	
 	@Override
@@ -349,7 +355,7 @@ public class RogueGame extends StateBasedGame{
 		this.bullets.clear();
 		
 		for(NetVector b : playerState.bullets){
-			this.bullets.add(new Bullet(RogueGame.WORLD_SIZE, b.getPos()));
+			this.bullets.add(new Bullet(RogueGame.WORLD_SIZE, b.getPos(),b.theta,0));
 		}
 		
 		//update bullet positions
@@ -366,7 +372,8 @@ public class RogueGame extends StateBasedGame{
 		state.bullets.clear();
 		for(Bullet b : this.bullets){
 			temp = new NetVector();
-			temp.setPos(new Vector(b.getX(),b.getY()));
+			temp.setPos(b.getEPosition());
+			temp.theta = b.theta;
 			//add bullet to state array to send to client
 			state.bullets.add(temp);
 		}
