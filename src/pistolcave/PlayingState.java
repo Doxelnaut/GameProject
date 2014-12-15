@@ -421,6 +421,8 @@ public class PlayingState extends BasicGameState {
 			PistolCaveGame.player.crouch = PC.state.player.getCrouched();
 			PistolCaveGame.player.getWalkingAnimation(PC.state.player.getDirection());	
 			PistolCaveGame.player.halt();
+			PistolCaveGame.player.shooting = PC.state.player.attacking;
+			PistolCaveGame.player.shoot();
 		}
 
 		//you are first player
@@ -436,6 +438,8 @@ public class PlayingState extends BasicGameState {
 				PistolCaveGame.player2.crouch = PC.state.player2.getCrouched();
 				PistolCaveGame.player2.getWalkingAnimation(PC.state.player2.getDirection());
 				PistolCaveGame.player2.halt();
+				PistolCaveGame.player2.shooting = PC.state.player2.attacking;
+				PistolCaveGame.player2.shoot();
 			}
 		}	
 	}
@@ -480,12 +484,23 @@ public class PlayingState extends BasicGameState {
 			newState.playerNewState.setPos(PistolCaveGame.player.getPosition());
 			newState.playerNewState.setCrouched(PistolCaveGame.player.crouch);
 			newState.playerNewState.setDirection(PistolCaveGame.player.current);
+			newState.playerNewState.setMinX(PistolCaveGame.player.getCoarseGrainedMinX());
+			newState.playerNewState.setMaxX(PistolCaveGame.player.getCoarseGrainedMaxX());
+			newState.playerNewState.setMinY(PistolCaveGame.player.getCoarseGrainedMinY());
+			newState.playerNewState.setMaxY(PistolCaveGame.player.getCoarseGrainedMaxY());
+			newState.playerNewState.attacking = PistolCaveGame.player.shooting;
+
 		}
 		//build state representing second player
 		else{
 			newState.playerNewState.setPos(PistolCaveGame.player2.getPosition());
 			newState.playerNewState.setCrouched(PistolCaveGame.player2.crouch);
 			newState.playerNewState.setDirection(PistolCaveGame.player2.current);
+			newState.playerNewState.setMinX(PistolCaveGame.player2.getCoarseGrainedMinX());
+			newState.playerNewState.setMaxX(PistolCaveGame.player2.getCoarseGrainedMaxX());
+			newState.playerNewState.setMinY(PistolCaveGame.player2.getCoarseGrainedMinY());
+			newState.playerNewState.setMaxY(PistolCaveGame.player2.getCoarseGrainedMaxY());
+			newState.playerNewState.attacking = PistolCaveGame.player2.shooting;
 		}
 
 		newState.delta = delta;
@@ -516,7 +531,6 @@ public class PlayingState extends BasicGameState {
 		//add bullets updated from server
 		for(NetVector b : PC.state.bullets)
 			PC.bullets.add(new Bullet(PistolCaveGame.WORLD_SIZE, b.getPos(),b.theta,0));
-
 	}
 
 }

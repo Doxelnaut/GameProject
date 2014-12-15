@@ -39,6 +39,7 @@ public class GameState implements Serializable{
 	boolean secondPlayer = false;
 	boolean firstPlayer = false;
 	ArrayList<NetVector> bullets = new ArrayList<NetVector>();
+	ArrayList<NetVector>enemies = new ArrayList<NetVector>();
 	
 	public GameState(){
 		
