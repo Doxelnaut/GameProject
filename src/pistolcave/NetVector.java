@@ -41,6 +41,10 @@ public class NetVector implements Serializable{
 	boolean crouched = false;
 	boolean attacking = false;
 	double theta;
+	double minX;
+	double minY;
+	double maxX;
+	double maxY;
 	
 	
 	public NetVector(){
@@ -74,4 +78,35 @@ public class NetVector implements Serializable{
 	public boolean getCrouched(){
 		return crouched;
 	}
+	
+	public void setMinX(double x){
+		minX = x;
+	}
+	public void setMaxX(double x){
+		maxX = x;
+	}
+	
+	public double getMinX(){
+		return minX;
+	}
+	
+	public double getMaxX(){
+		return maxX;
+	}
+	
+	public void setMinY(double y){
+		minY = y;
+	}
+	public void setMaxY(double y){
+		maxY = y;
+	}
+	
+	public double getMinY(){
+		return minY;
+	}
+	
+	public double getMaxY(){
+		return maxY;
+	}
 }
+
