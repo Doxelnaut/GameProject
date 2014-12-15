@@ -441,23 +441,6 @@ public class PlayingState extends BasicGameState {
 	}
 
 	//----------------------------------------------------------------------------------------------------------------------------
-	public void updateVisibleBlockList(int row, int col){
-		float tx;
-		float ty;
-		if(secondPlayer){
-			tx = PistolCaveGame.player2.getX()/PistolCaveGame.TILE_SIZE;
-			ty = PistolCaveGame.player2.getY()/PistolCaveGame.TILE_SIZE;
-		}
-		else{
-			tx = PistolCaveGame.player.getX()/PistolCaveGame.TILE_SIZE;
-			ty = PistolCaveGame.player.getY()/PistolCaveGame.TILE_SIZE;
-
-		}
-		System.out.println("tx: " + tx + " ty: " + ty);
-		System.out.println("row " + row + " col: " + col);
-	}
-
-	//----------------------------------------------------------------------------------------------------------------------------
 
 
 	//gets user input, and executes command.
@@ -483,7 +466,7 @@ public class PlayingState extends BasicGameState {
 		Vector p = new Vector(550,340);
 		//gets angle to mouse
 		PC.theta = p.angleTo(new Vector(mouseX,mouseY));
-		System.out.println("Theta = " + PC.theta);
+	//	System.out.println("Theta = " + PC.theta);
 		
 
 				
