@@ -87,7 +87,7 @@ public class InputHandler {
 		if(input.isKeyPressed(Input.KEY_C)){ // consumes a single key press event, used to toggle crouching
 			commands.add(keys_c);
 		}
-		if(input.isKeyDown(Input.KEY_F)){
+		if(input.isKeyPressed(Input.KEY_F)){
 			mouse_left = new ShootCommand(PC.currentPlayer.getPosition(),game);
 			commands.add(mouse_left);
 			

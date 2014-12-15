@@ -49,8 +49,8 @@ public class Bullet extends IsoEntity{
 		theta = t;
 		velocity = new Vector(0f,-.5f).setRotation(theta);
 		domain = wWorldSize;
-		addImageWithBoundingBox(ResourceManager
-				.getImage(PistolCaveGame.bulletResource));
+		//addImageWithBoundingBox(ResourceManager
+			//	.getImage(PistolCaveGame.bulletResource));
 	}
 	
 	public void update(float delta) {
