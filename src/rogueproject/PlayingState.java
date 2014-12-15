@@ -417,6 +417,7 @@ public class PlayingState extends BasicGameState {
 			RogueGame.camX = RogueGame.player2.getX() - RogueGame.VIEWPORT_SIZE_X / 2;
 			RogueGame.camY = RogueGame.player2.getY() - RogueGame.VIEWPORT_SIZE_Y / 2;
 			RogueGame.player2.halt();
+			
 			//update first players model
 			RogueGame.player.setPosition(RG.state.player.getPos());
 			RogueGame.player.crouch = RG.state.player.getCrouched();
@@ -484,7 +485,6 @@ public class PlayingState extends BasicGameState {
 		Vector p = new Vector(550,340);
 		//gets angle to mouse
 		RG.theta = p.angleTo(new Vector(mouseX,mouseY));
-		System.out.println("Theta = " + RG.theta);
 		
 
 				
