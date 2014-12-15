@@ -59,10 +59,10 @@ public class Bullet extends IsoEntity{
 	}
 	
 	public boolean isActive() {
-	/*	
+		
 		if (this.getX() < 0 || this.getX() > domain.getX() ||
 				this.getY() < 0 || this.getY() > domain.getY()) active = false;
-		*/
+		
 		return active;
 	}
 	

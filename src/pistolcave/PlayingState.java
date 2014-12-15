@@ -497,12 +497,22 @@ public class PlayingState extends BasicGameState {
 			newState.playerNewState.setPos(PistolCaveGame.player.getPosition());
 			newState.playerNewState.setCrouched(PistolCaveGame.player.crouch);
 			newState.playerNewState.setDirection(PistolCaveGame.player.current);
+			newState.playerNewState.setMinX(PistolCaveGame.player.getCoarseGrainedMinX());
+			newState.playerNewState.setMaxX(PistolCaveGame.player.getCoarseGrainedMaxX());
+			newState.playerNewState.setMinY(PistolCaveGame.player.getCoarseGrainedMinY());
+			newState.playerNewState.setMaxY(PistolCaveGame.player.getCoarseGrainedMaxY());
+
+
 		}
 		//build state representing second player
 		else{
 			newState.playerNewState.setPos(PistolCaveGame.player2.getPosition());
 			newState.playerNewState.setCrouched(PistolCaveGame.player2.crouch);
 			newState.playerNewState.setDirection(PistolCaveGame.player2.current);
+			newState.playerNewState.setMinX(PistolCaveGame.player2.getCoarseGrainedMinX());
+			newState.playerNewState.setMaxX(PistolCaveGame.player2.getCoarseGrainedMaxX());
+			newState.playerNewState.setMinY(PistolCaveGame.player2.getCoarseGrainedMinY());
+			newState.playerNewState.setMaxY(PistolCaveGame.player2.getCoarseGrainedMaxY());
 		}
 
 		newState.delta = delta;
