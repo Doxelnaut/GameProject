@@ -367,27 +367,26 @@ public class Player extends Actor {
 	
 	public void updateDirection(double theta){
 		
-		theta = theta + 22; //adjust for isometric skew of coordinates
 		//get player direction based on mouse angle to player
-		if(-22.4 < theta && theta < 22.5){
+		if(-70 < theta && theta < -5){
 			this.current = Right;
 		}
-		else if(22.4 < theta && theta < 67.5){
+		else if(-6 < theta && theta < 20){
 			this.current = DownRight;
 		}
-		else if(67.4 < theta && theta < 112.5){
+		else if(19 < theta && theta <50){
 			this.current = Down;
 		}
-		else if(112.4 < theta && theta < 157.5){
+		else if(49 < theta && theta < 115){
 			this.current = DownLeft;
 		}
-		else if(-22.5 > theta && theta > -67.5){
+		else if(-69 > theta && theta > -107){
 			this.current = UpRight;
 		}
-		else if(-67.4 > theta && theta > -112.5){
+		else if(-106 > theta && theta > -150){
 			this.current = Up;
 		}
-		else if(-112.5 > theta && theta > 157.5){
+		else if(-149 > theta && theta > -176){
 			this.current = UpLeft;
 		}
 		else{
