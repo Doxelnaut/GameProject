@@ -345,23 +345,35 @@ public class PistolCaveGame extends StateBasedGame{
 			 * the positions of each Entity as well as use the camera coordinates.
 			 */
 			//check for collisions here then if ok update player position
-//			ArrayList<IsoEntity> scanTable = new ArrayList<IsoEntity>();
-			// set scan line to start on the left edge of the screen
-//			float scanline = (this.player.getX() - this.VIEWPORT_SIZE_X/2) - this.TILE_SIZE*2;
-//			while(scanline <= (this.player.getY() + this.VIEWPORT_SIZE_Y/2) + this.TILE_SIZE*2){
-//				System.out.println("scanline: " + scanline);
-//				for(IsoEntity ie : this.wallsandblocks){
-//					if(ie.getCoarseGrainedMinX() <= scanline && !scanTable.contains(ie)){
-//						scanTable.add(ie);
-//					}
-//					else if (ie.getCoarseGrainedMaxX() <= scanline && scanTable.contains(ie)){
-//						scanTable.remove(ie);
-//					}
-//				}
-//				
-//				
-//				scanline+=2;
-//			}
+			ArrayList<IsoEntity> scanTable = new ArrayList<IsoEntity>();
+			// set scan line to start one screen tile to the left of the player
+			float scanline = playerState.playerNewState.getPos().getX() - this.TILE_SIZE*2;
+			// stop when the scan line is further than one screen tile to the right of the player.
+			while(scanline <= (playerState.playerNewState.getPos().getX() + this.TILE_SIZE*2)){
+				//System.out.println("scanline: " + scanline);
+				for(IsoEntity ie : this.wallsandblocks){
+					if(ie.getCoarseGrainedMinX() <= scanline && !scanTable.contains(ie)){
+						scanTable.add(ie);
+					}
+					else if (ie.getCoarseGrainedMaxX() <= scanline && scanTable.contains(ie)){
+						scanTable.remove(ie);
+					}
+				}
+				scanline+=2;
+			}
+			// check each entity that is close enough to see if the player collides
+			if(!scanTable.isEmpty()){
+				for(int i = 0; i < scanTable.size(); i++){
+					IsoEntity ie = scanTable.get(i);
+					if(playerState.playerNewState.minX < ie.getCoarseGrainedMaxX()
+							&& playerState.playerNewState.maxX > ie.getCoarseGrainedMinX() 
+							&& playerState.playerNewState.minY < ie.getCoarseGrainedMaxY() 
+							&& playerState.playerNewState.maxY > ie.getCoarseGrainedMinY()){
+						
+
+					}
+				}
+			}
 			
 			//update player position
 			this.state.player.setPos(playerState.playerNewState.getPos());
