@@ -28,6 +28,8 @@ import java.io.*;
  */
 public class PathFinder 
 {
+	private static final int Up = 0, UpRight=1, Right=2, DownRight=3, Down=4, DownLeft=5, Left=6, UpLeft=7, CTRL=8;
+
 	/*the below variables are the "INPUT" variables*/
 	static int numrows=100;		static 	int numcols=100;
 	public int startrow;
@@ -35,10 +37,10 @@ public class PathFinder
     public int endrow ;
     public int endcol;
 	public int foundPath;
-	public float nextX = 0;
-	public float nextY = 0;
-	public float currentX = 0;
-	public float currentY = 0;
+	public float nextX = -1;
+	public float nextY = -1;
+	public float currentX = -1;
+	public float currentY = -1;
 	static 	int[][] myMaze;
 	Actor enemy;
 	Player player;
@@ -93,7 +95,6 @@ public class PathFinder
 		currentY = endcol;
 		
 		findNext();
-		
 		System.out.println("currentx: " + currentX + " currentY:" + currentY);
 		System.out.println("nextx: " + nextX + " nextY:" + nextY);
 		System.out.println();
@@ -105,23 +106,41 @@ public class PathFinder
 		if (beenhere((int)currentX-1, (int)currentY, shortestpath, shortestlength)) {
 			nextX = currentX -1;
 			nextY = currentY;
-			return;
+			//return;
 		}
 		else if (beenhere((int)currentX, (int)currentY-1, shortestpath, shortestlength)) {
 			nextX = currentX;
 			nextY = currentY-1;
-			return;
+			//return;
 		}
 		else if (beenhere((int)currentX, (int)currentY+1, shortestpath, shortestlength)) {
 			nextX = currentX;
 			nextY = currentY+1;
-			return;
+			//return;
 		}
 		else if (beenhere((int)currentX+1, (int)currentY, shortestpath, shortestlength)) {
 			nextX = currentX+1;
 			nextY = currentY;
-			return;
+		//	return;
 		}
+		
+		//no current path
+		if(nextX == -1 || nextY == -1) return;
+		if(currentX > nextX){
+			enemy.move(Left);
+		}
+		if(currentX < nextX){
+			enemy.move(Right);
+		}
+		if(currentY < nextY){
+			enemy.move(Down);
+
+		}
+		if(currentY > nextY){
+			enemy.move(Up);
+
+		}
+		return;
 		
 	}
 

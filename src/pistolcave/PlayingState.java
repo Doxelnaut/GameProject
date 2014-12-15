@@ -196,10 +196,10 @@ public class PlayingState extends BasicGameState {
 		PistolCaveGame.enemies.add(PistolCaveGame.enemy2);	
 		for(IsoEntity ie : PistolCaveGame.enemies){
 			if(secondPlayer){
-				((Actor) ie).pathFinder(PistolCaveGame.player2);
+				((Actor) ie).pathFinder(PistolCaveGame.player2,2);
 
 			}else{
-				((Actor) ie).pathFinder(PistolCaveGame.player);
+				((Actor) ie).pathFinder(PistolCaveGame.player,1);
 				
 			}
 		}
@@ -337,7 +337,7 @@ public class PlayingState extends BasicGameState {
 				endrow=(int)(PistolCaveGame.player2.wPosition.getY()/PistolCaveGame.TILE_SIZE);
 				endcol=(int)(PistolCaveGame.player2.wPosition.getX()/PistolCaveGame.TILE_SIZE);
 				if(startrow != ie.getPath().startrow && startcol != ie.getPath().startcol){
-					((Actor) ie).pathFinder(PistolCaveGame.player2);
+					((Actor) ie).pathFinder(PistolCaveGame.player2,2);
 				}
 			}
 		
@@ -357,7 +357,7 @@ public class PlayingState extends BasicGameState {
 				}
 				//Player is in a different 
 				if(startrow != ie.getPath().startrow && startcol != ie.getPath().startcol){
-					((Actor) ie).pathFinder(PistolCaveGame.player);
+					((Actor) ie).pathFinder(PistolCaveGame.player,1);
 				}
 			}
 			
