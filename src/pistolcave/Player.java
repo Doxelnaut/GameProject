@@ -80,14 +80,14 @@ public class Player extends Actor {
 				walking[DownLeft] = new Animation(ResourceManager.getSpriteSheet(PistolCaveGame.WalkDownLeft, 83, 139), 0,0,14,0, true, 70, true);
 				walking[DownRight] = new Animation(ResourceManager.getSpriteSheet(PistolCaveGame.WalkDownRight, 105, 127), 0,0,14,0, true, 70, true);
 				
-				walkingFIRE[Left] = new Animation(ResourceManager.getSpriteSheet(PistolCaveGame.fireLeft, 108, 133), 0,0,3,0, true, 70, true);
-				walkingFIRE[Right] = new Animation(ResourceManager.getSpriteSheet(PistolCaveGame.fireRight,103, 127), 0,0,3,0, true, 70, true);
-				walkingFIRE[Up] = new Animation(ResourceManager.getSpriteSheet(PistolCaveGame.fireUp, 103, 126), 0,0,3,0, true, 70, true);
-				walkingFIRE[Down] = new Animation(ResourceManager.getSpriteSheet(PistolCaveGame.fireDown, 103, 122), 0,0,3,0, true, 70, true);
-				walkingFIRE[UpLeft] = new Animation(ResourceManager.getSpriteSheet(PistolCaveGame.fireUpLeft, 122, 128), 0,0,3,0, true, 70, true);
-				walkingFIRE[UpRight] = new Animation(ResourceManager.getSpriteSheet(PistolCaveGame.fireUpRight, 73, 136), 0,0,3,0, true, 70, true);
-				walkingFIRE[DownLeft] = new Animation(ResourceManager.getSpriteSheet(PistolCaveGame.fireDownLeft, 82, 131), 0,0,3,0, true, 70, true);
-				walkingFIRE[DownRight] = new Animation(ResourceManager.getSpriteSheet(PistolCaveGame.fireDownRight, 118, 121), 0,0,3,0, true, 70, true);
+				walkingFIRE[Left] = new Animation(ResourceManager.getSpriteSheet(PistolCaveGame.fireLeft, 108, 133), 0,0,3,0, true, 90, true);
+				walkingFIRE[Right] = new Animation(ResourceManager.getSpriteSheet(PistolCaveGame.fireRight,103, 127), 0,0,3,0, true, 90, true);
+				walkingFIRE[Up] = new Animation(ResourceManager.getSpriteSheet(PistolCaveGame.fireUp, 103, 126), 0,0,3,0, true, 90, true);
+				walkingFIRE[Down] = new Animation(ResourceManager.getSpriteSheet(PistolCaveGame.fireDown, 103, 122), 0,0,3,0, true, 90, true);
+				walkingFIRE[UpLeft] = new Animation(ResourceManager.getSpriteSheet(PistolCaveGame.fireUpLeft, 122, 128), 0,0,3,0, true, 90, true);
+				walkingFIRE[UpRight] = new Animation(ResourceManager.getSpriteSheet(PistolCaveGame.fireUpRight, 73, 136), 0,0,3,0, true, 90, true);
+				walkingFIRE[DownLeft] = new Animation(ResourceManager.getSpriteSheet(PistolCaveGame.fireDownLeft, 82, 131), 0,0,3,0, true, 90, true);
+				walkingFIRE[DownRight] = new Animation(ResourceManager.getSpriteSheet(PistolCaveGame.fireDownRight, 118, 121), 0,0,3,0, true, 90, true);
 				
 				crouching[Left] = new Animation(ResourceManager.getSpriteSheet(PistolCaveGame.crouchLeft, 99, 100), 0,0,14,0, true, 70, true);
 				crouching[Right] = new Animation(ResourceManager.getSpriteSheet(PistolCaveGame.crouchRight,80, 109), 0,0,14,0, true, 70, true);
@@ -180,9 +180,9 @@ public class Player extends Actor {
 	 * toggle crouch
 	 */
 	public void crouch(){
+		removeAnimation(currentAnimation);
 		if(crouch){
 			crouch = false;
-			removeAnimation(crouching[current]);
 			addAnimation(walking[current]);
 			currentAnimation = walking[current];
 			
@@ -190,7 +190,6 @@ public class Player extends Actor {
 		}
 		else{
 			crouch = true;
-			removeAnimation(walking[current]);
 			addAnimation(crouching[current]);
 			currentAnimation = crouching[current];
 		}
@@ -211,6 +210,7 @@ public class Player extends Actor {
 	public void getWalkingAnimation(int direction){ //TODO doesn't handle crouching, creates multiple animations
 		
 		removeAnimation(currentAnimation);
+		
 
 		if(crouch){
 			
@@ -340,12 +340,11 @@ public class Player extends Actor {
 					addAnimation(crouchingFIRE[current]);
 					currentAnimation = crouchingFIRE[current];
 					crouchingFIRE[current].setCurrentFrame(0);
-					crouchingFIRE[current].stopAt(3);
 					crouchingFIRE[current].start();
+					crouchingFIRE[current].setLooping(false);
 					shooting = true;
 					shootingDirection = current;
 				}
-
 		}
 		else{
 				if(shooting) {
@@ -353,8 +352,8 @@ public class Player extends Actor {
 					addAnimation(walkingFIRE[current]);
 					currentAnimation = walkingFIRE[current];
 					walkingFIRE[current].setCurrentFrame(0);
-					walkingFIRE[current].stopAt(3);
 					walkingFIRE[current].start();
+					walkingFIRE[current].setLooping(false);
 					shooting = true;
 					shootingDirection = current;
 
@@ -416,10 +415,14 @@ public class Player extends Actor {
 		if(shooting){
 			if(crouch){
 				addAnimation(crouchingFIRE[current]);
+				crouchingFIRE[current].setCurrentFrame(0);
+				crouchingFIRE[current].stop();
 				currentAnimation = crouchingFIRE[current];
 			}
 			else{
 				addAnimation(walkingFIRE[current]);
+				walkingFIRE[current].setCurrentFrame(0);
+				walkingFIRE[current].stop();
 				currentAnimation = walkingFIRE[current];
 
 			}
