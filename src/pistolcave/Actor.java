@@ -223,28 +223,6 @@ public class Actor extends IsoEntity {
 	public void update(final int delta){
 		
 	}
-	
-	/* Render */
-	
-	@Override
-	public void render (Graphics g){
-		/*
-		 * Position in Tile coordinates is tracked by the top left corner of each tile,
-		 * but Entity position renders sprite images centered at the Entity's position.
-		 * To fix this, the Actor's Entity position is translated by half of the tile size
-		 * towards the bottom right corner of the tile, so the Actor's Entity position
-		 * is the middle of the tile. Then the Actor gets rendered correctly to the screen.
-		 * After the Actor is rendered, its Entity position is translated back to Tile
-		 * coordinates.
-		 */
-		
-		/* moving in isometric */
-		
-	//	getX()*(RogueGame.TILE_SIZE/2) + getY()*(RogueGame.TILE_SIZE/2))
-		setPosition(getPosition().add(new Vector(PistolCaveGame.TILE_SIZE/2, PistolCaveGame.TILE_SIZE/2)));
-		super.render(g);
-		setPosition(getPosition().add(new Vector(-PistolCaveGame.TILE_SIZE/2, -PistolCaveGame.TILE_SIZE/2)));
-	}
 
 	public void crouch() {
 		//VOID
