@@ -208,7 +208,14 @@ public class PlayingState extends BasicGameState {
 					}
 				}
 			}
-
+			for(Actor a : PC.enemies){
+				a.render(g);
+			}
+			PistolCaveGame.player.render(g);
+			if(PC.player2Connected){
+				PistolCaveGame.player2.render(g);
+			}
+			
 			Collections.sort(PistolCaveGame.wallsandblocks);
 			for (IsoEntity ie : PistolCaveGame.wallsandblocks) {
 				if(ie.getX() >= ((PistolCaveGame.player2.getX() - PistolCaveGame.VIEWPORT_SIZE_X/2) - (PistolCaveGame.TILE_SIZE*2)) - 5
@@ -246,6 +253,14 @@ public class PlayingState extends BasicGameState {
 				}
 			}
 
+			for(Actor a : PC.enemies){
+				a.render(g);
+			}
+			PistolCaveGame.player.render(g);
+			if(PC.player2Connected){
+				PistolCaveGame.player2.render(g);
+			}
+			
 			Collections.sort(PistolCaveGame.wallsandblocks);
 			for (IsoEntity ie : PistolCaveGame.wallsandblocks) {
 				if(ie.getX() >= ((PistolCaveGame.player.getX() - PistolCaveGame.VIEWPORT_SIZE_X/2) - (PistolCaveGame.TILE_SIZE*2)) - 5
@@ -274,10 +289,6 @@ public class PlayingState extends BasicGameState {
 
 		}
 
-		PistolCaveGame.player.render(g);
-		if(PC.player2Connected){
-			PistolCaveGame.player2.render(g);
-		}
 		for(Bullet b : PC.bullets)
 			b.render(g);
 	}
