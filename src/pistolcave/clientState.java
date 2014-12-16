@@ -3,8 +3,6 @@ package pistolcave;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import jig.Vector;
-
 /**
  * 
  * @author Corey Amoruso

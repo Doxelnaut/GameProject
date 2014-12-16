@@ -1,15 +1,7 @@
 package pistolcave;
 
-import java.io.Serializable;
-
 import org.newdawn.slick.Animation;
-import org.newdawn.slick.Graphics;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.util.pathfinding.AStarPathFinder;
-import org.newdawn.slick.util.pathfinding.Mover;
-import org.newdawn.slick.util.pathfinding.Path;
-
-import jig.Entity;
 import jig.ResourceManager;
 import jig.Vector;
 
@@ -37,7 +29,7 @@ import jig.Vector;
  *	Copyright 2014 Corey Amoruso, Ryan Bergquist, Zacharias Shufflebarger
  */
 public class Actor extends IsoEntity {
-	private static final int Up = 0, UpRight=1, Right=2, DownRight=3, Down=4, DownLeft=5, Left=6, UpLeft=7, CTRL=8;
+	private static final int Up = 0, UpRight=1, Right=2, DownRight=3, Down=4, DownLeft=5, Left=6, UpLeft=7;
 
 	Animation[] walking = new Animation[8];
 	Animation[] Attack = new Animation[8];
@@ -191,25 +183,19 @@ public class Actor extends IsoEntity {
 
 	/**
 	 * Reciever method for MoveUpCommand. 
+	 * @param x 
 	 */
-	public void move(int direction) {
-		//TODO: move character. Need to change collision detection to use tiles again, 
-		// or implement a scan line to lower the number of entities that are checked
-		// for collision. Perhaps the scan line can just use the camera view coords?
-		// I would much rather re-implement tiles to save on speed. I'm sure part of 
-		// the slow down came from checking for collisions too much.
-		
+	public void move(int direction, float x) {
+			
 		// Set movement in world coordinates using a unit vector that points in any one
 		// of the cardinal or diagonal directions. 
 		int theta = direction * 45; // angle of directional unit vector from North.
 		Vector unitDirection = new Vector(0, -1);
 		unitDirection = unitDirection.rotate(theta);
-		this.setPosition(this.getPosition().add(unitDirection.scale(5)));
+		this.setPosition(this.getPosition().add(unitDirection.scale(x)));
 	
 		this.getWalkingAnimation();
 				
-		// TODO: basic movement handled. Need to check for collision first, though.
-		// TODO: choose and create animation based on direction.
 	}
 	
 	public void shoot(Vector direction, StateBasedGame game){

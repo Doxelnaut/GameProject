@@ -1,9 +1,6 @@
 package pistolcave;
 
 import java.util.ArrayList;
-
-import jig.Vector;
-
 import org.newdawn.slick.Input;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -33,7 +30,7 @@ import org.newdawn.slick.state.StateBasedGame;
 public class InputHandler {
 
 	// Enumerated so rotations are multiples of direction integers
-	private static final int N = 0, NE=1, E=2, SE=3, S=4, SW=5, W=6, NW=7, CTRL=8;
+	private static final int N = 0, NE=1, E=2, SE=3, S=4, SW=5, W=6, NW=7;
 	
 	PistolCaveGame PC;
 	
@@ -54,31 +51,39 @@ public class InputHandler {
 	 * 
 	 */
 	@SuppressWarnings("static-access")
-	public ArrayList<Command> handleInput(Input input,StateBasedGame game){
+	public ArrayList<Command> handleInput(Input input,StateBasedGame game,float x){
 		PC = (PistolCaveGame)game;
 		ArrayList<Command> commands = new ArrayList<Command>();
 		if(input.isKeyDown(Input.KEY_W) && input.isKeyDown(Input.KEY_A)){
+			keys_wa.dist = x;
 			commands.add(keys_wa);
 		}
 		else if(input.isKeyDown(Input.KEY_W) && input.isKeyDown(Input.KEY_D)){
+			keys_wd.dist = x;
 			commands.add(keys_wd);
 		}
 		else if(input.isKeyDown(Input.KEY_S) && input.isKeyDown(Input.KEY_A)){
+			keys_sa.dist = x;
 			commands.add(keys_sa);
 		}
 		else if(input.isKeyDown(Input.KEY_S) && input.isKeyDown(Input.KEY_D)){
+			keys_sd.dist = x;
 			commands.add(keys_sd);
 		}
 		else if(input.isKeyDown(Input.KEY_W)){
+			key_w.dist = x;
 			commands.add(key_w);
 		}
 		else if(input.isKeyDown(Input.KEY_A)){
+			key_a.dist = x;
 			commands.add(key_a);
 		}
 		else if(input.isKeyDown(Input.KEY_S)){
+			key_s.dist = x;
 			commands.add(key_s);
 		}
 		else if(input.isKeyDown(Input.KEY_D)){
+			key_d.dist = x;
 			commands.add(key_d);
 		}
 //		else if(input.isKeyDown(Input.KEY_SPACE)){

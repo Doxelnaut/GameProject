@@ -127,17 +127,17 @@ public class PathFinder
 		//no current path
 		if(nextX == -1 || nextY == -1) return;
 		if(currentX > nextX){
-			enemy.move(Left);
+			enemy.move(Left,2);
 		}
 		if(currentX < nextX){
-			enemy.move(Right);
+			enemy.move(Right,2);
 		}
 		if(currentY < nextY){
-			enemy.move(Down);
+			enemy.move(Down,2);
 
 		}
 		if(currentY > nextY){
-			enemy.move(Up);
+			enemy.move(Up,2);
 
 		}
 		return;

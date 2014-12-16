@@ -415,7 +415,7 @@ public class PistolCaveGame extends StateBasedGame{
 				}
 			}
 			// check against enemies
-			for(NetVector ie : sEnemies){ // smoke and mirrors: bad collision detection, but small map/few actors
+			for(NetVector ie : sEnemies){ 
 				if(playerState.playerNewState.currentPos.getX() - TILE_SIZE/2 < ie.getPos().getX() + TILE_SIZE/2
 						&& playerState.playerNewState.currentPos.getX() + TILE_SIZE/2 > ie.getPos().getX() - TILE_SIZE/2
 						&& playerState.playerNewState.currentPos.getY() - TILE_SIZE/2 < ie.getPos().getY() + TILE_SIZE/2

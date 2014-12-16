@@ -1,17 +1,11 @@
 package pistolcave;
 
-
-import java.awt.geom.Point2D;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 
 import jig.Vector;
 
@@ -100,40 +94,6 @@ public class PlayingState extends BasicGameState {
 			e.printStackTrace();
 			System.out.println("Error opening streams");
 		}
-
-//		//Create map
-//		//First, read from file
-//		BufferedReader reader = null;
-//		try {
-//			reader = new BufferedReader(new FileReader("src/resource/maps/Map.txt"));
-//		} catch (FileNotFoundException e1) {
-//			e1.printStackTrace();
-//		}
-//
-//		String line = null;
-//
-//		int row = 0;
-//		//read in one line at a time and builds the wall and block arrays
-//		try {
-//			while ((line = reader.readLine()) != null) {
-//
-//				String[] parts = line.split("\\s");
-//				//System.out.println(parts.length);
-//				for(int col = 0; col < parts.length; col++){
-//					PistolCaveGame.map[row][col] = Integer.valueOf(parts[col]); // fill 2D map array
-//					//System.out.print(RogueGame.map[row][col] + " ");
-//					createMapEntities(row, col); // fill the entity arrays
-//					//updateVisibleBlockList(row,col);
-//				}
-//				System.out.print("\n");
-//				row++;
-//			}
-//		} catch (NumberFormatException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-
 
 		//read game state from server. Needed in order to set player ones position in the second players instance
 
@@ -227,10 +187,6 @@ public class PlayingState extends BasicGameState {
 					}
 				}
 			}
-			
-//			for(Actor a : PC.enemies){
-//				a.render(g);
-//			}
 
 			g.translate(PistolCaveGame.camX, PistolCaveGame.camY);		
 
@@ -269,10 +225,6 @@ public class PlayingState extends BasicGameState {
 					}
 				}
 			}
-			
-//			for(Actor a : PC.enemies){
-//				a.render(g);
-//			}
 
 			g.translate(PistolCaveGame.camX, PistolCaveGame.camY);		
 
@@ -295,9 +247,9 @@ public class PlayingState extends BasicGameState {
 			b.render(g);
 		
 		// remove enemies from render list
-				for(Actor a : PC.enemies){
-					PistolCaveGame.wallsandblocks.remove(a);
-				}
+		for(Actor a : PC.enemies){
+			PistolCaveGame.wallsandblocks.remove(a);
+		}
 	}
 	
 	@Override
@@ -320,7 +272,7 @@ public class PlayingState extends BasicGameState {
 
 		updateBullets();
 		//build and execute command from user
-		getCommand(input);
+		getCommand(input, x);
 
 		//build clientState and send to server
 		buildClientState(delta);
@@ -435,13 +387,13 @@ public class PlayingState extends BasicGameState {
 
 
 	//gets user input, and executes command.
-	void getCommand(Input input){
+	void getCommand(Input input, float x){
 		
 		//rotate player model towards mouse
 		PC.currentPlayer.updateDirection(PC.theta);
 		
 		InputHandler inputHandler = new InputHandler();
-		ArrayList<Command> commands = inputHandler.handleInput(input,PC);
+		ArrayList<Command> commands = inputHandler.handleInput(input,PC,x);
 
 		if(commands.size() > 0){
 			for(Command c : commands){
