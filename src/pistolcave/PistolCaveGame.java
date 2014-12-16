@@ -250,6 +250,7 @@ public class PistolCaveGame extends StateBasedGame{
 		ResourceManager.loadImage(groundSheetPath);
 		ResourceManager.loadImage(tallBlockImgPath);
 		ResourceManager.loadImage(shortBlockImgPath);
+		ResourceManager.loadImage(caveTileSetPath);
 		
 		// preload Enemy graphics
 		ResourceManager.loadImage(ACTOR_GOBLIN0_IMG_RSC);
@@ -365,66 +366,34 @@ public class PistolCaveGame extends StateBasedGame{
 			//update the gamestate enemy array with data from the server's list of enemies(sEnemies)
 			this.state.enemies = sEnemies;
 
-			
-			/**
-			 * This collision detection does not work. The first time an object inside of this
-			 * is referenced, the client stalls. Somehow, the host needs to be able to check 
-			 * the positions of each Entity as well as use the camera coordinates.
-			 */
 			//check for collisions here then if ok update player position
 			boolean canMove = true;
-			for(IsoEntity ie : stop){
-				if(playerState.playerNewState.minX < ie.getFooting().getX()
-						&& playerState.playerNewState.maxX > ie.getCoarseGrainedMinX() 
-						&& playerState.playerNewState.minY < ie.getCoarseGrainedMaxY() 
-						&& playerState.playerNewState.maxY > ie.getCoarseGrainedMinY()){
+			//check against walls
+			for(IsoEntity ie : stop){ // smoke and mirrors: bad collision detection, but small map/few actors
+				if(playerState.playerNewState.currentPos.getX() - TILE_SIZE/2 < ie.getPosition().getX() + TILE_SIZE/2
+						&& playerState.playerNewState.currentPos.getX() + TILE_SIZE/2 > ie.getPosition().getX() - TILE_SIZE/2
+						&& playerState.playerNewState.currentPos.getY() - TILE_SIZE/2 < ie.getPosition().getY() + TILE_SIZE/2
+						&& playerState.playerNewState.currentPos.getY() + TILE_SIZE/2 > ie.getPosition().getY() - TILE_SIZE/2){
 					canMove = false;
 					break;
 				}
 			}
-//			ArrayList<IsoEntity> scanTable = new ArrayList<IsoEntity>();
-//			// set scan line to start one screen tile to the left of the player
-//			float scanline = playerState.playerNewState.getPos().getX() - TILE_SIZE*2;
-//			boolean canMove = true; // if any collision is detected, this will be set to 'false'
-//			// stop when the scan line is further than one screen tile to the right of the player.
-//			while(scanline <= (playerState.playerNewState.getPos().getX() + TILE_SIZE*2)){
-//				// System.out.println("scanline: " + scanline);
-//				for(IsoEntity ie : stop){
-//					if(ie.getCoarseGrainedMinX() <= scanline && !scanTable.contains(ie)){
-//						scanTable.add(ie);
-//					}
-//					else if (ie.getCoarseGrainedMaxX() <= scanline && scanTable.contains(ie)){
-//						scanTable.remove(ie);
-//					}
-//				}
-//				scanline+=2;
-//
-//
-//				System.out.println("scanTable is empty: " + scanTable.isEmpty());
-//				System.out.println("stop is empty: " + stop.isEmpty());
-//
-//				// check each entity that is close enough to see if the player collides
-//				if(!scanTable.isEmpty()){
-//					for(int i = 0; i < scanTable.size(); i++){
-//						IsoEntity ie = scanTable.get(i);
-//						if(playerState.playerNewState.minX < ie.getCoarseGrainedMaxX()
-//								&& playerState.playerNewState.maxX > ie.getCoarseGrainedMinX() 
-//								&& playerState.playerNewState.minY < ie.getCoarseGrainedMaxY() 
-//								&& playerState.playerNewState.maxY > ie.getCoarseGrainedMinY()){
-//							canMove = false;
-//							break;
-//						}
-//					}
-//				}
-//				if(!canMove){
-//					break;
-//				}
-//			}
+			// check against enemies
+			for(NetVector ie : sEnemies){ // smoke and mirrors: bad collision detection, but small map/few actors
+				if(playerState.playerNewState.currentPos.getX() - TILE_SIZE/2 < ie.getPos().getX() + TILE_SIZE/2
+						&& playerState.playerNewState.currentPos.getX() + TILE_SIZE/2 > ie.getPos().getX() - TILE_SIZE/2
+						&& playerState.playerNewState.currentPos.getY() - TILE_SIZE/2 < ie.getPos().getY() + TILE_SIZE/2
+						&& playerState.playerNewState.currentPos.getY() + TILE_SIZE/2 > ie.getPos().getY() - TILE_SIZE/2){
+					canMove = false;
+					break;
+				}
+			}
+
 			//update player position
 			if(canMove){
 				this.state.player.setPos(playerState.playerNewState.getPos());
 			}
-			//update player direction and crouch
+			//update player direction and crouch, regardless of collisions
 			this.state.player.setDirection(playerState.playerNewState.getDirection());
 			this.state.player.setCrouched(playerState.playerNewState.getCrouched());
 
@@ -433,11 +402,34 @@ public class PistolCaveGame extends StateBasedGame{
 		//update player 2
 		else if(playerState.playerNum == 2){
 			
-			//check for collisions here then if ok update player position
-			
-			
-			//update player position
-			this.state.player2.setPos(playerState.playerNewState.getPos());
+			//check for collisions here then if ok update second player position
+			boolean canMove = true;
+			// check against walls
+			for(IsoEntity ie : stop){
+				if(playerState.playerNewState.currentPos.getX() - TILE_SIZE/2 < ie.getPosition().getX() + TILE_SIZE/2
+						&& playerState.playerNewState.currentPos.getX() + TILE_SIZE/2 > ie.getPosition().getX() - TILE_SIZE/2
+						&& playerState.playerNewState.currentPos.getY() - TILE_SIZE/2 < ie.getPosition().getY() + TILE_SIZE/2
+						&& playerState.playerNewState.currentPos.getY() + TILE_SIZE/2 > ie.getPosition().getY() - TILE_SIZE/2){
+					canMove = false;
+					break;
+				}
+			}
+			// check against enemies
+			for(NetVector ie : sEnemies){ // smoke and mirrors: bad collision detection, but small map/few actors
+				if(playerState.playerNewState.currentPos.getX() - TILE_SIZE/2 < ie.getPos().getX() + TILE_SIZE/2
+						&& playerState.playerNewState.currentPos.getX() + TILE_SIZE/2 > ie.getPos().getX() - TILE_SIZE/2
+						&& playerState.playerNewState.currentPos.getY() - TILE_SIZE/2 < ie.getPos().getY() + TILE_SIZE/2
+						&& playerState.playerNewState.currentPos.getY() + TILE_SIZE/2 > ie.getPos().getY() - TILE_SIZE/2){
+					canMove = false;
+					break;
+				}
+			}
+
+			//update second player position
+			if(canMove){
+				this.state.player2.setPos(playerState.playerNewState.getPos());
+			}
+			//update second player direction and crouch, regardless of collisions
 			this.state.player2.setDirection(playerState.playerNewState.getDirection());
 			this.state.player2.setCrouched(playerState.playerNewState.getCrouched());
 		}
