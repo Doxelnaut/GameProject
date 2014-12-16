@@ -178,8 +178,10 @@ public class PistolCaveGame extends StateBasedGame{
 	public static final String servName = "127.0.0.1";
 	
 	public static final int WARRIOR = 1;
-	public static final int Enemy1 = 2;
-	public static final int Enemy2 = 3;
+	
+	//I dont think this is needed
+	//public static final int Enemy1 = 2;
+	//public static final int Enemy2 = 3;
 	
 	ArrayList<IsoEntity> actors;
 	public static ArrayList<IsoEntity> ground;
@@ -187,8 +189,9 @@ public class PistolCaveGame extends StateBasedGame{
 	public static ArrayList<IsoEntity> walls;
 	public static ArrayList<IsoEntity> wallsandblocks;
 	public static ArrayList<IsoEntity> stop;
-	public static ArrayList<IsoEntity> enemies;
-	public static ArrayList<PathFinder> enemiePaths;
+	
+	public ArrayList<Actor> enemies;  //list of enemy entities to be used by the client for rendering, server does not touch this
+	public static ArrayList<NetVector> sEnemies; //list of NetVectors to represent enemies on the server  
 	public ArrayList<Bullet> bullets;
 
 	GameState state = new GameState();
@@ -217,8 +220,10 @@ public class PistolCaveGame extends StateBasedGame{
 		wallsandblocks = new ArrayList<IsoEntity>(200);
 		stop = new ArrayList<IsoEntity>(100);
 		bullets = new ArrayList<Bullet>(10);
-		enemies = new ArrayList<IsoEntity>(100);
-		enemiePaths = new ArrayList<PathFinder>(100);
+		enemies = new ArrayList<Actor>(100);
+		sEnemies = new ArrayList<NetVector>(100);
+		
+		addEnemies();
 	}
 	
 	@Override
@@ -339,6 +344,15 @@ public class PistolCaveGame extends StateBasedGame{
 		//update player 1
 		if(playerState.playerNum == 1){
 			
+			
+			
+			//Ryan here is a call to a method to handle path finding, the method is down below
+			updateEnemyPaths(playerState.playerNewState.getPos());
+			
+			//update the gamestate enemy array with data from the server's list of enemies(sEnemies)
+			this.state.enemies = sEnemies;
+
+			
 			/**
 			 * This collision detection does not work. The first time an object inside of this
 			 * is referenced, the client stalls. Somehow, the host needs to be able to check 
@@ -409,6 +423,61 @@ public class PistolCaveGame extends StateBasedGame{
 		}
 		
 		
+	}
+	
+	//path finding, p is the players position used to calculate the source tile x and y
+	private void updateEnemyPaths(Vector p) {
+		
+		int endrow,endcol,startrow,startcol;
+	
+	//run dijkstras here, updating the positions of the enemies stored in sEnemies.	
+		
+		/*if(secondPlayer){
+			for(IsoEntity ie : PistolCaveGame.enemies){
+				startrow= (int) (PistolCaveGame.player2.wPosition.getY() /PistolCaveGame.TILE_SIZE);
+				startcol=(int)(PistolCaveGame.player2.wPosition.getX()/PistolCaveGame.TILE_SIZE);
+				endrow=(int)(PistolCaveGame.player2.wPosition.getY()/PistolCaveGame.TILE_SIZE);
+				endcol=(int)(PistolCaveGame.player2.wPosition.getX()/PistolCaveGame.TILE_SIZE);
+				if(startrow != ie.getPath().startrow && startcol != ie.getPath().startcol){
+					((Actor) ie).pathFinder(PistolCaveGame.player2,2);
+				}
+			}
+		
+		}else{
+			for(IsoEntity ie : PistolCaveGame.enemies){
+				startrow= (int) (PistolCaveGame.player.wPosition.getY() /PistolCaveGame.TILE_SIZE);
+				startcol=(int)(PistolCaveGame.player.wPosition.getX()/PistolCaveGame.TILE_SIZE);
+				endrow=(int)(PistolCaveGame.player.wPosition.getY()/PistolCaveGame.TILE_SIZE);
+				endcol=(int)(PistolCaveGame.player.wPosition.getX()/PistolCaveGame.TILE_SIZE);
+				double xx = (endrow - startrow) * (endrow - startrow);
+				double y = (endcol-startcol) * (endcol-startcol);
+				double z = Math.sqrt(xx+y); //distance formula
+				    
+				    //Enemy is too far away
+				if( (int)z > 10) {
+				   	return;
+				}
+				//Player is in a different 
+				if(startrow != ie.getPath().startrow && startcol != ie.getPath().startcol){
+					((Actor) ie).pathFinder(PistolCaveGame.player,1);
+				}
+			}
+			
+		}
+		*/
+	}
+	
+	//creates the enemies on the server, you will update the positions of these object instead of an Entity or Actor on the server,
+	//the sEnemies array will be passed to the client which will inturn build the "enemies" array from the data stored in these objects.
+	private void addEnemies() {
+		NetVector enemy1 = new NetVector(new Vector(8*PistolCaveGame.TILE_SIZE,11*PistolCaveGame.TILE_SIZE));
+		enemy1.direction = 5;
+		enemy1.type = 2;
+		PistolCaveGame.sEnemies.add(enemy1);
+		NetVector enemy2 = new NetVector(new Vector(15*PistolCaveGame.TILE_SIZE,10*PistolCaveGame.TILE_SIZE));
+		enemy2.direction = 5;
+		enemy2.type = 3;
+		PistolCaveGame.sEnemies.add(enemy2);	
 	}
 	
 }
