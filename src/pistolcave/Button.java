@@ -2,19 +2,10 @@ package pistolcave;
 
 import jig.Entity;
 import jig.ResourceManager;
-
-import org.newdawn.slick.Animation;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.UnicodeFont;
-import org.newdawn.slick.font.effects.ColorEffect;
 import org.newdawn.slick.util.ResourceLoader;
-
-import java.awt.Color;
-
 import org.newdawn.slick.TrueTypeFont;
-
 import java.io.InputStream;
 import java.awt.Font;
 
@@ -54,8 +45,6 @@ public class Button extends Entity {
 	private int style;
 	private Font awtFont;
 	private TrueTypeFont custom;
-	
-	private Animation select; // Perhaps we will use this to animate the buttons... Maybe.
 	
 	/* Constructor */
 	

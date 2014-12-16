@@ -2,9 +2,6 @@ package pistolcave;
 
 import java.io.Serializable;
 
-import jig.Vector;
-
-import org.newdawn.slick.state.StateBasedGame;
 
 /**
  * 
@@ -40,12 +37,12 @@ public class Command implements Serializable {
 	 * Generic constructor.
 	 */
 	public Command(){}
-	
+
 	/**
 	 * Generic method to be overridden by child classes.
 	 * @param actor
 	 */
-	public void execute(Actor actor){}
+	public void execute(Actor actor) {}
 	
 	
 }

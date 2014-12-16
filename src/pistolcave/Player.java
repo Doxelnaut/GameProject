@@ -43,8 +43,7 @@ public class Player extends Actor {
 	static boolean secondPlayer = false;
 	double theta;
 	
-//	public static final int WAIT = -1, N = 0, E = 1, S = 2, W = 3, NW = 4, NE = 5, SE = 6, SW = 7, REST = 8;
-	private static final int Up = 0, UpRight=1, Right=2, DownRight=3, Down=4, DownLeft=5, Left=6, UpLeft=7, CTRL=8;
+	private static final int Up = 0, UpRight=1, Right=2, DownRight=3, Down=4, DownLeft=5, Left=6, UpLeft=7;
 
 	int current = Right; // current direction used for animation
 	int shootingDirection;
@@ -150,13 +149,8 @@ public class Player extends Actor {
 	 * Reciever method for MoveUpCommand. 
 	 */
 	@Override
-	public void move(int direction) {
-		//TODO: move character. Need to change collision detection to use tiles again, 
-		// or implement a scan line to lower the number of entities that are checked
-		// for collision. Perhaps the scan line can just use the camera view coords?
-		// I would much rather re-implement tiles to save on speed. I'm sure part of 
-		// the slow down came from checking for collisions too much.
-		
+	public void move(int direction, float x) {
+				
 		// Set movement in world coordinates using a unit vector that points in any one
 		// of the cardinal or diagonal directions. 
 		this.shooting = false;
@@ -164,15 +158,9 @@ public class Player extends Actor {
 		theta = direction * 45; // angle of directional unit vector from North.
 		Vector unitDirection = new Vector(0, -1);
 		unitDirection = unitDirection.rotate(theta);
-		this.setPosition(this.getPosition().add(unitDirection.scale(3)));
+		this.setPosition(this.getPosition().add(unitDirection.scale(x)));
 		this.getWalkingAnimation(direction);
 		
-//		if(!canMove()){
-//			ungo();
-//		}
-				
-		// TODO: basic movement handled. Need to check for collision first, though.
-		// TODO: choose and create animation based on direction.
 	}
 
 	@Override
@@ -196,7 +184,6 @@ public class Player extends Actor {
 	}
 	
 	public void shoot(Vector direction, StateBasedGame game){
-		//TODO: shoot bullets
 		this.shooting = true;
 		this.shoot();
 		PistolCaveGame RG = (PistolCaveGame) game;
@@ -207,17 +194,13 @@ public class Player extends Actor {
 	 * starts walking animation when either crouched or standing
 	 * @param direction the direction of movement in world coordinates
 	 */
-	public void getWalkingAnimation(int direction){ //TODO doesn't handle crouching, creates multiple animations
+	public void getWalkingAnimation(int direction){ 
 		
 		removeAnimation(currentAnimation);
 		
 
 		if(crouch){
 			
-			
-//			if (walking[current].isStopped()){
-//				removeAnimation(walking[current]);
-//			}
 			addAnimation(crouching[current]);
 			currentAnimation = crouching[current];
 
@@ -236,10 +219,6 @@ public class Player extends Actor {
 			addAnimation(walking[current]);
 			currentAnimation = walking[current];
 
-
-//			if (crouching[current].isStopped()){
-//			removeAnimation(crouching[current]);
-//			}
 			if (current != direction) {
 				removeAnimation(walking[current]);
 				current = direction;
@@ -360,24 +339,7 @@ public class Player extends Actor {
 				}	
 		}
 	}
-/*
-	public void changeImage() {
-		if (walkingFIRE[current].isStopped()) {
-			removeAnimation(walkingFIRE[current]);
-			addAnimation(walking[current]);
-			shooting = false;
-			}
-		if (crouchingFIRE[current].isStopped()) {
-			removeAnimation(crouchingFIRE[current]);
-			addAnimation(crouching[current]);
-			shooting = false;
-		}
-	}
 
-	public boolean isShooting() {
-		return shooting;
-	}
-	*/
 	public boolean getCrouch(){
 		return crouch;
 	}
@@ -455,140 +417,6 @@ public class Player extends Actor {
 		}
 	}
 
-/*	public boolean isShooting() {
-		if(crouch){
-			if(shooting){
-				if(crouchingFIRE[shootingDirection].isStopped()) {
-					removeAnimation(crouchingFIRE[shootingDirection]);
-					addAnimation(crouching[current]);
-					shooting = false;
-					return false;
-				}
-			}
-			
-		}
-		else{
-			if(shooting){
-				if(walkingFIRE[shootingDirection].isStopped()) {
-					removeAnimation(walkingFIRE[shootingDirection]);
-					addAnimation(walking[current]);
-					shooting = false;
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-	
-	*/
 }
-
-	
-//	public void start(float x, float direction) {
-//		isShooting();
-//		if(direction == 9){
-//			System.out.println("SHOOT");
-//			
-//			//System.out.println(GameState.current);
-//				
-//				shoot();
-//			//	GameState.fireball = GameState.launchFireball();
-//				
-//				
-//		
-//			
-//		}
-//		
-//			if(direction == 0){
-//				System.out.println("crouch");
-//				toggleCrouch();
-//			}
-//			else if(direction == 5){
-//				go(UP, x,UpRIGHT); 
-//				if(canMove()){
-//					go(RIGHT, x,UpRIGHT); 
-//					if(!canMove()){
-//						halt();
-//						ungo();
-//					}
-//
-//				}
-//				else{
-//					halt();
-//					ungo();
-//				}
-//			}
-//			else if(direction == 6){
-//				go(UP, x,UpLEFT); 
-//				if(canMove()){
-//					go(LEFT, x,UpLEFT); 
-//					if(!canMove()){
-//						halt();
-//						ungo();
-//					}
-//				}
-//				else{
-//					halt();
-//					ungo();
-//				}
-//			}
-//			else if(direction == 7){
-//				go(DOWN, x,DownLEFT); 
-//				if(canMove()){
-//					go(LEFT, x,DownLEFT); 
-//					if(!canMove()){
-//						halt();
-//						ungo();
-//					}
-//				}
-//				else{
-//					halt();
-//					ungo();
-//				}
-//			}
-//			else if(direction == 8){
-//				go(DOWN, x,DownRIGHT);
-//				if(canMove()){
-//					go(RIGHT, x,DownRIGHT);
-//					if(!canMove()){
-//						halt();
-//						ungo();
-//					}
-//				}
-//				else{
-//					halt();
-//					ungo();
-//				}
-//			}
-//			else if (direction == 1){
-//				go(UP, x,UP);
-//				if(!canMove()){
-//					halt();
-//					ungo();
-//				}
-//			}
-//			else if (direction == 4){
-//				go(LEFT, x,LEFT);
-//				if(!canMove()){
-//					halt();
-//					ungo();
-//				}
-//			}
-//			else if (direction == 3){
-//				go(DOWN, x,DOWN);
-//				if(!canMove()){
-//					halt();
-//					ungo();
-//				}
-//			}
-//			else if (direction == 2){
-//				go(RIGHT, x,RIGHT);
-//				if(!canMove()){
-//					halt();
-//					ungo();
-//				}
-//			}
-//		}		
-//	}
 	
 

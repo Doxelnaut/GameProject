@@ -2,12 +2,8 @@ package pistolcave;
 
 import jig.ConvexPolygon;
 import jig.Entity;
-import jig.ResourceManager;
 import jig.Vector;
-
-import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.Sound;
 
 /**
  * 

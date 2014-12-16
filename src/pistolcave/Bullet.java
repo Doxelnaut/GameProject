@@ -1,9 +1,5 @@
 package pistolcave;
 
-import org.newdawn.slick.state.StateBasedGame;
-
-import jig.Entity;
-import jig.ResourceManager;
 import jig.Vector;
 
 /**
