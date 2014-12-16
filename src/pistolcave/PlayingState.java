@@ -149,6 +149,7 @@ public class PlayingState extends BasicGameState {
 			//create player
 			PistolCaveGame.player = new Player(PistolCaveGame.WORLD_SIZE, new Vector(3*PistolCaveGame.TILE_SIZE, 2*PistolCaveGame.TILE_SIZE),1);
 			PistolCaveGame.blocks.add(PistolCaveGame.player);
+			PistolCaveGame.wallsandblocks.add(PistolCaveGame.player);
 			PC.currentPlayer = PistolCaveGame.player;
 			newState = new clientState(1);
 		}
@@ -158,9 +159,11 @@ public class PlayingState extends BasicGameState {
 			//create 1st player for rendering purposes
 			PistolCaveGame.player = new Player(PistolCaveGame.WORLD_SIZE, PC.state.player.getPos(),1);
 			PistolCaveGame.blocks.add(PistolCaveGame.player);
+			PistolCaveGame.wallsandblocks.add(PistolCaveGame.player);
 			//create 2nd player
 			PistolCaveGame.player2 = new Player(PistolCaveGame.WORLD_SIZE, new Vector(2*PistolCaveGame.TILE_SIZE, 2*PistolCaveGame.TILE_SIZE),1);
 			PistolCaveGame.blocks.add(PistolCaveGame.player2);
+			PistolCaveGame.wallsandblocks.add(PistolCaveGame.player2);
 			PistolCaveGame.player2.secondPlayer = true;
 			secondPlayer = true;
 			PC.currentPlayer = PistolCaveGame.player2;
@@ -185,6 +188,7 @@ public class PlayingState extends BasicGameState {
 			Actor tempE = new Actor(PistolCaveGame.WORLD_SIZE, v.getPos(),v.type);
 			tempE.current = v.direction;
 			PC.enemies.add(tempE);
+			
 		}
 	}
 
@@ -198,6 +202,7 @@ public class PlayingState extends BasicGameState {
 
 		g.translate(-PistolCaveGame.camX, -PistolCaveGame.camY);	
 		
+		// Second Player render -----------------------------------------------------------------------------------
 		if(secondPlayer){
 			for (IsoEntity ie : PistolCaveGame.ground) {
 				if(ie.getX() >= ((PistolCaveGame.player2.getX() - PistolCaveGame.VIEWPORT_SIZE_X/2) - (PistolCaveGame.TILE_SIZE*2)) - 5
@@ -207,13 +212,6 @@ public class PlayingState extends BasicGameState {
 						ie.render(g);
 					}
 				}
-			}
-			for(Actor a : PC.enemies){
-				a.render(g);
-			}
-			PistolCaveGame.player.render(g);
-			if(PC.player2Connected){
-				PistolCaveGame.player2.render(g);
 			}
 			
 			Collections.sort(PistolCaveGame.wallsandblocks);
@@ -226,6 +224,10 @@ public class PlayingState extends BasicGameState {
 					}
 				}
 			}
+			
+//			for(Actor a : PC.enemies){
+//				a.render(g);
+//			}
 
 			g.translate(PistolCaveGame.camX, PistolCaveGame.camY);		
 
@@ -241,7 +243,8 @@ public class PlayingState extends BasicGameState {
 			}
 
 			g.translate(-PistolCaveGame.camX, -PistolCaveGame.camY);		
-
+		// End Second Player render -------------------------------------------------------------------------------
+		// First Player render ------------------------------------------------------------------------------------
 		}else{
 			for (IsoEntity ie : PistolCaveGame.ground) {
 				if(ie.getX() >= ((PistolCaveGame.player.getX() - PistolCaveGame.VIEWPORT_SIZE_X/2) - (PistolCaveGame.TILE_SIZE*2)) - 5
@@ -251,14 +254,6 @@ public class PlayingState extends BasicGameState {
 						ie.render(g);
 					}
 				}
-			}
-
-			for(Actor a : PC.enemies){
-				a.render(g);
-			}
-			PistolCaveGame.player.render(g);
-			if(PC.player2Connected){
-				PistolCaveGame.player2.render(g);
 			}
 			
 			Collections.sort(PistolCaveGame.wallsandblocks);
@@ -271,6 +266,10 @@ public class PlayingState extends BasicGameState {
 					}
 				}
 			}
+			
+//			for(Actor a : PC.enemies){
+//				a.render(g);
+//			}
 
 			g.translate(PistolCaveGame.camX, PistolCaveGame.camY);		
 
@@ -282,13 +281,13 @@ public class PlayingState extends BasicGameState {
 						" Armor: " + (int)PistolCaveGame.player.getArmor() + 
 						" Experience: " + (int)PistolCaveGame.player.getExp()
 						, 100 , 10);
-				g.drawString("Dungeon Level: " , 100, 25);
+				g.drawString("World Pos: " + PistolCaveGame.player.getPosition() + " Entity Pos: " + PistolCaveGame.player.getX()+ ", " + PistolCaveGame.player.getY(), 100, 25);
 			}
 
 			g.translate(-PistolCaveGame.camX, -PistolCaveGame.camY);		
 
 		}
-
+		// End First Player render --------------------------------------------------------------------------------
 		for(Bullet b : PC.bullets)
 			b.render(g);
 	}
