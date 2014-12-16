@@ -401,7 +401,12 @@ public class PistolCaveGame extends StateBasedGame{
 		
 		//update player 2
 		else if(playerState.playerNum == 2){
+			//Ryan here is a call to a method to handle path finding, the method is down below
+			updateEnemyPaths(playerState.playerNewState.getPos());
 			
+			//update the gamestate enemy array with data from the server's list of enemies(sEnemies)
+			this.state.enemies = sEnemies;
+
 			//check for collisions here then if ok update second player position
 			boolean canMove = true;
 			// check against walls
@@ -466,8 +471,10 @@ public class PistolCaveGame extends StateBasedGame{
 	
 	//path finding, p is the players position used to calculate the source tile x and y
 	private void updateEnemyPaths(Vector p) {
-		
-		int endrow,endcol,startrow,startcol;
+
+		int startrow = (int)p.getX();
+		int startcol = (int)p.getY();
+		int endrow,endcol;
 	
 	//run dijkstras here, updating the positions of the enemies stored in sEnemies.	
 		
