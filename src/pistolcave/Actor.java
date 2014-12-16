@@ -70,10 +70,10 @@ public class Actor extends IsoEntity {
 	 * @param setx tile x coordinate
 	 * @param sety tile y coordinate
 	 */	
-	public Actor(Vector wWorldSize, Vector vector, int type){
+	public Actor(Vector wWorldSize, Vector vector, int t){
 		super(wWorldSize, PistolCaveGame.TILE_SIZE);
-		this.getTypeImage(type);
-		this.type = type;
+		this.getTypeImage(t);
+		this.type = t;
 		this.setTypeAttributes(type,vector);
 		//wWorldSz = wWorldSize;
 		//removeAnimation(walking[current]);

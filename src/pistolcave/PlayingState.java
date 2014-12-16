@@ -150,8 +150,6 @@ public class PlayingState extends BasicGameState {
 			PistolCaveGame.player = new Player(PistolCaveGame.WORLD_SIZE, new Vector(3*PistolCaveGame.TILE_SIZE, 2*PistolCaveGame.TILE_SIZE),1);
 			PistolCaveGame.blocks.add(PistolCaveGame.player);
 			PC.currentPlayer = PistolCaveGame.player;
-
-			addEnemies();
 			newState = new clientState(1);
 		}
 
@@ -160,8 +158,6 @@ public class PlayingState extends BasicGameState {
 			//create 1st player for rendering purposes
 			PistolCaveGame.player = new Player(PistolCaveGame.WORLD_SIZE, PC.state.player.getPos(),1);
 			PistolCaveGame.blocks.add(PistolCaveGame.player);
-			addEnemies();
-
 			//create 2nd player
 			PistolCaveGame.player2 = new Player(PistolCaveGame.WORLD_SIZE, new Vector(2*PistolCaveGame.TILE_SIZE, 2*PistolCaveGame.TILE_SIZE),1);
 			PistolCaveGame.blocks.add(PistolCaveGame.player2);
@@ -173,37 +169,23 @@ public class PlayingState extends BasicGameState {
 		}
 
 
-//		//create walls and blocks array for efficient collision detection.
-//		for (IsoEntity ie : PistolCaveGame.walls) {
-//			PistolCaveGame.wallsandblocks.add(ie);
-//		}
-//		for (IsoEntity ie : PistolCaveGame.blocks) {
-//			PistolCaveGame.wallsandblocks.add(ie);
-//		}
-//		for (IsoEntity ie : PistolCaveGame.enemies) {
-//			PistolCaveGame.wallsandblocks.add(ie);
-//		}
-	
+		//create walls and blocks array for efficient collision detection.
+		for (IsoEntity ie : PistolCaveGame.walls) {
+			PistolCaveGame.wallsandblocks.add(ie);
+		}
+		for (IsoEntity ie : PistolCaveGame.blocks) {
+			PistolCaveGame.wallsandblocks.add(ie);
+		}
 
 		
 	}
 
-
-	private void addEnemies() {
-		PistolCaveGame.enemy1 = new Actor(PistolCaveGame.WORLD_SIZE,new Vector(8*PistolCaveGame.TILE_SIZE,11*PistolCaveGame.TILE_SIZE),2);
-		PistolCaveGame.enemies.add(PistolCaveGame.enemy1);
-		PistolCaveGame.enemy2 = new Actor(PistolCaveGame.WORLD_SIZE,new Vector(15*PistolCaveGame.TILE_SIZE,10*PistolCaveGame.TILE_SIZE),3);
-		PistolCaveGame.enemies.add(PistolCaveGame.enemy2);	
-		for(IsoEntity ie : PistolCaveGame.enemies){
-			if(secondPlayer){
-				((Actor) ie).pathFinder(PistolCaveGame.player2,2);
-
-			}else{
-				((Actor) ie).pathFinder(PistolCaveGame.player,1);
-				
-			}
+	public void addEnemies(){
+		for(NetVector v : PC.state.enemies){
+			Actor tempE = new Actor(PistolCaveGame.WORLD_SIZE, v.getPos(),v.type);
+			tempE.current = v.direction;
+			PC.enemies.add(tempE);
 		}
-
 	}
 
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
@@ -214,7 +196,8 @@ public class PlayingState extends BasicGameState {
 		}
 
 
-		g.translate(-PistolCaveGame.camX, -PistolCaveGame.camY);		
+		g.translate(-PistolCaveGame.camX, -PistolCaveGame.camY);	
+		
 		if(secondPlayer){
 			for (IsoEntity ie : PistolCaveGame.ground) {
 				if(ie.getX() >= ((PistolCaveGame.player2.getX() - PistolCaveGame.VIEWPORT_SIZE_X/2) - (PistolCaveGame.TILE_SIZE*2)) - 5
@@ -225,7 +208,14 @@ public class PlayingState extends BasicGameState {
 					}
 				}
 			}
-
+			for(Actor a : PC.enemies){
+				a.render(g);
+			}
+			PistolCaveGame.player.render(g);
+			if(PC.player2Connected){
+				PistolCaveGame.player2.render(g);
+			}
+			
 			Collections.sort(PistolCaveGame.wallsandblocks);
 			for (IsoEntity ie : PistolCaveGame.wallsandblocks) {
 				if(ie.getX() >= ((PistolCaveGame.player2.getX() - PistolCaveGame.VIEWPORT_SIZE_X/2) - (PistolCaveGame.TILE_SIZE*2)) - 5
@@ -263,6 +253,14 @@ public class PlayingState extends BasicGameState {
 				}
 			}
 
+			for(Actor a : PC.enemies){
+				a.render(g);
+			}
+			PistolCaveGame.player.render(g);
+			if(PC.player2Connected){
+				PistolCaveGame.player2.render(g);
+			}
+			
 			Collections.sort(PistolCaveGame.wallsandblocks);
 			for (IsoEntity ie : PistolCaveGame.wallsandblocks) {
 				if(ie.getX() >= ((PistolCaveGame.player.getX() - PistolCaveGame.VIEWPORT_SIZE_X/2) - (PistolCaveGame.TILE_SIZE*2)) - 5
@@ -291,14 +289,10 @@ public class PlayingState extends BasicGameState {
 
 		}
 
-		PistolCaveGame.player.render(g);
-		if(PC.player2Connected){
-			PistolCaveGame.player2.render(g);
-		}
 		for(Bullet b : PC.bullets)
 			b.render(g);
-
 	}
+	
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta)
 			throws SlickException {
@@ -324,48 +318,11 @@ public class PlayingState extends BasicGameState {
 		//build clientState and send to server
 		buildClientState(delta);
 
-
-		updateEnemyPaths();
 			
 					
 	}
 //
-	private void updateEnemyPaths() {
-		int endrow,endcol,startrow,startcol;
 	
-		if(secondPlayer){
-			for(IsoEntity ie : PistolCaveGame.enemies){
-				startrow= (int) (PistolCaveGame.player2.wPosition.getY() /PistolCaveGame.TILE_SIZE);
-				startcol=(int)(PistolCaveGame.player2.wPosition.getX()/PistolCaveGame.TILE_SIZE);
-				endrow=(int)(PistolCaveGame.player2.wPosition.getY()/PistolCaveGame.TILE_SIZE);
-				endcol=(int)(PistolCaveGame.player2.wPosition.getX()/PistolCaveGame.TILE_SIZE);
-				if(startrow != ie.getPath().startrow && startcol != ie.getPath().startcol){
-					((Actor) ie).pathFinder(PistolCaveGame.player2,2);
-				}
-			}
-		
-		}else{
-			for(IsoEntity ie : PistolCaveGame.enemies){
-				startrow= (int) (PistolCaveGame.player.wPosition.getY() /PistolCaveGame.TILE_SIZE);
-				startcol=(int)(PistolCaveGame.player.wPosition.getX()/PistolCaveGame.TILE_SIZE);
-				endrow=(int)(PistolCaveGame.player.wPosition.getY()/PistolCaveGame.TILE_SIZE);
-				endcol=(int)(PistolCaveGame.player.wPosition.getX()/PistolCaveGame.TILE_SIZE);
-				double xx = (endrow - startrow) * (endrow - startrow);
-				double y = (endcol-startcol) * (endcol-startcol);
-				double z = Math.sqrt(xx+y); //distance formula
-				    
-				    //Enemy is too far away
-				if( (int)z > 10) {
-				   	return;
-				}
-				//Player is in a different 
-				if(startrow != ie.getPath().startrow && startcol != ie.getPath().startcol){
-					((Actor) ie).pathFinder(PistolCaveGame.player,1);
-				}
-			}
-			
-		}
-	}
 	public int getID() {
 		return PistolCaveGame.PLAYINGSTATE;
 	}
@@ -445,6 +402,9 @@ public class PlayingState extends BasicGameState {
 				PistolCaveGame.player2.shoot();
 			}
 		}	
+		
+		PC.enemies.clear();
+		addEnemies();
 
 	}
 
@@ -461,8 +421,7 @@ public class PlayingState extends BasicGameState {
 			ty = PistolCaveGame.player.getY()/PistolCaveGame.TILE_SIZE;
 
 		}
-//		System.out.println("tx: " + tx + " ty: " + ty);
-//		System.out.println("row " + row + " col: " + col);
+
 	}
 
 	//----------------------------------------------------------------------------------------------------------------------------
