@@ -188,7 +188,6 @@ public class PlayingState extends BasicGameState {
 			Actor tempE = new Actor(PistolCaveGame.WORLD_SIZE, v.getPos(),v.type);
 			tempE.current = v.direction;
 			PC.enemies.add(tempE);
-			
 		}
 	}
 
@@ -199,7 +198,11 @@ public class PlayingState extends BasicGameState {
 			PC.enterState(PistolCaveGame.STARTUPSTATE);
 		}
 
-
+		// add enemies to render list
+		for(Actor a : PC.enemies){
+			PistolCaveGame.wallsandblocks.add(a);
+		}
+		
 		g.translate(-PistolCaveGame.camX, -PistolCaveGame.camY);	
 		
 		// Second Player render -----------------------------------------------------------------------------------
@@ -290,6 +293,11 @@ public class PlayingState extends BasicGameState {
 		// End First Player render --------------------------------------------------------------------------------
 		for(Bullet b : PC.bullets)
 			b.render(g);
+		
+		// remove enemies from render list
+				for(Actor a : PC.enemies){
+					PistolCaveGame.wallsandblocks.remove(a);
+				}
 	}
 	
 	@Override
