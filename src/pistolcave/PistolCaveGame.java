@@ -3,6 +3,10 @@ package pistolcave;
 
 
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -178,8 +182,10 @@ public class PistolCaveGame extends StateBasedGame{
 	public static final String servName = "127.0.0.1";
 	
 	public static final int WARRIOR = 1;
-	public static final int Enemy1 = 2;
-	public static final int Enemy2 = 3;
+	
+	//I dont think this is needed
+	//public static final int Enemy1 = 2;
+	//public static final int Enemy2 = 3;
 	
 	ArrayList<IsoEntity> actors;
 	public static ArrayList<IsoEntity> ground;
@@ -187,8 +193,9 @@ public class PistolCaveGame extends StateBasedGame{
 	public static ArrayList<IsoEntity> walls;
 	public static ArrayList<IsoEntity> wallsandblocks;
 	public static ArrayList<IsoEntity> stop;
-	public static ArrayList<IsoEntity> enemies;
-	public static ArrayList<PathFinder> enemiePaths;
+	
+	public ArrayList<Actor> enemies;  //list of enemy entities to be used by the client for rendering, server does not touch this
+	public static ArrayList<NetVector> sEnemies; //list of NetVectors to represent enemies on the server  
 	public ArrayList<Bullet> bullets;
 
 	GameState state = new GameState();
@@ -217,8 +224,10 @@ public class PistolCaveGame extends StateBasedGame{
 		wallsandblocks = new ArrayList<IsoEntity>(200);
 		stop = new ArrayList<IsoEntity>(100);
 		bullets = new ArrayList<Bullet>(10);
-		enemies = new ArrayList<IsoEntity>(100);
-		enemiePaths = new ArrayList<PathFinder>(100);
+		enemies = new ArrayList<Actor>(100);
+		sEnemies = new ArrayList<NetVector>(100);
+		
+		addEnemies();
 	}
 	
 	@Override
@@ -320,6 +329,15 @@ public class PistolCaveGame extends StateBasedGame{
 		// preload sounds
 		//ResourceManager.loadImage(ouchSoundPath);
 
+		generateMap();		
+		
+		//create walls and blocks array for efficient collision detection.
+		for (IsoEntity ie : PistolCaveGame.walls) {
+			PistolCaveGame.wallsandblocks.add(ie);
+		}
+		for (IsoEntity ie : PistolCaveGame.blocks) {
+			PistolCaveGame.wallsandblocks.add(ie);
+		}
 	}
 	
 	public static void main(String[] args) {
@@ -339,18 +357,39 @@ public class PistolCaveGame extends StateBasedGame{
 		//update player 1
 		if(playerState.playerNum == 1){
 			
+			
+			
+			//Ryan here is a call to a method to handle path finding, the method is down below
+			updateEnemyPaths(playerState.playerNewState.getPos());
+			
+			//update the gamestate enemy array with data from the server's list of enemies(sEnemies)
+			this.state.enemies = sEnemies;
+
+			
 			/**
 			 * This collision detection does not work. The first time an object inside of this
 			 * is referenced, the client stalls. Somehow, the host needs to be able to check 
 			 * the positions of each Entity as well as use the camera coordinates.
 			 */
 			//check for collisions here then if ok update player position
+			boolean canMove = true;
+			for(IsoEntity ie : stop){
+				if(playerState.playerNewState.minX < ie.getFooting().getX()
+						&& playerState.playerNewState.maxX > ie.getCoarseGrainedMinX() 
+						&& playerState.playerNewState.minY < ie.getCoarseGrainedMaxY() 
+						&& playerState.playerNewState.maxY > ie.getCoarseGrainedMinY()){
+					canMove = false;
+					break;
+				}
+			}
 //			ArrayList<IsoEntity> scanTable = new ArrayList<IsoEntity>();
-			// set scan line to start on the left edge of the screen
-//			float scanline = (this.player.getX() - this.VIEWPORT_SIZE_X/2) - this.TILE_SIZE*2;
-//			while(scanline <= (this.player.getY() + this.VIEWPORT_SIZE_Y/2) + this.TILE_SIZE*2){
-//				System.out.println("scanline: " + scanline);
-//				for(IsoEntity ie : this.wallsandblocks){
+//			// set scan line to start one screen tile to the left of the player
+//			float scanline = playerState.playerNewState.getPos().getX() - TILE_SIZE*2;
+//			boolean canMove = true; // if any collision is detected, this will be set to 'false'
+//			// stop when the scan line is further than one screen tile to the right of the player.
+//			while(scanline <= (playerState.playerNewState.getPos().getX() + TILE_SIZE*2)){
+//				// System.out.println("scanline: " + scanline);
+//				for(IsoEntity ie : stop){
 //					if(ie.getCoarseGrainedMinX() <= scanline && !scanTable.contains(ie)){
 //						scanTable.add(ie);
 //					}
@@ -358,15 +397,37 @@ public class PistolCaveGame extends StateBasedGame{
 //						scanTable.remove(ie);
 //					}
 //				}
-//				
-//				
 //				scanline+=2;
+//
+//
+//				System.out.println("scanTable is empty: " + scanTable.isEmpty());
+//				System.out.println("stop is empty: " + stop.isEmpty());
+//
+//				// check each entity that is close enough to see if the player collides
+//				if(!scanTable.isEmpty()){
+//					for(int i = 0; i < scanTable.size(); i++){
+//						IsoEntity ie = scanTable.get(i);
+//						if(playerState.playerNewState.minX < ie.getCoarseGrainedMaxX()
+//								&& playerState.playerNewState.maxX > ie.getCoarseGrainedMinX() 
+//								&& playerState.playerNewState.minY < ie.getCoarseGrainedMaxY() 
+//								&& playerState.playerNewState.maxY > ie.getCoarseGrainedMinY()){
+//							canMove = false;
+//							break;
+//						}
+//					}
+//				}
+//				if(!canMove){
+//					break;
+//				}
 //			}
-			
 			//update player position
-			this.state.player.setPos(playerState.playerNewState.getPos());
+			if(canMove){
+				this.state.player.setPos(playerState.playerNewState.getPos());
+			}
+			//update player direction and crouch
 			this.state.player.setDirection(playerState.playerNewState.getDirection());
 			this.state.player.setCrouched(playerState.playerNewState.getCrouched());
+
 		}
 		
 		//update player 2
@@ -411,4 +472,122 @@ public class PistolCaveGame extends StateBasedGame{
 		
 	}
 	
+	//path finding, p is the players position used to calculate the source tile x and y
+	private void updateEnemyPaths(Vector p) {
+		
+		int endrow,endcol,startrow,startcol;
+	
+	//run dijkstras here, updating the positions of the enemies stored in sEnemies.	
+		
+		/*if(secondPlayer){
+			for(IsoEntity ie : PistolCaveGame.enemies){
+				startrow= (int) (PistolCaveGame.player2.wPosition.getY() /PistolCaveGame.TILE_SIZE);
+				startcol=(int)(PistolCaveGame.player2.wPosition.getX()/PistolCaveGame.TILE_SIZE);
+				endrow=(int)(PistolCaveGame.player2.wPosition.getY()/PistolCaveGame.TILE_SIZE);
+				endcol=(int)(PistolCaveGame.player2.wPosition.getX()/PistolCaveGame.TILE_SIZE);
+				if(startrow != ie.getPath().startrow && startcol != ie.getPath().startcol){
+					((Actor) ie).pathFinder(PistolCaveGame.player2,2);
+				}
+			}
+		
+		}else{
+			for(IsoEntity ie : PistolCaveGame.enemies){
+				startrow= (int) (PistolCaveGame.player.wPosition.getY() /PistolCaveGame.TILE_SIZE);
+				startcol=(int)(PistolCaveGame.player.wPosition.getX()/PistolCaveGame.TILE_SIZE);
+				endrow=(int)(PistolCaveGame.player.wPosition.getY()/PistolCaveGame.TILE_SIZE);
+				endcol=(int)(PistolCaveGame.player.wPosition.getX()/PistolCaveGame.TILE_SIZE);
+				double xx = (endrow - startrow) * (endrow - startrow);
+				double y = (endcol-startcol) * (endcol-startcol);
+				double z = Math.sqrt(xx+y); //distance formula
+				    
+				    //Enemy is too far away
+				if( (int)z > 10) {
+				   	return;
+				}
+				//Player is in a different 
+				if(startrow != ie.getPath().startrow && startcol != ie.getPath().startcol){
+					((Actor) ie).pathFinder(PistolCaveGame.player,1);
+				}
+			}
+			
+		}
+		*/
+	}
+	
+	//creates the enemies on the server, you will update the positions of these object instead of an Entity or Actor on the server,
+	//the sEnemies array will be passed to the client which will inturn build the "enemies" array from the data stored in these objects.
+	private void addEnemies() {
+		NetVector enemy1 = new NetVector(new Vector(8*PistolCaveGame.TILE_SIZE,11*PistolCaveGame.TILE_SIZE));
+		enemy1.direction = 5;
+		enemy1.type = 2;
+		PistolCaveGame.sEnemies.add(enemy1);
+		NetVector enemy2 = new NetVector(new Vector(15*PistolCaveGame.TILE_SIZE,10*PistolCaveGame.TILE_SIZE));
+		enemy2.direction = 5;
+		enemy2.type = 3;
+		PistolCaveGame.sEnemies.add(enemy2);	
+	}
+	
+	public void generateMap(){
+		//Create map
+		//First, read from file
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new FileReader("src/resource/maps/Map.txt"));
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
+		String line = null;
+
+		int row = 0;
+		//read in one line at a time and builds the wall and block arrays
+		try {
+			while ((line = reader.readLine()) != null) {
+
+				String[] parts = line.split("\\s");
+				//System.out.println(parts.length);
+				for(int col = 0; col < parts.length; col++){
+					map[row][col] = Integer.valueOf(parts[col]); // fill 2D map array
+					//System.out.print(RogueGame.map[row][col] + " ");
+					createMapEntities(row, col); // fill the entity arrays
+					//updateVisibleBlockList(row,col);
+				}
+//				System.out.print("\n");
+				row++;
+			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Fills the entity arrays using the integer IDs stored in the map file.
+	 * @param row x tile position of map
+	 * @param col y tile position of map
+	 */
+	public void createMapEntities(int row, int col){
+		switch(map[row][col]){
+		case 0: // ground tiles
+			walkable[row][col] = 1;
+			break;
+		case 1: // wall tiles
+			walls.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), true) );
+			stop.add(new Ground(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE)) );
+			walkable[row][col] = 0;
+			break;
+		case 2: // rock tiles
+			blocks.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), false) );
+			walkable[row][col] = 0;
+			break;
+		case 3: // potions
+			blocks.add(new Items(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), 2) );
+			walkable[row][col] = 0;
+			break;
+		default:
+			break;
+		}
+		ground.add(new Ground(WORLD_SIZE, new Vector(row*TILE_SIZE, col*TILE_SIZE)) );
+	}
 }

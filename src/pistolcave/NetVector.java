@@ -45,9 +45,13 @@ public class NetVector implements Serializable{
 	double minY;
 	double maxX;
 	double maxY;
-	
+	int type;
 	
 	public NetVector(){
+	}
+	
+	public NetVector(Vector v){
+		currentPos = v;
 	}
 	
 	public NetVector(float X, float Y, int d){
