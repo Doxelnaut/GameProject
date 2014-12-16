@@ -196,10 +196,10 @@ public class PlayingState extends BasicGameState {
 		PistolCaveGame.enemies.add(PistolCaveGame.enemy2);	
 		for(IsoEntity ie : PistolCaveGame.enemies){
 			if(secondPlayer){
-				((Actor) ie).pathFinder(PistolCaveGame.player2);
+				((Actor) ie).pathFinder(PistolCaveGame.player2,2);
 
 			}else{
-				((Actor) ie).pathFinder(PistolCaveGame.player);
+				((Actor) ie).pathFinder(PistolCaveGame.player,1);
 				
 			}
 		}
@@ -337,7 +337,7 @@ public class PlayingState extends BasicGameState {
 				endrow=(int)(PistolCaveGame.player2.wPosition.getY()/PistolCaveGame.TILE_SIZE);
 				endcol=(int)(PistolCaveGame.player2.wPosition.getX()/PistolCaveGame.TILE_SIZE);
 				if(startrow != ie.getPath().startrow && startcol != ie.getPath().startcol){
-					((Actor) ie).pathFinder(PistolCaveGame.player2);
+					((Actor) ie).pathFinder(PistolCaveGame.player2,2);
 				}
 			}
 		
@@ -357,7 +357,7 @@ public class PlayingState extends BasicGameState {
 				}
 				//Player is in a different 
 				if(startrow != ie.getPath().startrow && startcol != ie.getPath().startcol){
-					((Actor) ie).pathFinder(PistolCaveGame.player);
+					((Actor) ie).pathFinder(PistolCaveGame.player,1);
 				}
 			}
 			
@@ -445,23 +445,6 @@ public class PlayingState extends BasicGameState {
 	}
 
 	//----------------------------------------------------------------------------------------------------------------------------
-	public void updateVisibleBlockList(int row, int col){
-		float tx;
-		float ty;
-		if(secondPlayer){
-			tx = PistolCaveGame.player2.getX()/PistolCaveGame.TILE_SIZE;
-			ty = PistolCaveGame.player2.getY()/PistolCaveGame.TILE_SIZE;
-		}
-		else{
-			tx = PistolCaveGame.player.getX()/PistolCaveGame.TILE_SIZE;
-			ty = PistolCaveGame.player.getY()/PistolCaveGame.TILE_SIZE;
-
-		}
-		System.out.println("tx: " + tx + " ty: " + ty);
-		System.out.println("row " + row + " col: " + col);
-	}
-
-	//----------------------------------------------------------------------------------------------------------------------------
 
 
 	//gets user input, and executes command.
@@ -487,7 +470,7 @@ public class PlayingState extends BasicGameState {
 		Vector p = new Vector(550,340);
 		//gets angle to mouse
 		PC.theta = p.angleTo(new Vector(mouseX,mouseY));
-		System.out.println("Theta = " + PC.theta);
+	//	System.out.println("Theta = " + PC.theta);
 		
 
 				
