@@ -101,38 +101,38 @@ public class PlayingState extends BasicGameState {
 			System.out.println("Error opening streams");
 		}
 
-		//Create map
-		//First, read from file
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new FileReader("src/resource/maps/Map.txt"));
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		}
-
-		String line = null;
-
-		int row = 0;
-		//read in one line at a time and builds the wall and block arrays
-		try {
-			while ((line = reader.readLine()) != null) {
-
-				String[] parts = line.split("\\s");
-				//System.out.println(parts.length);
-				for(int col = 0; col < parts.length; col++){
-					PistolCaveGame.map[row][col] = Integer.valueOf(parts[col]); // fill 2D map array
-					//System.out.print(RogueGame.map[row][col] + " ");
-					createMapEntities(row, col); // fill the entity arrays
-					//updateVisibleBlockList(row,col);
-				}
-				System.out.print("\n");
-				row++;
-			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		//Create map
+//		//First, read from file
+//		BufferedReader reader = null;
+//		try {
+//			reader = new BufferedReader(new FileReader("src/resource/maps/Map.txt"));
+//		} catch (FileNotFoundException e1) {
+//			e1.printStackTrace();
+//		}
+//
+//		String line = null;
+//
+//		int row = 0;
+//		//read in one line at a time and builds the wall and block arrays
+//		try {
+//			while ((line = reader.readLine()) != null) {
+//
+//				String[] parts = line.split("\\s");
+//				//System.out.println(parts.length);
+//				for(int col = 0; col < parts.length; col++){
+//					PistolCaveGame.map[row][col] = Integer.valueOf(parts[col]); // fill 2D map array
+//					//System.out.print(RogueGame.map[row][col] + " ");
+//					createMapEntities(row, col); // fill the entity arrays
+//					//updateVisibleBlockList(row,col);
+//				}
+//				System.out.print("\n");
+//				row++;
+//			}
+//		} catch (NumberFormatException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 
 
 		//read game state from server. Needed in order to set player ones position in the second players instance
@@ -173,16 +173,16 @@ public class PlayingState extends BasicGameState {
 		}
 
 
-		//create walls and blocks array for efficient collision detection.
-		for (IsoEntity ie : PistolCaveGame.walls) {
-			PistolCaveGame.wallsandblocks.add(ie);
-		}
-		for (IsoEntity ie : PistolCaveGame.blocks) {
-			PistolCaveGame.wallsandblocks.add(ie);
-		}
-		for (IsoEntity ie : PistolCaveGame.enemies) {
-			PistolCaveGame.wallsandblocks.add(ie);
-		}
+//		//create walls and blocks array for efficient collision detection.
+//		for (IsoEntity ie : PistolCaveGame.walls) {
+//			PistolCaveGame.wallsandblocks.add(ie);
+//		}
+//		for (IsoEntity ie : PistolCaveGame.blocks) {
+//			PistolCaveGame.wallsandblocks.add(ie);
+//		}
+//		for (IsoEntity ie : PistolCaveGame.enemies) {
+//			PistolCaveGame.wallsandblocks.add(ie);
+//		}
 	
 
 		
@@ -291,7 +291,10 @@ public class PlayingState extends BasicGameState {
 
 		}
 
-
+		PistolCaveGame.player.render(g);
+		if(PC.player2Connected){
+			PistolCaveGame.player2.render(g);
+		}
 		for(Bullet b : PC.bullets)
 			b.render(g);
 
@@ -453,8 +456,8 @@ public class PlayingState extends BasicGameState {
 			ty = PistolCaveGame.player.getY()/PistolCaveGame.TILE_SIZE;
 
 		}
-		System.out.println("tx: " + tx + " ty: " + ty);
-		System.out.println("row " + row + " col: " + col);
+//		System.out.println("tx: " + tx + " ty: " + ty);
+//		System.out.println("row " + row + " col: " + col);
 	}
 
 	//----------------------------------------------------------------------------------------------------------------------------
@@ -483,7 +486,7 @@ public class PlayingState extends BasicGameState {
 		Vector p = new Vector(550,340);
 		//gets angle to mouse
 		PC.theta = p.angleTo(new Vector(mouseX,mouseY));
-		System.out.println("Theta = " + PC.theta);
+//		System.out.println("Theta = " + PC.theta);
 		
 
 				

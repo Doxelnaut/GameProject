@@ -3,6 +3,10 @@ package pistolcave;
 
 
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -320,6 +324,18 @@ public class PistolCaveGame extends StateBasedGame{
 		// preload sounds
 		//ResourceManager.loadImage(ouchSoundPath);
 
+		generateMap();		
+		
+		//create walls and blocks array for efficient collision detection.
+		for (IsoEntity ie : PistolCaveGame.walls) {
+			PistolCaveGame.wallsandblocks.add(ie);
+		}
+		for (IsoEntity ie : PistolCaveGame.blocks) {
+			PistolCaveGame.wallsandblocks.add(ie);
+		}
+		for (IsoEntity ie : PistolCaveGame.enemies) {
+			PistolCaveGame.wallsandblocks.add(ie);
+		}
 	}
 	
 	public static void main(String[] args) {
@@ -345,40 +361,62 @@ public class PistolCaveGame extends StateBasedGame{
 			 * the positions of each Entity as well as use the camera coordinates.
 			 */
 			//check for collisions here then if ok update player position
-			ArrayList<IsoEntity> scanTable = new ArrayList<IsoEntity>();
-			// set scan line to start one screen tile to the left of the player
-			float scanline = playerState.playerNewState.getPos().getX() - this.TILE_SIZE*2;
-			// stop when the scan line is further than one screen tile to the right of the player.
-			while(scanline <= (playerState.playerNewState.getPos().getX() + this.TILE_SIZE*2)){
-				//System.out.println("scanline: " + scanline);
-				for(IsoEntity ie : this.wallsandblocks){
-					if(ie.getCoarseGrainedMinX() <= scanline && !scanTable.contains(ie)){
-						scanTable.add(ie);
-					}
-					else if (ie.getCoarseGrainedMaxX() <= scanline && scanTable.contains(ie)){
-						scanTable.remove(ie);
-					}
-				}
-				scanline+=2;
-			}
-			// check each entity that is close enough to see if the player collides
-			if(!scanTable.isEmpty()){
-				for(int i = 0; i < scanTable.size(); i++){
-					IsoEntity ie = scanTable.get(i);
-					if(playerState.playerNewState.minX < ie.getCoarseGrainedMaxX()
-							&& playerState.playerNewState.maxX > ie.getCoarseGrainedMinX() 
-							&& playerState.playerNewState.minY < ie.getCoarseGrainedMaxY() 
-							&& playerState.playerNewState.maxY > ie.getCoarseGrainedMinY()){
-						
-
-					}
+			boolean canMove = true;
+			for(IsoEntity ie : stop){
+				if(playerState.playerNewState.minX < ie.getFooting().getX()
+						&& playerState.playerNewState.maxX > ie.getCoarseGrainedMinX() 
+						&& playerState.playerNewState.minY < ie.getCoarseGrainedMaxY() 
+						&& playerState.playerNewState.maxY > ie.getCoarseGrainedMinY()){
+					canMove = false;
+					break;
 				}
 			}
-			
+//			ArrayList<IsoEntity> scanTable = new ArrayList<IsoEntity>();
+//			// set scan line to start one screen tile to the left of the player
+//			float scanline = playerState.playerNewState.getPos().getX() - TILE_SIZE*2;
+//			boolean canMove = true; // if any collision is detected, this will be set to 'false'
+//			// stop when the scan line is further than one screen tile to the right of the player.
+//			while(scanline <= (playerState.playerNewState.getPos().getX() + TILE_SIZE*2)){
+//				// System.out.println("scanline: " + scanline);
+//				for(IsoEntity ie : stop){
+//					if(ie.getCoarseGrainedMinX() <= scanline && !scanTable.contains(ie)){
+//						scanTable.add(ie);
+//					}
+//					else if (ie.getCoarseGrainedMaxX() <= scanline && scanTable.contains(ie)){
+//						scanTable.remove(ie);
+//					}
+//				}
+//				scanline+=2;
+//
+//
+//				System.out.println("scanTable is empty: " + scanTable.isEmpty());
+//				System.out.println("stop is empty: " + stop.isEmpty());
+//
+//				// check each entity that is close enough to see if the player collides
+//				if(!scanTable.isEmpty()){
+//					for(int i = 0; i < scanTable.size(); i++){
+//						IsoEntity ie = scanTable.get(i);
+//						if(playerState.playerNewState.minX < ie.getCoarseGrainedMaxX()
+//								&& playerState.playerNewState.maxX > ie.getCoarseGrainedMinX() 
+//								&& playerState.playerNewState.minY < ie.getCoarseGrainedMaxY() 
+//								&& playerState.playerNewState.maxY > ie.getCoarseGrainedMinY()){
+//							canMove = false;
+//							break;
+//						}
+//					}
+//				}
+//				if(!canMove){
+//					break;
+//				}
+//			}
 			//update player position
-			this.state.player.setPos(playerState.playerNewState.getPos());
+			if(canMove){
+				this.state.player.setPos(playerState.playerNewState.getPos());
+			}
+			//update player direction and crouch
 			this.state.player.setDirection(playerState.playerNewState.getDirection());
 			this.state.player.setCrouched(playerState.playerNewState.getCrouched());
+
 		}
 		
 		//update player 2
@@ -423,4 +461,67 @@ public class PistolCaveGame extends StateBasedGame{
 		
 	}
 	
+	public void generateMap(){
+		//Create map
+		//First, read from file
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new FileReader("src/resource/maps/Map.txt"));
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
+		String line = null;
+
+		int row = 0;
+		//read in one line at a time and builds the wall and block arrays
+		try {
+			while ((line = reader.readLine()) != null) {
+
+				String[] parts = line.split("\\s");
+				//System.out.println(parts.length);
+				for(int col = 0; col < parts.length; col++){
+					map[row][col] = Integer.valueOf(parts[col]); // fill 2D map array
+					//System.out.print(RogueGame.map[row][col] + " ");
+					createMapEntities(row, col); // fill the entity arrays
+					//updateVisibleBlockList(row,col);
+				}
+//				System.out.print("\n");
+				row++;
+			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Fills the entity arrays using the integer IDs stored in the map file.
+	 * @param row x tile position of map
+	 * @param col y tile position of map
+	 */
+	public void createMapEntities(int row, int col){
+		switch(map[row][col]){
+		case 0: // ground tiles
+			walkable[row][col] = 1;
+			break;
+		case 1: // wall tiles
+			walls.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), true) );
+			stop.add(new Ground(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE)) );
+			walkable[row][col] = 0;
+			break;
+		case 2: // rock tiles
+			blocks.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), false) );
+			walkable[row][col] = 0;
+			break;
+		case 3: // potions
+			blocks.add(new Items(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), 2) );
+			walkable[row][col] = 0;
+			break;
+		default:
+			break;
+		}
+		ground.add(new Ground(WORLD_SIZE, new Vector(row*TILE_SIZE, col*TILE_SIZE)) );
+	}
 }

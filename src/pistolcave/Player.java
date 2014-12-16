@@ -167,9 +167,9 @@ public class Player extends Actor {
 		this.setPosition(this.getPosition().add(unitDirection.scale(3)));
 		this.getWalkingAnimation(direction);
 		
-		if(!canMove()){
-			ungo();
-		}
+//		if(!canMove()){
+//			ungo();
+//		}
 				
 		// TODO: basic movement handled. Need to check for collision first, though.
 		// TODO: choose and create animation based on direction.
