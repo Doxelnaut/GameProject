@@ -197,6 +197,7 @@ public class PistolCaveGame extends StateBasedGame{
 	
 	public ArrayList<Actor> enemies;  //list of enemy entities to be used by the client for rendering, server does not touch this
 	public static ArrayList<NetVector> sEnemies; //list of NetVectors to represent enemies on the server  
+	public static ArrayList<NetVector> sEPaths; 
 	public ArrayList<Bullet> bullets;
 
 	GameState state = new GameState();
@@ -227,6 +228,7 @@ public class PistolCaveGame extends StateBasedGame{
 		bullets = new ArrayList<Bullet>(10);
 		enemies = new ArrayList<Actor>(100);
 		sEnemies = new ArrayList<NetVector>(100);
+		sEPaths = new ArrayList<NetVector>(100);
 		
 		addEnemies();
 	}
@@ -365,7 +367,7 @@ public class PistolCaveGame extends StateBasedGame{
 			
 			
 			//Ryan here is a call to a method to handle path finding, the method is down below
-			updateEnemyPaths(playerState.playerNewState.getPos());
+			updateEnemyPaths(playerState.playerNewState.getPos(),1);
 			
 			//update the gamestate enemy array with data from the server's list of enemies(sEnemies)
 			this.state.enemies = sEnemies;
@@ -405,7 +407,12 @@ public class PistolCaveGame extends StateBasedGame{
 		
 		//update player 2
 		else if(playerState.playerNum == 2){
+			//Ryan here is a call to a method to handle path finding, the method is down below
+			updateEnemyPaths(playerState.playerNewState.getPos(),2);
 			
+			//update the gamestate enemy array with data from the server's list of enemies(sEnemies)
+			this.state.enemies = sEnemies;
+
 			//check for collisions here then if ok update second player position
 			boolean canMove = true;
 			// check against walls
@@ -469,45 +476,30 @@ public class PistolCaveGame extends StateBasedGame{
 	}
 	
 	//path finding, p is the players position used to calculate the source tile x and y
-	private void updateEnemyPaths(Vector p) {
-		
-		int endrow,endcol,startrow,startcol;
-	
-	//run dijkstras here, updating the positions of the enemies stored in sEnemies.	
-		
-		/*if(secondPlayer){
-			for(IsoEntity ie : PistolCaveGame.enemies){
-				startrow= (int) (PistolCaveGame.player2.wPosition.getY() /PistolCaveGame.TILE_SIZE);
-				startcol=(int)(PistolCaveGame.player2.wPosition.getX()/PistolCaveGame.TILE_SIZE);
-				endrow=(int)(PistolCaveGame.player2.wPosition.getY()/PistolCaveGame.TILE_SIZE);
-				endcol=(int)(PistolCaveGame.player2.wPosition.getX()/PistolCaveGame.TILE_SIZE);
-				if(startrow != ie.getPath().startrow && startcol != ie.getPath().startcol){
-					((Actor) ie).pathFinder(PistolCaveGame.player2,2);
-				}
-			}
-		
-		}else{
-			for(IsoEntity ie : PistolCaveGame.enemies){
-				startrow= (int) (PistolCaveGame.player.wPosition.getY() /PistolCaveGame.TILE_SIZE);
-				startcol=(int)(PistolCaveGame.player.wPosition.getX()/PistolCaveGame.TILE_SIZE);
-				endrow=(int)(PistolCaveGame.player.wPosition.getY()/PistolCaveGame.TILE_SIZE);
-				endcol=(int)(PistolCaveGame.player.wPosition.getX()/PistolCaveGame.TILE_SIZE);
-				double xx = (endrow - startrow) * (endrow - startrow);
-				double y = (endcol-startcol) * (endcol-startcol);
-				double z = Math.sqrt(xx+y); //distance formula
-				    
-				    //Enemy is too far away
-				if( (int)z > 10) {
-				   	return;
-				}
-				//Player is in a different 
-				if(startrow != ie.getPath().startrow && startcol != ie.getPath().startcol){
-					((Actor) ie).pathFinder(PistolCaveGame.player,1);
-				}
-			}
-			
+	private void updateEnemyPaths(Vector p,int userNum) {
+
+		for(NetVector enemy : sEnemies){
+			pathFinder(p,enemy);
 		}
-		*/
+
+
+	//run dijkstras here, updating the positions of the enemies stored in sEnemies.	
+
+	}
+	public void pathFinder(Vector user, NetVector enemy) {
+		int[] source = new int[2];
+		source[0]= (int) user.getX()/16;
+		source[1] =(int) user.getY()/16;
+		Dijkstra pathToUser = new Dijkstra(source);
+		
+		System.out.println(source[0] + " " + source[1]);
+		int[][] TP = pathToUser.weights;
+		for(int i = 0; i < TP.length; i++){
+			for(int j = 0; j < TP.length; j++){
+				System.out.print(pathToUser.G[i][j].getCost() + "    ");
+			}
+			System.out.println();
+		}
 	}
 	
 	//creates the enemies on the server, you will update the positions of these object instead of an Entity or Actor on the server,

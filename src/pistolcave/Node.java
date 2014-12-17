@@ -12,7 +12,7 @@ public class Node {
 		x = tx;
 		y = ty;
 		parent = null;
-		cost = 1000;
+		cost = 1;
 	}
 	
 	public void setParent(Node n){

@@ -47,8 +47,8 @@ public class Actor extends IsoEntity {
 	
 	public int playerType = 0;
 	public int enemyType = 1;
-	public PathFinder pathToUser1;
-	public PathFinder pathToUser2;
+	public Dijkstra pathToUser1;
+	public Dijkstra pathToUser2;
 	public Animation anim;
 	int current = Right; // current direction used for animation
 	int shootingDirection;
@@ -167,19 +167,7 @@ public class Actor extends IsoEntity {
 			break;
 		}
 	}
-	public void pathFinder(Player user, int i) {
-			PathFinder pf = new PathFinder(this,user);
-			if(i == 1){
-				this.pathToUser1 = pf;
-			}
-			else{
-				this.pathToUser2 = pf;
-			}
-			//pf.showmypath();
-			
-		
-
-	}
+	
 	
 	/* Actions */
 
@@ -215,7 +203,7 @@ public class Actor extends IsoEntity {
 	public void crouch() {
 		//VOID
 	}
-	public PathFinder getPath()				{return this.pathToUser1;}
+	public Dijkstra getPath()				{return this.pathToUser1;}
 
 
 	

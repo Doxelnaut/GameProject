@@ -290,7 +290,6 @@ public class PlayingState extends BasicGameState {
 			System.out.println("Error reading game state from server.");
 			e1.printStackTrace();
 		}
-
 		checkForPlayerJoin();
 		updatePlayersPosition();
 
@@ -304,6 +303,7 @@ public class PlayingState extends BasicGameState {
 		updateEnemies();
 
 		//build clientState and send to server
+	//	PC.update(this.newState);
 		buildClientState(delta);
 
 			
@@ -474,7 +474,6 @@ public class PlayingState extends BasicGameState {
 			temp.theta = b.theta;
 			newState.bullets.add(temp);
 		}
-
 
 		//send clientState to server
 		try {

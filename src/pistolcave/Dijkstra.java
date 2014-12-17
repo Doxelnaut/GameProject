@@ -6,7 +6,10 @@ import java.util.Iterator;
 public class Dijkstra {
 	Node[][] G = new Node[100][100];
 	int[][] weights = new int[100][100];
-	int infinity = 9999;
+	int infinity = 999;
+	public Dijkstra(int[] source){
+		buildGraph(source);
+	}
 	
 	public void buildGraph(int[] source){
 		ArrayList<Node> Q = new ArrayList<Node>();
@@ -20,6 +23,7 @@ public class Dijkstra {
 				Q.add(G[j][i]);			//add new node to Q (unvisited list)
 			}
 		}
+		
 		Node start = G[source[0]][source[1]];
 		weights[source[0]][source[1]] = 0;
 		start.setCost(0);
