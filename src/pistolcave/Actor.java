@@ -43,6 +43,7 @@ public class Actor extends IsoEntity {
 	public int type; // Player, creature, etc.
 	private int level;
 	private float attack;
+	int enemyID;	//used to track enemies across internet connection
 	
 	public int playerType = 0;
 	public int enemyType = 1;
@@ -51,6 +52,7 @@ public class Actor extends IsoEntity {
 	public Animation anim;
 	int current = Right; // current direction used for animation
 	int shootingDirection;
+	boolean shooting;
 	Vector wWorldSz;
 	Vector lastWPosition;
 	

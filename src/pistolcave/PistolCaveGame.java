@@ -46,7 +46,8 @@ import org.newdawn.slick.state.StateBasedGame;
 public class PistolCaveGame extends StateBasedGame{
 
 	double theta;
-	public static final int STARTUPSTATE = 0;
+	int enemyID = 0;
+	static final int STARTUPSTATE = 0;
 	public static final int PLAYINGSTATE = 1;
 	public static final int GAMEOVERSTATE = 2;
 	public static final int HOSTSTATE = 3;
@@ -355,6 +356,9 @@ public class PistolCaveGame extends StateBasedGame{
 	}
 	
 	public synchronized void update(clientState playerState){
+		
+		sEnemies = playerState.enemies;
+		
 		//update player 1
 		if(playerState.playerNum == 1){
 			
@@ -512,10 +516,12 @@ public class PistolCaveGame extends StateBasedGame{
 		NetVector enemy1 = new NetVector(new Vector(8*PistolCaveGame.TILE_SIZE,11*PistolCaveGame.TILE_SIZE));
 		enemy1.direction = 5;
 		enemy1.type = 2;
+		enemy1.enemyID = enemyID++;
 		PistolCaveGame.sEnemies.add(enemy1);
 		NetVector enemy2 = new NetVector(new Vector(15*PistolCaveGame.TILE_SIZE,10*PistolCaveGame.TILE_SIZE));
 		enemy2.direction = 5;
 		enemy2.type = 3;
+		enemy2.enemyID = enemyID++;
 		PistolCaveGame.sEnemies.add(enemy2);	
 	}
 	

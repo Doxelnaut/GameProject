@@ -46,6 +46,7 @@ public class NetVector implements Serializable{
 	double maxX;
 	double maxY;
 	int type;
+	int enemyID;
 	
 	public NetVector(){
 	}
