@@ -368,20 +368,20 @@ public class PistolCaveGame extends StateBasedGame{
 			boolean canMove = true;
 			//check against walls
 			for(IsoEntity ie : stop){ // smoke and mirrors: bad collision detection, but small map/few actors
-				if(playerState.playerNewState.currentPos.getX() - TILE_SIZE/2 < ie.getPosition().getX() + TILE_SIZE/2
-						&& playerState.playerNewState.currentPos.getX() + TILE_SIZE/2 > ie.getPosition().getX() - TILE_SIZE/2
-						&& playerState.playerNewState.currentPos.getY() - TILE_SIZE/2 < ie.getPosition().getY() + TILE_SIZE/2
-						&& playerState.playerNewState.currentPos.getY() + TILE_SIZE/2 > ie.getPosition().getY() - TILE_SIZE/2){
+				if(playerState.playerNewState.wPosition.getX() - TILE_SIZE/2 < ie.getPosition().getX() + TILE_SIZE/2
+						&& playerState.playerNewState.wPosition.getX() + TILE_SIZE/2 > ie.getPosition().getX() - TILE_SIZE/2
+						&& playerState.playerNewState.wPosition.getY() - TILE_SIZE/2 < ie.getPosition().getY() + TILE_SIZE/2
+						&& playerState.playerNewState.wPosition.getY() + TILE_SIZE/2 > ie.getPosition().getY() - TILE_SIZE/2){
 					canMove = false;
 					break;
 				}
 			}
 			// check against enemies
 			for(NetVector ie : sEnemies){ // smoke and mirrors: bad collision detection, but small map/few actors
-				if(playerState.playerNewState.currentPos.getX() - TILE_SIZE/2 < ie.getPos().getX() + TILE_SIZE/2
-						&& playerState.playerNewState.currentPos.getX() + TILE_SIZE/2 > ie.getPos().getX() - TILE_SIZE/2
-						&& playerState.playerNewState.currentPos.getY() - TILE_SIZE/2 < ie.getPos().getY() + TILE_SIZE/2
-						&& playerState.playerNewState.currentPos.getY() + TILE_SIZE/2 > ie.getPos().getY() - TILE_SIZE/2){
+				if(playerState.playerNewState.wPosition.getX() - TILE_SIZE/2 < ie.getPos().getX() + TILE_SIZE/2
+						&& playerState.playerNewState.wPosition.getX() + TILE_SIZE/2 > ie.getPos().getX() - TILE_SIZE/2
+						&& playerState.playerNewState.wPosition.getY() - TILE_SIZE/2 < ie.getPos().getY() + TILE_SIZE/2
+						&& playerState.playerNewState.wPosition.getY() + TILE_SIZE/2 > ie.getPos().getY() - TILE_SIZE/2){
 					canMove = false;
 					break;
 				}
@@ -404,20 +404,20 @@ public class PistolCaveGame extends StateBasedGame{
 			boolean canMove = true;
 			// check against walls
 			for(IsoEntity ie : stop){
-				if(playerState.playerNewState.currentPos.getX() - TILE_SIZE/2 < ie.getPosition().getX() + TILE_SIZE/2
-						&& playerState.playerNewState.currentPos.getX() + TILE_SIZE/2 > ie.getPosition().getX() - TILE_SIZE/2
-						&& playerState.playerNewState.currentPos.getY() - TILE_SIZE/2 < ie.getPosition().getY() + TILE_SIZE/2
-						&& playerState.playerNewState.currentPos.getY() + TILE_SIZE/2 > ie.getPosition().getY() - TILE_SIZE/2){
+				if(playerState.playerNewState.wPosition.getX() - TILE_SIZE/2 < ie.getPosition().getX() + TILE_SIZE/2
+						&& playerState.playerNewState.wPosition.getX() + TILE_SIZE/2 > ie.getPosition().getX() - TILE_SIZE/2
+						&& playerState.playerNewState.wPosition.getY() - TILE_SIZE/2 < ie.getPosition().getY() + TILE_SIZE/2
+						&& playerState.playerNewState.wPosition.getY() + TILE_SIZE/2 > ie.getPosition().getY() - TILE_SIZE/2){
 					canMove = false;
 					break;
 				}
 			}
 			// check against enemies
 			for(NetVector ie : sEnemies){ 
-				if(playerState.playerNewState.currentPos.getX() - TILE_SIZE/2 < ie.getPos().getX() + TILE_SIZE/2
-						&& playerState.playerNewState.currentPos.getX() + TILE_SIZE/2 > ie.getPos().getX() - TILE_SIZE/2
-						&& playerState.playerNewState.currentPos.getY() - TILE_SIZE/2 < ie.getPos().getY() + TILE_SIZE/2
-						&& playerState.playerNewState.currentPos.getY() + TILE_SIZE/2 > ie.getPos().getY() - TILE_SIZE/2){
+				if(playerState.playerNewState.wPosition.getX() - TILE_SIZE/2 < ie.getPos().getX() + TILE_SIZE/2
+						&& playerState.playerNewState.wPosition.getX() + TILE_SIZE/2 > ie.getPos().getX() - TILE_SIZE/2
+						&& playerState.playerNewState.wPosition.getY() - TILE_SIZE/2 < ie.getPos().getY() + TILE_SIZE/2
+						&& playerState.playerNewState.wPosition.getY() + TILE_SIZE/2 > ie.getPos().getY() - TILE_SIZE/2){
 					canMove = false;
 					break;
 				}
@@ -436,22 +436,28 @@ public class PistolCaveGame extends StateBasedGame{
 		this.bullets.clear();
 		
 		for(NetVector b : playerState.bullets){
-			this.bullets.add(new Bullet(PistolCaveGame.WORLD_SIZE, b.getPos(),b.theta,0,playerState.playerNewState.getDamage()));
+//			System.out.println("NetVector bullet wPos: " + b.getPos() + ", ePos: " + b.getEPos());
+			Bullet newSB = new Bullet(PistolCaveGame.WORLD_SIZE, b.getPos(),b.theta,0,playerState.playerNewState.getDamage());
+			this.bullets.add(newSB);
+//			System.out.println("new Bullet wPos: " + newSB.getPosition() + ", ePos: " + newSB.getEPosition());
 		}
 		
 		//update bullet positions
 		for(Bullet b : this.bullets){
+//			System.out.println("before update wPos: " + b.getPosition() + ", ePos: " + b.getEPosition());
 			b.update(playerState.delta);
+//			System.out.println("after update wPos: " + b.getPosition() + ", ePos: " + b.getEPosition());
+
 			// collision detection against enemies
 			for(NetVector nv : sEnemies){
-				System.out.println("nv pos: " + nv.getPos() + ", b pos: " + b.getPosition());
+//				System.out.println("nv bounds: " + nv.getPos() + ", b pos: " + b.getPosition());
 				if(b.getPosition().getX() - TILE_SIZE/2 < nv.getPos().getX() + TILE_SIZE/2
 						&& b.getPosition().getX() + TILE_SIZE/2 > nv.getPos().getX() - TILE_SIZE/2
 						&& b.getPosition().getY() - TILE_SIZE/2 < nv.getPos().getY() + TILE_SIZE/2
 						&& b.getPosition().getY() + TILE_SIZE/2 > nv.getPos().getY() - TILE_SIZE/2){
 					b.setActiveVar(false);
 					nv.doDamage(b.getDamage());
-					System.out.println("Bullet collides with enemy.");
+//					System.out.println("Bullet collides with enemy.");
 				}
 			}
 		}
@@ -465,7 +471,7 @@ public class PistolCaveGame extends StateBasedGame{
 		state.bullets.clear();
 		for(Bullet b : this.bullets){
 			temp = new NetVector();
-			temp.setPos(b.getEPosition());
+			temp.setPos(b.getPosition());
 			temp.theta = b.theta;
 			//add bullet to state array to send to client
 			state.bullets.add(temp);

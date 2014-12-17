@@ -43,9 +43,11 @@ public class Bullet extends IsoEntity{
 			setPosition(wPosition);
 		}
 		else
-			setPositionNoTranslate(wPosition);
+			setPosition/*NoTranslate*/(wPosition);
 		theta = t;
-		velocity = new Vector(0f,-.5f).setRotation(theta);
+		velocity = new Vector(1f,0f).setRotation(theta+45);
+//		velocity.setY(velocity.getY()/2);
+		System.out.println("velocity: " + velocity + ", theta: " + theta);
 		domain = wWorldSize;
 		damage = attack;
 		addImageWithBoundingBox(ResourceManager
@@ -64,7 +66,8 @@ public class Bullet extends IsoEntity{
 	
 	public void update(float delta) {
 		//setPosition(getPosition().add(direction).scale(speed));
-		translate(velocity.scale(delta));
+		//translate(velocity.scale(delta));
+		this.setPosition(this.getPosition().add(velocity.scale(delta/4)));
 	}
 	
 	public boolean isActive() {

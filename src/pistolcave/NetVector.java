@@ -36,7 +36,8 @@ public class NetVector implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	Vector currentPos;
+	Vector wPosition;
+	Vector ePosition;
 	int direction;
 	boolean crouched = false;
 	boolean attacking = false;
@@ -55,16 +56,17 @@ public class NetVector implements Serializable{
 	}
 	
 	public NetVector(Vector v){
-		currentPos = v;
+		wPosition = v;
 	}
 	
 	public NetVector(float X, float Y, int d){
-		currentPos = new Vector(X,Y);
+		wPosition = new Vector(X,Y);
 		direction = d;
 	}
 	
 	/* Getters */	
-	public Vector getPos(){return currentPos;}
+	public Vector getPos(){return wPosition;}
+	public Vector getEPos(){return ePosition;}
 	public int getDirection(){return direction;}	
 	public boolean getCrouched(){return crouched;}	
 	public double getMinX(){return minX;}	
@@ -76,7 +78,8 @@ public class NetVector implements Serializable{
 
 	
 	/* Setters */
-	public void setPos(Vector v){currentPos = v;}	
+	public void setPos(Vector v){wPosition = v;}		
+	public void setEPos(Vector v){ePosition = v;}
 	public void setDirection(int d){direction = d;}	
 	public void setCrouched(boolean c){crouched = c;}	
 	public void setMinX(double x){minX = x;}

@@ -187,7 +187,9 @@ public class Player extends Actor {
 		this.shooting = true;
 		this.shoot();
 		PistolCaveGame RG = (PistolCaveGame) game;
-		RG.bullets.add(new Bullet(PistolCaveGame.WORLD_SIZE, direction, RG.theta, 1, this.getAttack()));
+		Bullet newB = new Bullet(PistolCaveGame.WORLD_SIZE, direction, RG.theta, 1, this.getAttack());
+		RG.bullets.add(newB);
+//		System.out.println("shoot() bullet Wpos: " + newB.getPosition() + ", Epos: " + newB.getEPosition());
 	}
 	
 	/**
