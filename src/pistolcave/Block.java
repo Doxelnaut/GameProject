@@ -62,10 +62,10 @@ public class Block extends IsoEntity {
 			isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(3,0); 
 			break;
 		case 8:
-			isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(1,0); 
+			isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(5,0); 
 			break;
 		case 9:
-			isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(1,0); 
+			isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(6,0); 
 			break;
 			
 		default:
