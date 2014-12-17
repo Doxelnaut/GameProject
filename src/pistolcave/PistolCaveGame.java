@@ -367,9 +367,12 @@ public class PistolCaveGame extends StateBasedGame{
 	public synchronized void update(clientState playerState){
 		
 		sEnemies = playerState.enemies;
-		System.out.println("updating Now");
-		updateEnemyPaths(playerState.playerNewState.getPos());
-		System.out.println("Done Updating Now");
+		int c = 0;
+		for(NetVector n : sEnemies){
+			updateEnemyPaths(playerState.playerNewState.getPos(),c);
+			c++;
+			
+		}
 		//update player 1
 		if(playerState.playerNum == 1){
 			
@@ -394,6 +397,7 @@ public class PistolCaveGame extends StateBasedGame{
 			}
 			// check against enemies
 			for(NetVector ie : sEnemies){ // smoke and mirrors: bad collision detection, but small map/few actors
+				 
 				if(playerState.playerNewState.currentPos.getX() - TILE_SIZE/2 < ie.getPos().getX() + TILE_SIZE/2
 						&& playerState.playerNewState.currentPos.getX() + TILE_SIZE/2 > ie.getPos().getX() - TILE_SIZE/2
 						&& playerState.playerNewState.currentPos.getY() - TILE_SIZE/2 < ie.getPos().getY() + TILE_SIZE/2
@@ -484,7 +488,7 @@ public class PistolCaveGame extends StateBasedGame{
 		
 	}
 //------------------------------------------------------------------------------------------
-	public void updateEnemyPaths(Vector p) {
+	public void updateEnemyPaths(Vector p,int c) {
 
 		int[] source = new int[2];
 		source[0] = (int) (p.getX() / TILE_SIZE);
@@ -549,7 +553,7 @@ public class PistolCaveGame extends StateBasedGame{
 		}
 		Node pos;
 		int[] ePos = new int[2];
-		NetVector enemy = sEnemies.get(1);
+		NetVector enemy = sEnemies.get(c);
 		ePos[0] = (int) (enemy.getPos().getX() / TILE_SIZE) - offset[0];
 		ePos[1] = (int) (enemy.getPos().getY() / TILE_SIZE) - offset[1];
 
@@ -565,11 +569,13 @@ public class PistolCaveGame extends StateBasedGame{
 			System.out.println("old x = " + ePos[0] + " old y = " + ePos[1]);
 			System.out.println("new x = " + newX + " new y = " + newY);
 
-			float difX = newX - ePos[0] * TILE_SIZE;
-			float difY = newY - ePos[1] * TILE_SIZE;
+			float difX = newX - ePos[0];
+			float difY = newY - ePos[1];
 			enemy.setPos(new Vector(enemy.getPos().getX() + difX, enemy.getPos().getY() + difY));
 		}
 		weights[source[0]][source[1]] = 1;
+		
+		
 
 	}
 //-------------------------------------------------------------------------------------------------
