@@ -139,8 +139,7 @@ public class PlayingState extends BasicGameState {
 		for (IsoEntity ie : PistolCaveGame.blocks) {
 			PistolCaveGame.wallsandblocks.add(ie);
 		}
-
-		
+		PC.sEnemies = PC.state.enemies;
 	}
 
 	public void updateEnemies(int delta){
@@ -160,11 +159,11 @@ public class PlayingState extends BasicGameState {
 					oldY = a.getPosition().getY();
 					newX = v.getPos().getX();
 					newY = v.getPos().getY();
-					
-					Vector enemyMove = new Vector(newX - oldX, newY - oldY);
-					int direction = (int) (enemyMove.getRotation() / 45);
-					a.move(direction, delta * 60 /10000);
-					
+					if(oldX != newX && oldY != newY){
+						Vector enemyMove = new Vector(newX - oldX, newY - oldY);
+						int direction = (int) (enemyMove.getRotation() / 45);
+						a.move(direction, delta * 60 /10000);
+					}
 					//handle enemy attack
 					
 					break;
@@ -179,6 +178,7 @@ public class PlayingState extends BasicGameState {
 			}
 		}
 	}
+	
 
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
@@ -305,7 +305,7 @@ public class PlayingState extends BasicGameState {
 		
 		//build and execute command from user
 		getCommand(input, x);
-		
+				
 		//update enemies
 //		updateEnemies(delta);
 
@@ -364,7 +364,7 @@ public class PlayingState extends BasicGameState {
 			PistolCaveGame.camX = PistolCaveGame.player.getX() - PistolCaveGame.VIEWPORT_SIZE_X / 2;
 			PistolCaveGame.camY = PistolCaveGame.player.getY() - PistolCaveGame.VIEWPORT_SIZE_Y / 2;
 			PistolCaveGame.player.halt();
-
+			
 			//if You are first Player, and second player exists update player 2 location
 			if(joined){
 				PistolCaveGame.player2.setPosition(PC.state.player2.getPos());
@@ -453,6 +453,18 @@ public class PlayingState extends BasicGameState {
 			temp.theta = b.theta;
 			newState.bullets.add(temp);
 //			System.out.println("buildClientState() bullet Wpos: " + b.getPosition() + ", EPos: " + b.getEPosition());
+		}
+		
+		//rebuild enemy array to send to server
+		newState.enemies.clear();
+		
+		for(Actor a : PC.enemies){
+			temp = new NetVector();
+			temp.setPos(a.getPosition());
+			temp.direction = a.current;
+			temp.type = a.type;
+			temp.enemyID = a.enemyID;
+			newState.enemies.add(temp);
 		}
 
 		//send clientState to server
