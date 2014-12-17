@@ -333,12 +333,12 @@ public class PlayingState extends BasicGameState {
 			PistolCaveGame.walkable[row][col] = 1;
 			break;
 		case 1: // wall tiles
-			PistolCaveGame.walls.add(new Block(PistolCaveGame.WORLD_SIZE,new Vector(row*PistolCaveGame.TILE_SIZE, col*PistolCaveGame.TILE_SIZE), true) );
+			PistolCaveGame.walls.add(new Block(PistolCaveGame.WORLD_SIZE,new Vector(row*PistolCaveGame.TILE_SIZE, col*PistolCaveGame.TILE_SIZE), 1) );
 			PistolCaveGame.stop.add(new Ground(PistolCaveGame.WORLD_SIZE,new Vector(row*PistolCaveGame.TILE_SIZE, col*PistolCaveGame.TILE_SIZE)) );
 			PistolCaveGame.walkable[row][col] = 0;
 			break;
 		case 2: // rock tiles
-			PistolCaveGame.blocks.add(new Block(PistolCaveGame.WORLD_SIZE,new Vector(row*PistolCaveGame.TILE_SIZE, col*PistolCaveGame.TILE_SIZE), false) );
+			PistolCaveGame.blocks.add(new Block(PistolCaveGame.WORLD_SIZE,new Vector(row*PistolCaveGame.TILE_SIZE, col*PistolCaveGame.TILE_SIZE), 2) );
 			PistolCaveGame.walkable[row][col] = 0;
 			break;
 		case 3: // potions

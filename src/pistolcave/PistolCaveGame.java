@@ -93,6 +93,8 @@ public class PistolCaveGame extends StateBasedGame{
 	public static final String tallBlockImgPath   = "resource/graphics/tallcaveblock.png";
 	public static final String shortBlockImgPath   = "resource/graphics/shortcaveblock.png";
 	public static final String caveTileSetPath		= "resource/graphics/tileset_cave_1.png";
+	public static final String waterTileSetPath		= "resource/graphics/waterTiles.png";
+	public static final String caveWallsTileSetPath		= "resource/graphics/CaveWalls.png";
 
 	/* Player graphics */
 	public static final String PLAYER_IDLE_IMG_RSC = "resource/graphics/TMIM_Heroine/wIdle_0(16,99,112).png";
@@ -255,6 +257,8 @@ public class PistolCaveGame extends StateBasedGame{
 		ResourceManager.loadImage(tallBlockImgPath);
 		ResourceManager.loadImage(shortBlockImgPath);
 		ResourceManager.loadImage(caveTileSetPath);
+		ResourceManager.loadImage(caveWallsTileSetPath);
+		ResourceManager.loadImage(waterTileSetPath);
 		
 		// preload Enemy graphics
 		ResourceManager.loadImage(ACTOR_GOBLIN0_IMG_RSC);
@@ -615,23 +619,55 @@ public class PistolCaveGame extends StateBasedGame{
 		switch(map[row][col]){
 		case 0: // ground tiles
 			walkable[row][col] = 1;
+			ground.add(new Ground(WORLD_SIZE, new Vector(row*TILE_SIZE, col*TILE_SIZE)) );
+
 			break;
 		case 1: // wall tiles
-			walls.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), true) );
+			walls.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), 0) );
 			stop.add(new Ground(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE)) );
 			walkable[row][col] = 0;
 			break;
 		case 2: // rock tiles
-			blocks.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), false) );
+			blocks.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), 1) );
 			walkable[row][col] = 0;
 			break;
 		case 3: // potions
 			blocks.add(new Items(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), 2) );
+			ground.add(new Ground(WORLD_SIZE, new Vector(row*TILE_SIZE, col*TILE_SIZE)) );
+			walkable[row][col] = 0;
+			break;
+		case 4: //walls
+			walls.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), 2) );
+			stop.add(new Ground(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE)) );
+			walkable[row][col] = 0;
+			break;
+		case 5: //walls
+			walls.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), 3) );
+			stop.add(new Ground(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE)) );
+			walkable[row][col] = 0;
+			break;
+		case 6: //walls
+			walls.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), 4) );
+			stop.add(new Ground(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE)) );
+			walkable[row][col] = 0;
+			break;
+		case 7: //walls
+			walls.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), 5) );
+			stop.add(new Ground(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE)) );
+			walkable[row][col] = 0;
+			break;
+		case 8: //walls
+			walls.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), 6) );
+			stop.add(new Ground(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE)) );
+			walkable[row][col] = 0;
+			break;
+		case 9: //walls
+			walls.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), 7) );
+			stop.add(new Ground(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE)) );
 			walkable[row][col] = 0;
 			break;
 		default:
 			break;
 		}
-		ground.add(new Ground(WORLD_SIZE, new Vector(row*TILE_SIZE, col*TILE_SIZE)) );
 	}
 }

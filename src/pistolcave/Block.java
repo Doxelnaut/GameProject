@@ -29,21 +29,54 @@ import org.newdawn.slick.Image;
  *	Copyright 2014 Corey Amoruso, Ryan Bergquist, Zacharias Shufflebarger
  */
 public class Block extends IsoEntity {
-	boolean tall;
-	public Block(Vector wWorldSize, Vector wPosition, boolean tall) {
+	int tall;
+	public Block(Vector wWorldSize, Vector wPosition, int i) {
 		super(wWorldSize, PistolCaveGame.TILE_SIZE);
-		this.tall = tall;
-		Image isoImg;
-		if (tall)
-			isoImg = ResourceManager.getImage(PistolCaveGame.tallBlockImgPath); 
-		else
+		this.tall = i;
+		Image isoImg = null;
+		switch(i){
+		case 0: 
+		//	isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(0,0); 
+			isoImg = ResourceManager.getImage(PistolCaveGame.tallBlockImgPath);
+			break;
+		case 1:
 			isoImg = ResourceManager.getImage(PistolCaveGame.shortBlockImgPath);
-		
+			break;
+		case 2:
+			isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(0,0); 
+			break;
+		case 3:
+			//isoImg =ResourceManager.getImage(PistolCaveGame.tallBlockImgPath);
+			isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(11,0); 
+			break;
+		case 4:
+			isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(10,0); 
+			break;
+		case 5:
+			isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(1,0); 
+			break;
+		case 6:
+			isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(2,0); 
+			break;
+		case 7:
+			isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(3,0); 
+			break;
+		case 8:
+			isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(1,0); 
+			break;
+		case 9:
+			isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(1,0); 
+			break;
+			
+		default:
+			isoImg = ResourceManager.getImage(PistolCaveGame.tallBlockImgPath); 
+		}
+
 		addImage(isoImg);
 		setZHeightFromIsoImage(isoImg);
 		setPosition(wPosition);
 	}
-	public boolean gettall(){
+	public int gettall(){
 		return tall;
 	}
 	
