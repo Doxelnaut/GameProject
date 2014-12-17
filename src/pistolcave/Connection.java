@@ -113,6 +113,12 @@ public class Connection implements Runnable {
 			}
 				
 			PC.update(playerState);
+			try {
+				Thread.sleep(2);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	    }
 	    
 	}

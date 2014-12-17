@@ -2,7 +2,6 @@
 package pistolcave;
 
 
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -47,6 +46,7 @@ public class PistolCaveGame extends StateBasedGame{
 
 	double theta;
 	int enemyID = 0;
+	int[][]weights = new int[100][100];
 	static final int STARTUPSTATE = 0;
 	public static final int PLAYINGSTATE = 1;
 	public static final int GAMEOVERSTATE = 2;
@@ -196,7 +196,7 @@ public class PistolCaveGame extends StateBasedGame{
 	public static ArrayList<IsoEntity> stop;
 	
 	public ArrayList<Actor> enemies;  //list of enemy entities to be used by the client for rendering, server does not touch this
-	public static ArrayList<NetVector> sEnemies; //list of NetVectors to represent enemies on the server  
+	public ArrayList<NetVector> sEnemies; //list of NetVectors to represent enemies on the server  
 	public static ArrayList<NetVector> sEPaths; 
 	public ArrayList<Bullet> bullets;
 
@@ -212,6 +212,7 @@ public class PistolCaveGame extends StateBasedGame{
 	public static Actor enemy2 = null;
 	public Player currentPlayer;
 	static PathFinder enemy2Path = null;
+	Node[][] G = new Node[11][11];
 	
 	public PistolCaveGame(String title, float width, float height) {
 		super(title);
@@ -361,14 +362,14 @@ public class PistolCaveGame extends StateBasedGame{
 	public synchronized void update(clientState playerState){
 		
 		sEnemies = playerState.enemies;
-		
+		updateEnemyPaths(playerState.playerNewState.getPos());
+
 		//update player 1
 		if(playerState.playerNum == 1){
 			
 			
 			
 			//Ryan here is a call to a method to handle path finding, the method is down below
-		//	updateEnemyPaths(playerState.playerNewState.getPos(),1);
 			
 			//update the gamestate enemy array with data from the server's list of enemies(sEnemies)
 			this.state.enemies = sEnemies;
@@ -405,7 +406,8 @@ public class PistolCaveGame extends StateBasedGame{
 			this.state.player.setCrouched(playerState.playerNewState.getCrouched());
 
 		}
-		
+		 
+			
 		//update player 2
 		else if(playerState.playerNum == 2){
 			//Ryan here is a call to a method to handle path finding, the method is down below
@@ -475,82 +477,131 @@ public class PistolCaveGame extends StateBasedGame{
 		
 		
 	}
-	
+//------------------------------------------------------------------------------------------
+	public void updateEnemyPaths(Vector p) {
 
-	//private void updateEnemyPaths(Vector p) {
-		
-	//	int endrow,endcol,startrow,startcol;
-	
-	//run dijkstras here, updating the positions of the enemies stored in sEnemies.	
-		
-		
-		/*if(secondPlayer){
-			for(IsoEntity ie : PistolCaveGame.enemies){
-				startrow= (int) (PistolCaveGame.player2.wPosition.getY() /PistolCaveGame.TILE_SIZE);
-				startcol=(int)(PistolCaveGame.player2.wPosition.getX()/PistolCaveGame.TILE_SIZE);
-				endrow=(int)(PistolCaveGame.player2.wPosition.getY()/PistolCaveGame.TILE_SIZE);
-				endcol=(int)(PistolCaveGame.player2.wPosition.getX()/PistolCaveGame.TILE_SIZE);
-				if(startrow != ie.getPath().startrow && startcol != ie.getPath().startcol){
-					((Actor) ie).pathFinder(PistolCaveGame.player2,2);
-				}
-			}
-		
-		}else{
-			for(IsoEntity ie : PistolCaveGame.enemies){
-				startrow= (int) (PistolCaveGame.player.wPosition.getY() /PistolCaveGame.TILE_SIZE);
-				startcol=(int)(PistolCaveGame.player.wPosition.getX()/PistolCaveGame.TILE_SIZE);
-				endrow=(int)(PistolCaveGame.player.wPosition.getY()/PistolCaveGame.TILE_SIZE);
-				endcol=(int)(PistolCaveGame.player.wPosition.getX()/PistolCaveGame.TILE_SIZE);
-				double xx = (endrow - startrow) * (endrow - startrow);
-				double y = (endcol-startcol) * (endcol-startcol);
-				double z = Math.sqrt(xx+y); //distance formula
-				    
-				    //Enemy is too far away
-				if( (int)z > 10) {
-				   	return;
-				}
-				//Player is in a different 
-				if(startrow != ie.getPath().startrow && startcol != ie.getPath().startcol){
-					((Actor) ie).pathFinder(PistolCaveGame.player,1);
-				}
-			}
-			
->>>>>>> refs/heads/Issue4
-		}
-
-
-	//run dijkstras here, updating the positions of the enemies stored in sEnemies.	
-
-	}
-	public void pathFinder(Vector user, NetVector enemy) {
 		int[] source = new int[2];
-		source[0]= (int) user.getX()/16;
-		source[1] =(int) user.getY()/16;
-		Dijkstra pathToUser = new Dijkstra(source);
+		source[0] = (int) (p.getX() / TILE_SIZE);
+		source[1] = (int) (p.getY() / TILE_SIZE);
 		
-		System.out.println(source[0] + " " + source[1]);
-		int[][] TP = pathToUser.weights;
-		for(int i = 0; i < TP.length; i++){
-			for(int j = 0; j < TP.length; j++){
-				System.out.print(pathToUser.G[i][j].getCost() + "    ");
+		//offset is used to translate the tiles surrounding the player to graph G
+		int[] offset = new int[2];
+		offset[0] = source[0] - 5;
+		offset[1] = source[1] - 5;
+		
+		int dist;
+		
+		ArrayList<Node> Q = new ArrayList<Node>();
+		for(int i = 0; i < 11;i++){
+			for(int j = 0; j < 11; j++){
+				G[j][i] = new Node(j,i);   	//init graph
+				Q.add(G[j][i]);			//add new node to Q (unvisited list)
 			}
-			System.out.println();
 		}
+		Node start = G[5][5];   //places player at center of translated Graph
+		weights[source[0]][source[1]] = 0; //set weight of players tile to 0 temporarily
+		start.setCost(0);
+
+		while(Q.size()>1){
+			Iterator<Node> iter = Q.iterator();
+			Node u = (Node) iter.next();
+			Node temp = (Node) iter.next();
+			for(int i = 0; i < Q.size()-2; i++){
+				if(u.getCost() > temp.getCost()){
+					u = temp;
+				}
+				temp = (Node) iter.next();
+			}
+			iter = Q.iterator();
+			temp = iter.next();
+
+			while(temp.getX() != u.getX() || temp.getY() != u.getY()){
+				temp = iter.next();
+			}
+			iter.remove();
+
+			iter = Q.iterator();
+			temp = iter.next();
+			for(int i = 0; i < Q.size()-1; i++){
+				if(isNeighbor(temp,u)){
+					if(temp.getX()+offset[0] < 0 || temp.getY()+offset[1] < 0){
+						dist = 999;
+					}
+					else{
+						dist = u.getCost() + weights[temp.getX()+offset[0]][temp.getY()+offset[1]];
+					}
+					if(dist < temp.getCost()){
+						temp.setCost(dist);
+						temp.setParent(u);
+					}
+					if(dist > 10){
+						//i = Q.size();
+					}
+				}
+				temp = iter.next();
+			}	
+		}
+		Node pos;
+		int[] ePos = new int[2];
+		NetVector enemy = sEnemies.get(1);
+		ePos[0] = (int) (enemy.getPos().getX() / TILE_SIZE) - offset[0];
+		ePos[1] = (int) (enemy.getPos().getY() / TILE_SIZE) - offset[1];
+
+		if(ePos[0] > 10 || ePos[1] > 10 || ePos[0] < 0 || ePos[1] < 0){
+			weights[source[0]][source[1]] = 1;
+			return;
+		}
+		pos = G[ePos[0]][ePos[1]];
+		
+		if(pos.getParent()!= null){
+			float newX = pos.getParent().getX();
+			float newY = pos.getParent().getY();
+			System.out.println("old x = " + ePos[0] + " old y = " + ePos[1]);
+			System.out.println("new x = " + newX + " new y = " + newY);
+
+			float difX = newX - ePos[0] * TILE_SIZE;
+			float difY = newY - ePos[1] * TILE_SIZE;
+			enemy.setPos(new Vector(enemy.getPos().getX() + difX, enemy.getPos().getY() + difY));
+		}
+		weights[source[0]][source[1]] = 1;
+
 	}
-*/	
+//-------------------------------------------------------------------------------------------------
+	/*
+	 * Checks if the two nodes are neighboring each other
+	 */
+		public boolean isNeighbor(Node a, Node b){
+			float ax = a.getX();
+			float ay = a.getY();
+			float bx = b.getX();
+			float by = b.getY();
+			
+			if(ax == bx-1 && (ay == by || ay == by-1 || ay == by +1)){
+				return true;
+			}
+			else if(ax == bx+1 && (ay == by || ay == by-1 || ay == by +1)){
+				return true;
+			}
+			else if(ax == bx && (ay == by || ay == by-1 || ay == by +1)){
+				return true;
+			}
+			return false;
+		}
+//---------------------------------------------------------------------------------------------------
+	
 	//creates the enemies on the server, you will update the positions of these object instead of an Entity or Actor on the server,
 	//the sEnemies array will be passed to the client which will inturn build the "enemies" array from the data stored in these objects.
 	private void addEnemies() {
-		NetVector enemy1 = new NetVector(new Vector(8*PistolCaveGame.TILE_SIZE,11*PistolCaveGame.TILE_SIZE));
+		NetVector enemy1 = new NetVector(new Vector(8*PistolCaveGame.TILE_SIZE,12*PistolCaveGame.TILE_SIZE));
 		enemy1.direction = 5;
 		enemy1.type = 2;
 		enemy1.enemyID = enemyID++;
-		PistolCaveGame.sEnemies.add(enemy1);
+		sEnemies.add(enemy1);
 		NetVector enemy2 = new NetVector(new Vector(15*PistolCaveGame.TILE_SIZE,10*PistolCaveGame.TILE_SIZE));
 		enemy2.direction = 5;
 		enemy2.type = 3;
 		enemy2.enemyID = enemyID++;
-		PistolCaveGame.sEnemies.add(enemy2);	
+		sEnemies.add(enemy2);	
 	}
 	
 	public void generateMap(){
@@ -597,15 +648,20 @@ public class PistolCaveGame extends StateBasedGame{
 		switch(map[row][col]){
 		case 0: // ground tiles
 			walkable[row][col] = 1;
+			weights[row][col] = 1;
+
 			break;
 		case 1: // wall tiles
 			walls.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), true) );
 			stop.add(new Ground(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE)) );
 			walkable[row][col] = 0;
+			weights[row][col] = 999;
 			break;
 		case 2: // rock tiles
 			blocks.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), false) );
 			walkable[row][col] = 0;
+			weights[row][col] = 999;
+
 			break;
 		case 3: // potions
 			blocks.add(new Items(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), 2) );
