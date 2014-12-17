@@ -197,7 +197,7 @@ public class PistolCaveGame extends StateBasedGame{
 	public static ArrayList<IsoEntity> wallsandblocks;
 	public static ArrayList<IsoEntity> stop;
 	
-	public ArrayList<Actor> enemies;  //list of enemy entities to be used by the client for rendering, server does not touch this
+	public static ArrayList<Actor> enemies;  //list of enemy entities to be used by the client for rendering, server does not touch this
 	public static ArrayList<NetVector> sEnemies; //list of NetVectors to represent enemies on the server  
 	public static ArrayList<NetVector> sEPaths; 
 	public ArrayList<Bullet> bullets;

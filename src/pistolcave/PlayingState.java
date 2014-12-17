@@ -325,29 +325,7 @@ public class PlayingState extends BasicGameState {
 	 * @param row x tile position of map
 	 * @param col y tile position of map
 	 */
-	public void createMapEntities(int row, int col){
-		switch(PistolCaveGame.map[row][col]){
-		case 0: // ground tiles
-			PistolCaveGame.walkable[row][col] = 1;
-			break;
-		case 1: // wall tiles
-			PistolCaveGame.walls.add(new Block(PistolCaveGame.WORLD_SIZE,new Vector(row*PistolCaveGame.TILE_SIZE, col*PistolCaveGame.TILE_SIZE), 1) );
-			PistolCaveGame.stop.add(new Ground(PistolCaveGame.WORLD_SIZE,new Vector(row*PistolCaveGame.TILE_SIZE, col*PistolCaveGame.TILE_SIZE)) );
-			PistolCaveGame.walkable[row][col] = 0;
-			break;
-		case 2: // rock tiles
-			PistolCaveGame.blocks.add(new Block(PistolCaveGame.WORLD_SIZE,new Vector(row*PistolCaveGame.TILE_SIZE, col*PistolCaveGame.TILE_SIZE), 2) );
-			PistolCaveGame.walkable[row][col] = 0;
-			break;
-		case 3: // potions
-			PistolCaveGame.blocks.add(new Items(PistolCaveGame.WORLD_SIZE,new Vector(row*PistolCaveGame.TILE_SIZE, col*PistolCaveGame.TILE_SIZE), 2) );
-			PistolCaveGame.walkable[row][col] = 0;
-			break;
-		default:
-			break;
-		}
-		PistolCaveGame.ground.add(new Ground(PistolCaveGame.WORLD_SIZE, new Vector(row*PistolCaveGame.TILE_SIZE, col*PistolCaveGame.TILE_SIZE)) );
-	}
+
 	//------------------------------------------------------------------------------------------------------------------	
 	void checkForPlayerJoin(){
 
@@ -395,22 +373,6 @@ public class PlayingState extends BasicGameState {
 				PistolCaveGame.player2.shoot();
 			}
 		}	
-	}
-
-	//----------------------------------------------------------------------------------------------------------------------------
-	public void updateVisibleBlockList(int row, int col){
-		float tx;
-		float ty;
-		if(secondPlayer){
-			tx = PistolCaveGame.player2.getX()/PistolCaveGame.TILE_SIZE;
-			ty = PistolCaveGame.player2.getY()/PistolCaveGame.TILE_SIZE;
-		}
-		else{
-			tx = PistolCaveGame.player.getX()/PistolCaveGame.TILE_SIZE;
-			ty = PistolCaveGame.player.getY()/PistolCaveGame.TILE_SIZE;
-
-		}
-
 	}
 
 	//----------------------------------------------------------------------------------------------------------------------------
