@@ -465,8 +465,8 @@ public class PlayingState extends BasicGameState {
 	void updateBullets(){
 		PC.bullets.clear();
 		//add bullets updated from server
-		for(NetVector b : PC.state.bullets)
-			PC.bullets.add(new Bullet(PistolCaveGame.WORLD_SIZE, b.getPos(),b.theta,0));
+		for(NetVector b : PC.state.bullets) // client doesn't need bullet damage, set it to 0
+			PC.bullets.add(new Bullet(PistolCaveGame.WORLD_SIZE, b.getPos(),b.theta,0,0));
 	}
 
 }
