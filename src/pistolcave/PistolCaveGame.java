@@ -46,7 +46,8 @@ import org.newdawn.slick.state.StateBasedGame;
 public class PistolCaveGame extends StateBasedGame{
 
 	double theta;
-	public static final int STARTUPSTATE = 0;
+	int enemyID = 0;
+	static final int STARTUPSTATE = 0;
 	public static final int PLAYINGSTATE = 1;
 	public static final int GAMEOVERSTATE = 2;
 	public static final int HOSTSTATE = 3;
@@ -230,6 +231,7 @@ public class PistolCaveGame extends StateBasedGame{
 		sEPaths = new ArrayList<NetVector>(100);
 		
 		addEnemies();
+		state.enemies = sEnemies;
 	}
 	
 	@Override
@@ -357,13 +359,16 @@ public class PistolCaveGame extends StateBasedGame{
 	}
 	
 	public synchronized void update(clientState playerState){
+		
+		sEnemies = playerState.enemies;
+		
 		//update player 1
 		if(playerState.playerNum == 1){
 			
 			
 			
 			//Ryan here is a call to a method to handle path finding, the method is down below
-			updateEnemyPaths(playerState.playerNewState.getPos(),1);
+		//	updateEnemyPaths(playerState.playerNewState.getPos(),1);
 			
 			//update the gamestate enemy array with data from the server's list of enemies(sEnemies)
 			this.state.enemies = sEnemies;
@@ -404,7 +409,7 @@ public class PistolCaveGame extends StateBasedGame{
 		//update player 2
 		else if(playerState.playerNum == 2){
 			//Ryan here is a call to a method to handle path finding, the method is down below
-			updateEnemyPaths(playerState.playerNewState.getPos(),2);
+			//updateEnemyPaths(playerState.playerNewState.getPos(),2);
 			
 			//update the gamestate enemy array with data from the server's list of enemies(sEnemies)
 			this.state.enemies = sEnemies;
@@ -471,11 +476,46 @@ public class PistolCaveGame extends StateBasedGame{
 		
 	}
 	
-	//path finding, p is the players position used to calculate the source tile x and y
-	private void updateEnemyPaths(Vector p,int userNum) {
 
-		for(NetVector enemy : sEnemies){
-			pathFinder(p,enemy);
+	//private void updateEnemyPaths(Vector p) {
+		
+	//	int endrow,endcol,startrow,startcol;
+	
+	//run dijkstras here, updating the positions of the enemies stored in sEnemies.	
+		
+		
+		/*if(secondPlayer){
+			for(IsoEntity ie : PistolCaveGame.enemies){
+				startrow= (int) (PistolCaveGame.player2.wPosition.getY() /PistolCaveGame.TILE_SIZE);
+				startcol=(int)(PistolCaveGame.player2.wPosition.getX()/PistolCaveGame.TILE_SIZE);
+				endrow=(int)(PistolCaveGame.player2.wPosition.getY()/PistolCaveGame.TILE_SIZE);
+				endcol=(int)(PistolCaveGame.player2.wPosition.getX()/PistolCaveGame.TILE_SIZE);
+				if(startrow != ie.getPath().startrow && startcol != ie.getPath().startcol){
+					((Actor) ie).pathFinder(PistolCaveGame.player2,2);
+				}
+			}
+		
+		}else{
+			for(IsoEntity ie : PistolCaveGame.enemies){
+				startrow= (int) (PistolCaveGame.player.wPosition.getY() /PistolCaveGame.TILE_SIZE);
+				startcol=(int)(PistolCaveGame.player.wPosition.getX()/PistolCaveGame.TILE_SIZE);
+				endrow=(int)(PistolCaveGame.player.wPosition.getY()/PistolCaveGame.TILE_SIZE);
+				endcol=(int)(PistolCaveGame.player.wPosition.getX()/PistolCaveGame.TILE_SIZE);
+				double xx = (endrow - startrow) * (endrow - startrow);
+				double y = (endcol-startcol) * (endcol-startcol);
+				double z = Math.sqrt(xx+y); //distance formula
+				    
+				    //Enemy is too far away
+				if( (int)z > 10) {
+				   	return;
+				}
+				//Player is in a different 
+				if(startrow != ie.getPath().startrow && startcol != ie.getPath().startcol){
+					((Actor) ie).pathFinder(PistolCaveGame.player,1);
+				}
+			}
+			
+>>>>>>> refs/heads/Issue4
 		}
 
 
@@ -497,17 +537,19 @@ public class PistolCaveGame extends StateBasedGame{
 			System.out.println();
 		}
 	}
-	
+*/	
 	//creates the enemies on the server, you will update the positions of these object instead of an Entity or Actor on the server,
 	//the sEnemies array will be passed to the client which will inturn build the "enemies" array from the data stored in these objects.
 	private void addEnemies() {
 		NetVector enemy1 = new NetVector(new Vector(8*PistolCaveGame.TILE_SIZE,11*PistolCaveGame.TILE_SIZE));
 		enemy1.direction = 5;
 		enemy1.type = 2;
+		enemy1.enemyID = enemyID++;
 		PistolCaveGame.sEnemies.add(enemy1);
 		NetVector enemy2 = new NetVector(new Vector(15*PistolCaveGame.TILE_SIZE,10*PistolCaveGame.TILE_SIZE));
 		enemy2.direction = 5;
 		enemy2.type = 3;
+		enemy2.enemyID = enemyID++;
 		PistolCaveGame.sEnemies.add(enemy2);	
 	}
 	

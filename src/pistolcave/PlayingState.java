@@ -143,11 +143,40 @@ public class PlayingState extends BasicGameState {
 		
 	}
 
-	public void addEnemies(){
+	public void updateEnemies(int delta){
+		boolean exists = false;
+		float oldX;
+		float oldY;
+		float newX;
+		float newY;
+		
 		for(NetVector v : PC.state.enemies){
-			Actor tempE = new Actor(PistolCaveGame.WORLD_SIZE, v.getPos(),v.type);
-			tempE.current = v.direction;
-			PC.enemies.add(tempE);
+			for(Actor a : PC.enemies){
+				if(a.enemyID == v.enemyID){
+					//enemy exists, update his position and perform designated action if one exists
+					exists = true;
+					
+					oldX = a.getPosition().getX();
+					oldY = a.getPosition().getY();
+					newX = v.getPos().getX();
+					newY = v.getPos().getY();
+					
+					Vector enemyMove = new Vector(newX - oldX, newY - oldY);
+					int direction = (int) (enemyMove.getRotation() / 45);
+					a.move(direction, delta * 60 /10000);
+					
+					//handle enemy attack
+					
+					break;
+				}
+			}
+			//this is a new enemy, add it to client enemy list
+			if(!exists){
+				Actor tempE = new Actor(PistolCaveGame.WORLD_SIZE, v.getPos(),v.type);
+				tempE.current = v.direction;
+				tempE.enemyID = v.enemyID;
+				PC.enemies.add(tempE);
+			}
 		}
 	}
 
@@ -269,9 +298,14 @@ public class PlayingState extends BasicGameState {
 		checkForPlayerJoin();
 		updatePlayersPosition();
 
+		//updates the bullets positions
 		updateBullets();
+		
 		//build and execute command from user
 		getCommand(input, x);
+		
+		//update enemies
+		updateEnemies(delta);
 
 		//build clientState and send to server
 	//	PC.update(this.newState);
@@ -361,10 +395,6 @@ public class PlayingState extends BasicGameState {
 				PistolCaveGame.player2.shoot();
 			}
 		}	
-		
-		PC.enemies.clear();
-		addEnemies();
-
 	}
 
 	//----------------------------------------------------------------------------------------------------------------------------

@@ -41,6 +41,8 @@ public class clientState implements Serializable{
 	int playerNum = 0;
 	int delta;
 	ArrayList<NetVector> bullets = new ArrayList<NetVector>();
+	ArrayList<NetVector>enemies = new ArrayList<NetVector>();
+
 	
 	clientState(){
 		playerNewState = new NetVector();

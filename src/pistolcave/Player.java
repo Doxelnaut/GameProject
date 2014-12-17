@@ -37,9 +37,7 @@ public class Player extends Actor {
 	Animation[] walkingFIRE = new Animation[8];
 	Animation[] crouching = new Animation[8];
 	Animation[] crouchingFIRE = new Animation[8];
-	Animation currentAnimation;
 	boolean crouch = false;
-	boolean shooting = false;
 	static boolean secondPlayer = false;
 	double theta;
 	
