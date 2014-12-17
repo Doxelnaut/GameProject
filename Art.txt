@@ -1,0 +1,16 @@
+Files:
+goblin_spearman_0.png
+goblin_spearman_elite.png
+Author:
+Short-Ribs, http://opengameart.org/users/short-ribs
+
+Files:
+TMIM_Heroine
+Author:
+Bleed, http://opengameart.org/users/bleed
+
+Files:
+cave_tileset
+grassland
+Author:
+Clint Bellanger, http://opengameart.org/users/clint-bellanger
