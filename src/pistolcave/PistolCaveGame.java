@@ -197,7 +197,7 @@ public class PistolCaveGame extends StateBasedGame{
 	public static ArrayList<IsoEntity> wallsandblocks;
 	public static ArrayList<IsoEntity> stop;
 	
-	public ArrayList<Actor> enemies;  //list of enemy entities to be used by the client for rendering, server does not touch this
+	public static ArrayList<Actor> enemies;  //list of enemy entities to be used by the client for rendering, server does not touch this
 	public static ArrayList<NetVector> sEnemies; //list of NetVectors to represent enemies on the server  
 	public static ArrayList<NetVector> sEPaths; 
 	public ArrayList<Bullet> bullets;
@@ -663,6 +663,16 @@ public class PistolCaveGame extends StateBasedGame{
 			break;
 		case 9: //walls
 			walls.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), 7) );
+			stop.add(new Ground(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE)) );
+			walkable[row][col] = 0;
+			break;
+		case 10: //walls
+			walls.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), 8) );
+			stop.add(new Ground(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE)) );
+			walkable[row][col] = 0;
+			break;
+		case 11: //walls
+			walls.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), 9) );
 			stop.add(new Ground(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE)) );
 			walkable[row][col] = 0;
 			break;

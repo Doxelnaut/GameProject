@@ -307,6 +307,7 @@ public class Player extends Actor {
 			}
 			
 		}
+		
 		return true;
 	
 	}
