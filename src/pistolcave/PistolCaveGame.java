@@ -362,8 +362,9 @@ public class PistolCaveGame extends StateBasedGame{
 	public synchronized void update(clientState playerState){
 		
 		sEnemies = playerState.enemies;
+		System.out.println("updating Now");
 		updateEnemyPaths(playerState.playerNewState.getPos());
-
+		System.out.println("Done Updating Now");
 		//update player 1
 		if(playerState.playerNum == 1){
 			
