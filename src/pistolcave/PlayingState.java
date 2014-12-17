@@ -162,7 +162,7 @@ public class PlayingState extends BasicGameState {
 					if(oldX != newX && oldY != newY){
 						Vector enemyMove = new Vector(newX - oldX, newY - oldY);
 						int direction = (int) (enemyMove.getRotation() / 45);
-						a.move(direction, delta * 60 /10000);
+						a.move(direction, (float)(delta * 60 /1000));
 					}
 					//handle enemy attack
 					
