@@ -143,7 +143,7 @@ public class PlayingState extends BasicGameState {
 		
 	}
 
-	public void updateEnemies(){
+	public void updateEnemies(int delta){
 		boolean exists = false;
 		float oldX;
 		float oldY;
@@ -161,6 +161,11 @@ public class PlayingState extends BasicGameState {
 					newX = v.getPos().getX();
 					newY = v.getPos().getY();
 					
+					Vector enemyMove = new Vector(newX - oldX, newY - oldY);
+					int direction = (int) (enemyMove.getRotation() / 45);
+					a.move(direction, delta * 60 /10000);
+					
+					//handle enemy attack
 					
 					break;
 				}
@@ -301,7 +306,7 @@ public class PlayingState extends BasicGameState {
 		getCommand(input, x);
 		
 		//update enemies
-		updateEnemies();
+		updateEnemies(delta);
 
 		//build clientState and send to server
 		buildClientState(delta);

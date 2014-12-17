@@ -229,6 +229,7 @@ public class PistolCaveGame extends StateBasedGame{
 		sEnemies = new ArrayList<NetVector>(100);
 		
 		addEnemies();
+		state.enemies = sEnemies;
 	}
 	
 	@Override
@@ -474,6 +475,7 @@ public class PistolCaveGame extends StateBasedGame{
 		int endrow,endcol,startrow,startcol;
 	
 	//run dijkstras here, updating the positions of the enemies stored in sEnemies.	
+		
 		
 		/*if(secondPlayer){
 			for(IsoEntity ie : PistolCaveGame.enemies){
