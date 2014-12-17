@@ -143,7 +143,7 @@ public class IsoEntity extends Entity implements Comparable<IsoEntity> {
 
 		return 0;
 	}
-	public PathFinder getPath(){return null;}
+	public Dijkstra getPath(){return null;}
 }
 
 
