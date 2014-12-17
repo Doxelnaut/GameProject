@@ -599,16 +599,20 @@ public class PistolCaveGame extends StateBasedGame{
 			walkable[row][col] = 1;
 			break;
 		case 1: // wall tiles
-			walls.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), true) );
+			walls.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), 0) );
 			stop.add(new Ground(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE)) );
 			walkable[row][col] = 0;
 			break;
 		case 2: // rock tiles
-			blocks.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), false) );
+			blocks.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), 1) );
 			walkable[row][col] = 0;
 			break;
 		case 3: // potions
 			blocks.add(new Items(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), 2) );
+			walkable[row][col] = 0;
+			break;
+		case 4: // water
+			blocks.add(new Block(WORLD_SIZE,new Vector(row*TILE_SIZE, col*TILE_SIZE), 2) );
 			walkable[row][col] = 0;
 			break;
 		default:

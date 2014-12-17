@@ -29,21 +29,23 @@ import org.newdawn.slick.Image;
  *	Copyright 2014 Corey Amoruso, Ryan Bergquist, Zacharias Shufflebarger
  */
 public class Block extends IsoEntity {
-	boolean tall;
-	public Block(Vector wWorldSize, Vector wPosition, boolean tall) {
+	int tall;
+	public Block(Vector wWorldSize, Vector wPosition, int i) {
 		super(wWorldSize, PistolCaveGame.TILE_SIZE);
-		this.tall = tall;
+		this.tall = i;
 		Image isoImg;
-		if (tall)
+		if (i == 0)
 			isoImg = ResourceManager.getImage(PistolCaveGame.tallBlockImgPath); 
-		else
+		else if(i == 1)
 			isoImg = ResourceManager.getImage(PistolCaveGame.shortBlockImgPath);
+		else
+			isoImg = ResourceManager.getImage(PistolCaveGame.caveTileSetPath).getSubImage(10, 10, 32, 32);
 		
 		addImage(isoImg);
 		setZHeightFromIsoImage(isoImg);
 		setPosition(wPosition);
 	}
-	public boolean gettall(){
+	public int gettall(){
 		return tall;
 	}
 	
