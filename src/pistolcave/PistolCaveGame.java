@@ -46,7 +46,8 @@ import org.newdawn.slick.state.StateBasedGame;
 public class PistolCaveGame extends StateBasedGame{
 
 	double theta;
-	public static final int STARTUPSTATE = 0;
+	int enemyID = 0;
+	static final int STARTUPSTATE = 0;
 	public static final int PLAYINGSTATE = 1;
 	public static final int GAMEOVERSTATE = 2;
 	public static final int HOSTSTATE = 3;
@@ -196,6 +197,7 @@ public class PistolCaveGame extends StateBasedGame{
 	
 	public ArrayList<Actor> enemies;  //list of enemy entities to be used by the client for rendering, server does not touch this
 	public static ArrayList<NetVector> sEnemies; //list of NetVectors to represent enemies on the server  
+	public static ArrayList<NetVector> sEPaths; 
 	public ArrayList<Bullet> bullets;
 
 	GameState state = new GameState();
@@ -226,8 +228,10 @@ public class PistolCaveGame extends StateBasedGame{
 		bullets = new ArrayList<Bullet>(10);
 		enemies = new ArrayList<Actor>(100);
 		sEnemies = new ArrayList<NetVector>(100);
+		sEPaths = new ArrayList<NetVector>(100);
 		
 		addEnemies();
+		state.enemies = sEnemies;
 	}
 	
 	@Override
@@ -355,12 +359,16 @@ public class PistolCaveGame extends StateBasedGame{
 	}
 	
 	public synchronized void update(clientState playerState){
+		
+		sEnemies = playerState.enemies;
+		
 		//update player 1
 		if(playerState.playerNum == 1){
 
 			//Ryan here is a call to a method to handle path finding, the method is down below
-			updateEnemyPaths(playerState.playerNewState.getPos());
 
+		//	updateEnemyPaths(playerState.playerNewState.getPos(),1);
+			
 			//update the gamestate enemy array with data from the server's list of enemies(sEnemies)
 			this.state.enemies = sEnemies;
 
@@ -399,6 +407,12 @@ public class PistolCaveGame extends StateBasedGame{
 
 		//update player 2
 		else if(playerState.playerNum == 2){
+
+			//Ryan here is a call to a method to handle path finding, the method is down below
+			//updateEnemyPaths(playerState.playerNewState.getPos(),2);
+			
+			//update the gamestate enemy array with data from the server's list of enemies(sEnemies)
+			this.state.enemies = sEnemies;
 
 			//check for collisions here then if ok update second player position
 			boolean canMove = true;
@@ -480,12 +494,13 @@ public class PistolCaveGame extends StateBasedGame{
 		
 	}
 	
-	//path finding, p is the players position used to calculate the source tile x and y
-	private void updateEnemyPaths(Vector p) {
+
+	//private void updateEnemyPaths(Vector p) {
 		
-		int endrow,endcol,startrow,startcol;
+	//	int endrow,endcol,startrow,startcol;
 	
 	//run dijkstras here, updating the positions of the enemies stored in sEnemies.	
+		
 		
 		/*if(secondPlayer){
 			for(IsoEntity ie : PistolCaveGame.enemies){
@@ -518,20 +533,41 @@ public class PistolCaveGame extends StateBasedGame{
 				}
 			}
 			
+>>>>>>> refs/heads/Issue4
 		}
-		*/
+
+
+	//run dijkstras here, updating the positions of the enemies stored in sEnemies.	
+
 	}
-	
+	public void pathFinder(Vector user, NetVector enemy) {
+		int[] source = new int[2];
+		source[0]= (int) user.getX()/16;
+		source[1] =(int) user.getY()/16;
+		Dijkstra pathToUser = new Dijkstra(source);
+		
+		System.out.println(source[0] + " " + source[1]);
+		int[][] TP = pathToUser.weights;
+		for(int i = 0; i < TP.length; i++){
+			for(int j = 0; j < TP.length; j++){
+				System.out.print(pathToUser.G[i][j].getCost() + "    ");
+			}
+			System.out.println();
+		}
+	}
+*/	
 	//creates the enemies on the server, you will update the positions of these object instead of an Entity or Actor on the server,
 	//the sEnemies array will be passed to the client which will inturn build the "enemies" array from the data stored in these objects.
 	private void addEnemies() {
 		NetVector enemy1 = new NetVector(new Vector(8*PistolCaveGame.TILE_SIZE,11*PistolCaveGame.TILE_SIZE));
 		enemy1.direction = 5;
 		enemy1.type = 2;
+		enemy1.enemyID = enemyID++;
 		PistolCaveGame.sEnemies.add(enemy1);
 		NetVector enemy2 = new NetVector(new Vector(15*PistolCaveGame.TILE_SIZE,10*PistolCaveGame.TILE_SIZE));
 		enemy2.direction = 5;
 		enemy2.type = 3;
+		enemy2.enemyID = enemyID++;
 		PistolCaveGame.sEnemies.add(enemy2);	
 	}
 	

@@ -49,7 +49,8 @@ public class NetVector implements Serializable{
 	int type;
 	float health; // for player/actor health
 	float damage; // for player attack/bullet damage
-	
+	int enemyID;
+
 	/* Constructors */
 	
 	public NetVector(){

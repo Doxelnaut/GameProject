@@ -38,16 +38,17 @@ public class Bullet extends IsoEntity{
 	public Bullet(Vector wWorldSize, Vector wPosition, double t, int translate, float attack) {
 		super(wWorldSize,PistolCaveGame.TILE_SIZE);
 		if(translate == 1){
-			wPosition = wPosition.setX(wPosition.getX() + 29); //moves the bullet over on top of player
-			wPosition = wPosition.setY(wPosition.getY() - 8);  //moves the bullet up to match player height
+			//adjust the bullets to fire from about shoulder height
+			wPosition = wPosition.setX(wPosition.getX() + 32); //moves the bullet over on top of player
+			wPosition = wPosition.setY(wPosition.getY() - 32);  //moves the bullet up to match player height
 			setPosition(wPosition);
 		}
 		else
 			setPosition/*NoTranslate*/(wPosition);
 		theta = t;
-		velocity = new Vector(1f,0f).setRotation(theta+45);
+		velocity = new Vector(1f,0f).setRotation(theta + 45);
 //		velocity.setY(velocity.getY()/2);
-		System.out.println("velocity: " + velocity + ", theta: " + theta);
+		System.out.println("velocity: " + velocity + ", theta: " + theta + ", theta+45: " + (theta+45));
 		domain = wWorldSize;
 		damage = attack;
 		addImageWithBoundingBox(ResourceManager
