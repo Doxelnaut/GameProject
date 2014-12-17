@@ -33,14 +33,45 @@ public class Block extends IsoEntity {
 	public Block(Vector wWorldSize, Vector wPosition, int i) {
 		super(wWorldSize, PistolCaveGame.TILE_SIZE);
 		this.tall = i;
-		Image isoImg;
-		if (i == 0)
-			isoImg = ResourceManager.getImage(PistolCaveGame.tallBlockImgPath); 
-		else if(i == 1)
+		Image isoImg = null;
+		switch(i){
+		case 0: 
+		//	isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(0,0); 
+			isoImg = ResourceManager.getImage(PistolCaveGame.tallBlockImgPath);
+			break;
+		case 1:
 			isoImg = ResourceManager.getImage(PistolCaveGame.shortBlockImgPath);
-		else
-			isoImg = ResourceManager.getImage(PistolCaveGame.caveTileSetPath).getSubImage(10, 10, 32, 32);
-		
+			break;
+		case 2:
+			isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(0,0); 
+			break;
+		case 3:
+			//isoImg =ResourceManager.getImage(PistolCaveGame.tallBlockImgPath);
+			isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(11,0); 
+			break;
+		case 4:
+			isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(10,0); 
+			break;
+		case 5:
+			isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(1,0); 
+			break;
+		case 6:
+			isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(2,0); 
+			break;
+		case 7:
+			isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(3,0); 
+			break;
+		case 8:
+			isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(1,0); 
+			break;
+		case 9:
+			isoImg = ResourceManager.getSpriteSheet(PistolCaveGame.caveWallsTileSetPath, 64, 105).getSprite(1,0); 
+			break;
+			
+		default:
+			isoImg = ResourceManager.getImage(PistolCaveGame.tallBlockImgPath); 
+		}
+
 		addImage(isoImg);
 		setZHeightFromIsoImage(isoImg);
 		setPosition(wPosition);
