@@ -36,7 +36,8 @@ public class NetVector implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	Vector currentPos;
+	Vector wPosition;
+	Vector ePosition;
 	int direction;
 	boolean crouched = false;
 	boolean attacking = false;
@@ -46,71 +47,50 @@ public class NetVector implements Serializable{
 	double maxX;
 	double maxY;
 	int type;
+	float health; // for player/actor health
+	float damage; // for player attack/bullet damage
+	
+	/* Constructors */
 	
 	public NetVector(){
 	}
 	
 	public NetVector(Vector v){
-		currentPos = v;
+		wPosition = v;
 	}
 	
 	public NetVector(float X, float Y, int d){
-		currentPos = new Vector(X,Y);
+		wPosition = new Vector(X,Y);
 		direction = d;
 	}
 	
-	public void setPos(Vector v){
-		currentPos = v;
-	}
+	/* Getters */	
+	public Vector getPos(){return wPosition;}
+	public Vector getEPos(){return ePosition;}
+	public int getDirection(){return direction;}	
+	public boolean getCrouched(){return crouched;}	
+	public double getMinX(){return minX;}	
+	public double getMaxX(){return maxX;}	
+	public double getMinY(){return minY;}	
+	public double getMaxY(){return maxY;}	
+	public float getDamage(){return this.damage;}
+	public float getHealth(){return this.health;}
+
 	
-	public Vector getPos(){
-		return currentPos;
-	}
+	/* Setters */
+	public void setPos(Vector v){wPosition = v;}		
+	public void setEPos(Vector v){ePosition = v;}
+	public void setDirection(int d){direction = d;}	
+	public void setCrouched(boolean c){crouched = c;}	
+	public void setMinX(double x){minX = x;}
+	public void setMaxX(double x){maxX = x;}	
+	public void setMinY(double y){minY = y;}
+	public void setMaxY(double y){maxY = y;}	
+	public void setDamage(float set){this.damage = set;}
+	public void setHealth(float set){this.health = set;}
 	
-	public void setDirection(int d){
-		direction = d;
-	}
+	/* Methods */
+	public void doDamage(float damage) {this.health =- damage;}
 	
-	public int getDirection(){
-		return direction;
-	}
-	
-	public void setCrouched(boolean c){
-		crouched = c;
-	}
-	
-	public boolean getCrouched(){
-		return crouched;
-	}
-	
-	public void setMinX(double x){
-		minX = x;
-	}
-	public void setMaxX(double x){
-		maxX = x;
-	}
-	
-	public double getMinX(){
-		return minX;
-	}
-	
-	public double getMaxX(){
-		return maxX;
-	}
-	
-	public void setMinY(double y){
-		minY = y;
-	}
-	public void setMaxY(double y){
-		maxY = y;
-	}
-	
-	public double getMinY(){
-		return minY;
-	}
-	
-	public double getMaxY(){
-		return maxY;
-	}
 }
 

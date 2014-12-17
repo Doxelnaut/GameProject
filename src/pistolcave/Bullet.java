@@ -1,5 +1,6 @@
 package pistolcave;
 
+import jig.ResourceManager;
 import jig.Vector;
 
 /**
@@ -32,8 +33,9 @@ public class Bullet extends IsoEntity{
 	boolean active = true;
 	int speed = 1; // scale movement
 	double theta;
+	float damage;
 	
-	public Bullet(Vector wWorldSize, Vector wPosition, double t, int translate) {
+	public Bullet(Vector wWorldSize, Vector wPosition, double t, int translate, float attack) {
 		super(wWorldSize,PistolCaveGame.TILE_SIZE);
 		if(translate == 1){
 			wPosition = wPosition.setX(wPosition.getX() + 29); //moves the bullet over on top of player
@@ -41,17 +43,31 @@ public class Bullet extends IsoEntity{
 			setPosition(wPosition);
 		}
 		else
-			setPositionNoTranslate(wPosition);
+			setPosition/*NoTranslate*/(wPosition);
 		theta = t;
-		velocity = new Vector(0f,-.5f).setRotation(theta);
+		velocity = new Vector(1f,0f).setRotation(theta+45);
+//		velocity.setY(velocity.getY()/2);
+		System.out.println("velocity: " + velocity + ", theta: " + theta);
 		domain = wWorldSize;
-		//addImageWithBoundingBox(ResourceManager
-			//	.getImage(PistolCaveGame.bulletResource));
+		damage = attack;
+		addImageWithBoundingBox(ResourceManager
+				.getImage(PistolCaveGame.bulletResource));
 	}
+	
+	/* Getters */
+	public float getDamage(){return this.damage;}
+	
+	/* Setters */
+	
+	public void setActiveVar(boolean a){active = a;}
+	public void setDamage(float set){this.damage = set;}
+	
+	/* Other Methods */
 	
 	public void update(float delta) {
 		//setPosition(getPosition().add(direction).scale(speed));
-		translate(velocity.scale(delta));
+		//translate(velocity.scale(delta));
+		this.setPosition(this.getPosition().add(velocity.scale(delta/4)));
 	}
 	
 	public boolean isActive() {
@@ -61,10 +77,6 @@ public class Bullet extends IsoEntity{
 		
 		return active;
 	}
-	
-	public void setActiveVar(boolean a){
-		active = a;
-	}
-	
+
 	
 }

@@ -236,7 +236,9 @@ public class PlayingState extends BasicGameState {
 						" Armor: " + (int)PistolCaveGame.player.getArmor() + 
 						" Experience: " + (int)PistolCaveGame.player.getExp()
 						, 100 , 10);
-				g.drawString("World Pos: " + PistolCaveGame.player.getPosition() + " Entity Pos: " + PistolCaveGame.player.getX()+ ", " + PistolCaveGame.player.getY(), 100, 25);
+				g.drawString("World Pos: " + PistolCaveGame.player.getPosition() + 
+						" Entity Pos: " + PistolCaveGame.player.getX()+ ", " + PistolCaveGame.player.getY() + 
+						" Theta: " + PC.theta, 100, 25);
 			}
 
 			g.translate(-PistolCaveGame.camX, -PistolCaveGame.camY);		
@@ -445,9 +447,11 @@ public class PlayingState extends BasicGameState {
 		NetVector temp;
 		for(Bullet b : PC.bullets){
 			temp = new NetVector();
-			temp.setPos(b.getEPosition());
+			temp.setPos(b.getPosition());
+			temp.setEPos(b.getEPosition());
 			temp.theta = b.theta;
 			newState.bullets.add(temp);
+//			System.out.println("buildClientState() bullet Wpos: " + b.getPosition() + ", EPos: " + b.getEPosition());
 		}
 
 
@@ -465,8 +469,10 @@ public class PlayingState extends BasicGameState {
 	void updateBullets(){
 		PC.bullets.clear();
 		//add bullets updated from server
-		for(NetVector b : PC.state.bullets)
-			PC.bullets.add(new Bullet(PistolCaveGame.WORLD_SIZE, b.getPos(),b.theta,0));
+		for(NetVector b : PC.state.bullets){ // client doesn't need bullet damage, set it to 0
+			PC.bullets.add(new Bullet(PistolCaveGame.WORLD_SIZE, b.getPos(),b.theta,0,0));
+//			System.out.println("updateBullets() bullet Pos: " + b.getPos());
+		}
 	}
 
 }

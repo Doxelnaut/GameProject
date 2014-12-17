@@ -128,6 +128,10 @@ public class IsoEntity extends Entity implements Comparable<IsoEntity> {
 		return super.getPosition();
 	}
 	
+	@Override
+	public void translate(final Vector t) {
+		this.setPosition( wPosition.add(t));
+	}
 
 	@Override
 	public int compareTo(IsoEntity other) {
