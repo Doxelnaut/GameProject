@@ -177,6 +177,7 @@ public class PlayingState extends BasicGameState {
 				PC.enemies.add(tempE);
 			}
 		}
+		exists = false;
 	}
 	
 
@@ -307,7 +308,7 @@ public class PlayingState extends BasicGameState {
 		getCommand(input, x);
 				
 		//update enemies
-//		updateEnemies(delta);
+		updateEnemies(delta);
 
 		//build clientState and send to server
 	//	PC.update(this.newState);
@@ -435,14 +436,14 @@ public class PlayingState extends BasicGameState {
 
 		newState.delta = delta;
 
-		newState.enemies.clear();
-		NetVector tempa;
-		for(Actor a : PC.enemies){
-			tempa = new NetVector();
-			tempa.setPos(a.getPosition());
-			tempa.type = a.getType();
-			newState.enemies.add(tempa);
-		}
+//		newState.enemies.clear();
+//		NetVector tempa;
+//		for(Actor a : PC.enemies){
+//			tempa = new NetVector();
+//			tempa.setPos(a.getPosition());
+//			tempa.type = a.getType();
+//			newState.enemies.add(tempa);
+//		}
 		
 		newState.bullets.clear();
 		NetVector temp;
